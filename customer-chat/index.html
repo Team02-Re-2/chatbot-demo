@@ -150,6 +150,8 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
       else if(info.state==="ready"){ m="규칙 판정으로 응대 중이에요"; }
       else { m="규칙 판정으로 응대 중이에요"; sb="팀 모델 받는 중 "+Math.round(info.pct*100)+"%"; p=info.pct; }
     }
+    /* 모델 받기 안내는 받는 중일 때만 보여 준다 (실패·완료 뒤에는 숨김) */
+    var nt=document.querySelector("#strip .note2"); if(nt) nt.hidden=!!(info&&(info.state==="fail"||info.state==="ready"||info.mode==="v2"));
     dot.className=cls; main.textContent=m; sub.textContent=sb; sub.hidden=!sb;
     pg.hidden=p<0; bar.style.width=Math.round(Math.max(0,p)*100)+"%";
   }

@@ -27,6 +27,12 @@
   /* ── 챗봇 2: iframe 전역의 st, V2를 읽는다 ─────────────────────────── */
   function watchChatbot2(frame, onInfo) {
     var curObj = null, rec = null, sig = "", handedAt = 0, last = null;
+    /* 새로고침하면 엔진 상태가 사라지므로, 이전에 "묻는 중"으로 남은 상담은 정리한다 */
+    try {
+      var d0 = loadAll(), ch = false;
+      d0.sessions.forEach(function (x) { if (x && x.bot === "챗봇2" && x.asking) { x.asking = false; x.abandoned = true; ch = true; } });
+      if (ch) { d0.updatedAt = Date.now(); localStorage.setItem(KEY, JSON.stringify(d0)); }
+    } catch (e0) {}
     function tick() {
       try {
         var win = frame.contentWindow, s = win.st, V = win.V2;

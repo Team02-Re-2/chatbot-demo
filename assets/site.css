@@ -32,11 +32,11 @@ body.inner h1{font-size:var(--fs-xl)}
 .site-bar{border-bottom:1px solid var(--line);background:var(--card);font-size:var(--fs-s)}
 .site-bar .in{max-width:1040px;margin:0 auto;padding:6px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;min-height:44px}
 .site-bar b{font-weight:700}
-.site-bar a{display:inline-flex;align-items:center;min-height:40px;margin-left:14px}
+.site-bar a{display:inline-flex;align-items:center;min-height:44px;margin-left:14px}
 .site-bar .in a:first-child{margin-left:0}
 
 /* 버튼 */
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;margin:6px 8px 0 0;border:1.5px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--btn-fg);font:700 var(--fs-s)/1.2 "IBM Plex Sans KR","Malgun Gothic",sans-serif;text-decoration:none;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;margin:6px 8px 0 0;border:1.5px solid var(--ink);border-radius:6px;background:var(--ink);color:var(--btn-fg);font:700 var(--fs-s)/1.2 "IBM Plex Sans KR","Malgun Gothic",sans-serif;text-decoration:none;cursor:pointer}
 .btn.sec{background:transparent;color:var(--ink)}
 .btn[disabled]{opacity:.45;cursor:default}
 
@@ -113,7 +113,7 @@ footer.foot{max-width:1040px;margin:0 auto;padding:12px 16px 48px;color:var(--mu
 .band .dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--l0)}
 .band .dot.v2{background:var(--l1)}.band .dot.err{background:var(--l3)}
 .band .st.err{color:var(--l3)}
-.band .links2 a{display:inline-flex;align-items:center;min-height:40px;margin-left:14px}
+.band .links2 a{display:inline-flex;align-items:center;min-height:44px;margin-left:14px}
 .band .sub{color:var(--muted);margin:0}
 .band .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:transparent}
 .band .prog i{display:block;height:100%;width:0;background:var(--ink)}
@@ -146,12 +146,12 @@ footer.foot{max-width:1040px;margin:0 auto;padding:12px 16px 48px;color:var(--mu
 .chk .fail.big{font-size:var(--fs-xl)}
 tr.bad td{background:var(--tint);border-bottom-color:var(--l3)}
 td.num{white-space:nowrap}
-details.fold>summary{cursor:pointer;min-height:40px;display:flex;align-items:center;font-weight:700}
+details.fold>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-weight:700}
 details.fold[open]>summary{margin-bottom:8px}
 
 /* 지도 */
 .mm{overflow-x:auto;padding:4px 0}
-pre.mermaid{margin:0;background:transparent;font-family:inherit;white-space:pre;text-align:left;min-height:40px}
+pre.mermaid{margin:0;background:transparent;font-family:inherit;white-space:pre;text-align:left;min-height:44px}
 code{background:var(--tint);padding:1px 5px;border-radius:4px;font-size:.92em}
 
 
@@ -228,7 +228,7 @@ body.console .site-bar{background:var(--hdr);border-bottom:.5px solid var(--line
 .sbar-note{font-size:12px;color:var(--muted);margin:0 0 6px}
 /* 대화 탭: iOS 세그먼트 컨트롤 */
 .tabs{display:inline-flex;gap:0;padding:2px;margin:0 0 12px;background:var(--fill);border:0;border-radius:10px}
-.tabs button{min-height:40px;font:inherit;font-size:15px;font-weight:500;color:var(--muted);background:transparent;border:0;border-radius:8px;padding:0 16px;margin:0;cursor:pointer}
+.tabs button{min-height:44px;font:inherit;font-size:15px;font-weight:500;color:var(--muted);background:transparent;border:0;border-radius:8px;padding:0 16px;margin:0;cursor:pointer}
 .tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;background:var(--card);box-shadow:var(--sh);border:0}
 .conv{display:flex;flex-direction:column;gap:8px;padding:14px;background:var(--card);border-radius:14px;box-shadow:var(--sh)}
 .msg{max-width:min(520px,80%);display:flex;flex-direction:column;gap:4px}
@@ -246,7 +246,7 @@ body.console .site-bar{background:var(--hdr);border-bottom:.5px solid var(--line
 @media (prefers-color-scheme:dark){.msg .bub{background:#26262A;color:#F2F2F7}.msg.sys .bub{background:transparent}.msg.me .bub{background:var(--blue-btn);color:#fff}}
 /* 라벨 배지: 연한 틴트 + 진한 글자 (색은 --l 변수) */
 body.console .lab{--c:var(--l0);min-width:28px;padding:1px 8px;border:0;border-radius:8px;font-size:12px;line-height:1.5;font-weight:600;text-align:center;
-  background:color-mix(in srgb,var(--c) 16%,transparent);color:color-mix(in srgb,var(--c) 62%,var(--lx))}
+  background:color-mix(in srgb,var(--c) 16%,transparent);color:color-mix(in srgb,var(--c) 45%,var(--lx))}
 body.console .lab.L0{--c:var(--l0)}body.console .lab.L1{--c:var(--l1)}body.console .lab.L2{--c:var(--l2)}body.console .lab.L3{--c:var(--l3)}
 .tmeta .lab{min-width:24px;padding:0 6px}
 .console-log{background:var(--card);border-radius:14px;box-shadow:var(--sh);padding:4px 8px}
@@ -296,7 +296,7 @@ body.split-page{--paper:#F2F2F7;--card:#FFFFFF;--ink:#111111;--muted:#6C6C70;--l
   .more-pan .only-narrow{display:block}
   .more-pan .nchip{margin:6px 0}
   .split-tabs{flex:none;display:flex;height:44px;margin:8px 16px 0;padding:2px;background:var(--tint);border-radius:10px}
-  .split-tabs button{flex:1;min-height:40px;border:0;border-radius:8px;background:transparent;color:var(--muted);font:500 15px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
+  .split-tabs button{flex:1;min-height:44px;border:0;border-radius:8px;background:transparent;color:var(--muted);font:500 15px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
   .split-tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;background:var(--card);box-shadow:var(--sh)}
   .split{grid-template-columns:minmax(0,1fr);padding:12px 16px 16px}
   .pane{display:none}.pane.on{display:grid;grid-template-rows:minmax(0,1fr)}

@@ -25,14 +25,16 @@
 (function(){
   var KEY="team2demo.v1", AKEY="team2demo.admin.v1";
   var sel=null, picked=false, asking=false, TH=null, tab="conv";
-  var LNAME={0:"정상·절차",1:"중립 문제 제기",2:"명시적 불만",3:"즉시 이관",9:"판단 불가"};
-  var ENG={"v2":"팀 모델 v2","v2+규칙":"v2 + 규칙 안전장치","rule":"규칙","규칙":"규칙","절차":"판정 생략","claude":"Claude","모델":"모델"};
+  /* 고정 표는 프로토타입이 없는 객체로 만들어, 저장된 글자가 "constructor" 같아도 표 값으로 오인되지 않게 합니다 */
+  function T(o){ var r=Object.create(null); Object.keys(o).forEach(function(k){ r[k]=o[k]; }); return r; }
+  var LNAME=T({0:"정상·절차",1:"중립 문제 제기",2:"명시적 불만",3:"즉시 이관",9:"판단 불가"});
+  var ENG=T({"v2":"팀 모델 v2","v2+규칙":"v2 + 규칙 안전장치","rule":"규칙","규칙":"규칙","절차":"판정 생략","claude":"Claude","모델":"모델"});
   /* 저장된 글자는 이 고정 표를 거친 값만 클래스로 씁니다 */
-  var SCLS={"대기":"w","상담중":"p","완료":"d"};
-  var KCLS={"즉시":"imm","누적":"cum"};
-  var LCLS={"0":"L0","1":"L1","2":"L2","3":"L3"};
-  var WCLS={"me":"me","bot":"bot","sys":"sys","ask":"sys","end":"sys"};
-  var WNAME={"me":"고객","bot":"챗봇"};
+  var SCLS=T({"대기":"w","상담중":"p","완료":"d"});
+  var KCLS=T({"즉시":"imm","누적":"cum"});
+  var LCLS=T({"0":"L0","1":"L1","2":"L2","3":"L3"});
+  var WCLS=T({"me":"me","bot":"bot","sys":"sys","ask":"sys","end":"sys"});
+  var WNAME=T({"me":"고객","bot":"챗봇"});
   function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
   function load(){ try{ var o=JSON.parse(localStorage.getItem(KEY)); if(o&&Array.isArray(o.sessions)) return o.sessions; }catch(e){} return []; }
   function loadA(){ try{ var o=JSON.parse(localStorage.getItem(AKEY)); if(o&&o.status&&typeof o.status==="object") return o; }catch(e){} return {status:{}}; }
@@ -51,7 +53,7 @@
     for(i=t.length-1;i>=0;i--) if(t[i]&&t[i].text) return String(t[i].text);
     return "";
   }
-  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"응대 중"); }
+  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"챗봇 응대"); }
   if(window.top===window) document.getElementById("sb").hidden=false;
   Team2Nums.ready.then(function(m){ var v=m&&m.th_c?parseFloat(m.th_c.value):NaN; TH=isNaN(v)?null:v; render(true); }).catch(function(){});
 
@@ -105,7 +107,7 @@
     dt.textContent="";
     if(!cur){ dt.append(el("div","empty","고객용 챗봇에서 대화하면 여기에 상담 내용이 보여요")); prevKey=""; prevLen=-1; return; }
     var H=cur.handoff, st2=H?stOf(A,cur.id):"";
-    var turns=Array.isArray(cur.turns)?cur.turns:[];
+    var turns=(Array.isArray(cur.turns)?cur.turns:[]).filter(function(t){ return t&&typeof t==="object"; });
     var hasConv=Array.isArray(cur.conv)&&cur.conv.length>0;
     var tabNow=hasConv?tab:"log";
     /* 머리 */
