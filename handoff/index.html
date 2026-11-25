@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>상담 이관 챗봇 목업</title>
+<style>
+:root{
+  --bg:#f4f5f7; --card:#fff; --ink:#1d2330; --sub:#5c6577; --line:#dfe3ea; --accent:#2b5fd9; --accent-ink:#fff;
+  --me:#2b5fd9; --me-ink:#fff; --bot:#eceff4; --bot-ink:#1d2330; --agent:#dff3e6; --agent-ink:#14432a; --sys:#6b7385;
+  --l0-bg:#e7e9ee; --l0-ink:#3d4454; --l1-bg:#dbe8ff; --l1-ink:#1a407f; --l2-bg:#ffe6c7; --l2-ink:#7a3d00;
+  --l3-bg:#ffd9d9; --l3-ink:#8a1111; --l9-bg:#e9dcff; --l9-ink:#4b2391;
+  --bar0:#8a93a6; --bar1:#4c82e6; --bar2:#e8932e; --bar3:#d64545; --bar9:#8a5fd6;
+  --warn-bg:#fff6dd; --warn-line:#ecd68a;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#13161c; --card:#1c212b; --ink:#e8ebf1; --sub:#9aa3b5; --line:#2e3542; --accent:#6b94f2; --accent-ink:#0d1220;
+    --me:#3b6be0; --me-ink:#fff; --bot:#2a3040; --bot-ink:#e8ebf1; --agent:#1f4a33; --agent-ink:#d8f5e3; --sys:#8f98ab;
+    --l0-bg:#2c3240; --l0-ink:#d0d5e0; --l1-bg:#1f3560; --l1-ink:#cfe0ff; --l2-bg:#5a3710; --l2-ink:#ffe0b8;
+    --l3-bg:#661c1c; --l3-ink:#ffd6d6; --l9-bg:#40286e; --l9-ink:#e6d8ff;
+    --bar0:#7b8499; --bar1:#5b8cf0; --bar2:#e8a04a; --bar3:#e25b5b; --bar9:#9c78e2;
+    --warn-bg:#352d12; --warn-line:#6b5a1f;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+header.top{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--line)}
+header.top h1{margin:0;font-size:17px}
+.modes{display:flex;gap:6px}
+.modes button{padding:6px 12px;border:1px solid var(--line);background:var(--card);border-radius:8px}
+.modes button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+main{display:grid;gap:16px;padding:16px;max-width:1280px;margin:0 auto}
+body[data-mode="both"] main{grid-template-columns:minmax(0,440px) minmax(0,1fr);align-items:start}
+body[data-mode="customer"] #adminPane,body[data-mode="admin"] #customerPane{display:none}
+body[data-mode="customer"] main{max-width:460px}
+@media (max-width:899px){body[data-mode="both"] main{grid-template-columns:minmax(0,1fr)} body[data-mode="both"] #customerPane{max-width:440px;width:100%;margin:0 auto}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.panel h2{margin:0 0 10px;font-size:15px}
+.paneTitle{font-size:12px;color:var(--sub);margin:0 0 6px;letter-spacing:.02em}
+
+/* 고객 */
+.phone{display:flex;flex-direction:column;padding:0;overflow:hidden}
+.phoneHead{padding:12px 14px;border-bottom:1px solid var(--line);font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.phoneHead button,.demoRow button,.chips button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:4px 10px;font-size:13px}
+.chat{height:380px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.b{max-width:82%;padding:8px 12px;border-radius:14px;white-space:pre-wrap;word-break:break-word}
+.b.me{align-self:flex-end;background:var(--me);color:var(--me-ink);border-bottom-right-radius:4px}
+.b.bot{align-self:flex-start;background:var(--bot);color:var(--bot-ink);border-bottom-left-radius:4px}
+.b.agent{align-self:flex-start;background:var(--agent);color:var(--agent-ink);border-bottom-left-radius:4px}
+.b .who{display:block;font-size:11px;font-weight:700;margin-bottom:2px;opacity:.8}
+.b.sys{align-self:center;max-width:100%;background:none;color:var(--sys);font-size:12px;padding:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px 0}
+.demoRow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px 0;font-size:12px;color:var(--sub)}
+.askRow{display:flex;gap:8px;padding:8px 12px 0}
+.askRow button{flex:1;padding:8px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.askRow button.alt{background:var(--card);color:var(--accent)}
+.notice{padding:8px 12px 0;color:var(--sub);font-size:13px}
+form.inp{display:flex;gap:8px;padding:10px 12px 4px}
+form.inp input{flex:1;min-width:0;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+form.inp button{padding:9px 14px;border-radius:10px;border:0;background:var(--accent);color:var(--accent-ink)}
+form.inp input:disabled,form.inp button:disabled{opacity:.5;cursor:not-allowed}
+.small{font-size:12px;color:var(--sub);padding:0 12px 12px}
+[hidden]{display:none!important}
+
+/* 관리자 */
+#adminPane{display:flex;flex-direction:column;gap:16px;min-width:0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile .n{font-size:26px;font-weight:700}
+.tile .t{font-size:12px;color:var(--sub)}
+.cards{display:flex;flex-direction:column;gap:10px}
+.hc{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+.hc .row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-bottom:6px}
+.hc .row.k{font-size:13px}
+.hc .k b{color:var(--sub);font-weight:600}
+.st{padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.st.waiting{background:var(--l2-bg);color:var(--l2-ink)}
+.st.serving{background:var(--l1-bg);color:var(--l1-ink)}
+.st.done{background:var(--l0-bg);color:var(--l0-ink)}
+.kind{padding:2px 8px;border-radius:6px;font-size:12px;border:1px solid var(--line)}
+.kind.immediate{background:var(--l3-bg);color:var(--l3-ink);border-color:transparent}
+.kind.cumulative{background:var(--l2-bg);color:var(--l2-ink);border-color:transparent}
+details{margin:6px 0}
+details summary{cursor:pointer;color:var(--accent);font-size:13px}
+details ul{margin:6px 0 0;padding-left:0;list-style:none;font-size:13px}
+details li{padding:3px 0;border-top:1px dashed var(--line)}
+.hc .act{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.hc .act input{flex:1;min-width:140px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
+.hc .act button,.resetBtn{padding:7px 12px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.hc .act button.alt{background:var(--card);color:var(--accent)}
+.empty{color:var(--sub);padding:8px 0}
+.lb{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.lb.l0{background:var(--l0-bg);color:var(--l0-ink)} .lb.l1{background:var(--l1-bg);color:var(--l1-ink)} .lb.l2{background:var(--l2-bg);color:var(--l2-ink)} .lb.l3{background:var(--l3-bg);color:var(--l3-ink)} .lb.l9{background:var(--l9-bg);color:var(--l9-ink)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--sub);font-weight:600;white-space:nowrap}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:130px 1fr 36px;gap:8px;align-items:center;font-size:13px}
+.bar .tr{background:var(--bg);border-radius:6px;height:16px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px}
+.bar .c{text-align:right;font-weight:700}
+.rule{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:10px 12px;font-size:13px}
+.rule p{margin:4px 0}
+.resetBtn.confirm{background:var(--l3-bg);color:var(--l3-ink);border-color:var(--l3-bg)}
+footer{max-width:1280px;margin:0 auto;padding:4px 16px 24px;font-size:12px;color:var(--sub)}
+</style>
+</head>
+<body data-mode="customer">
+<header class="top">
+  <h1>상담 이관 챗봇 목업</h1>
+  <nav class="modes" aria-label="화면 모드">
+    <button type="button" data-m="customer">고객 모드</button>
+    <button type="button" data-m="admin">관리자 모드</button>
+    <button type="button" data-m="both">나란히 보기</button>
+  </nav>
+</header>
+<main>
+  <section id="customerPane" aria-label="고객 화면">
+    <div class="panel phone">
+      <div class="phoneHead"><span>K쇼핑 상담 챗봇</span><button type="button" id="newBtn">새 대화</button></div>
+      <div class="chat" id="chat" role="log" aria-live="polite"></div>
+      <div class="chips" id="chips"></div>
+      <div class="demoRow"><span>시연 대본</span>
+        <button type="button" data-demo="immediate">즉시 이관</button>
+        <button type="button" data-demo="cumulative">누적 이관</button>
+        <button type="button" data-demo="none">이관 없음</button>
+      </div>
+      <div class="askRow" id="askRow" hidden>
+        <button type="button" id="yesBtn">네, 연결해 주세요</button>
+        <button type="button" id="noBtn" class="alt">아니요, 계속할게요</button>
+      </div>
+      <div class="notice" id="notice" hidden></div>
+      <form class="inp" id="form" autocomplete="off">
+        <input id="text" type="text" placeholder="메시지를 입력해 주세요" aria-label="메시지 입력" maxlength="300">
+        <button type="submit" id="sendBtn">보내기</button>
+      </form>
+      <div class="small">개인정보(전화번호·주소·이름)는 자동으로 가려져요.</div>
+    </div>
+  </section>
+
+  <section id="adminPane" aria-label="관리자 화면">
+    <div class="tiles" id="tiles"></div>
+    <div class="panel"><h2>이관 대기열</h2><div class="cards" id="queue"></div></div>
+    <div class="panel"><h2>판정 기록 <span style="font-weight:400;color:var(--sub);font-size:12px">(현재 대화)</span></h2><div class="tbl" id="judge"></div></div>
+    <div class="panel"><h2>라벨 분포</h2><div class="bars" id="dist"></div></div>
+    <div class="rule">
+      <p><b>이관 기준</b></p>
+      <p>즉시 이관: 책임자·상담원 요구, 신고·법적 조치, 이탈 위협, 욕설, 규정 밖 보상 요구(라벨 3)</p>
+      <p>누적 이관: 최근 고객 발화 3개 중 불만(2·3)이 2개 이상이면 먼저 '연결해 드릴까요?'라고 물어요</p>
+      <p>이 목업은 키워드 규칙으로 판정해요. 팀 모델 v2(기준선 0.7)와 Claude 판정은 원본 챗봇에 있어요.</p>
+    </div>
+    <div><button type="button" class="resetBtn" id="resetBtn">전체 초기화</button></div>
+  </section>
+</main>
+<footer>판정은 키워드 규칙 · 시험 문장은 모두 지어낸 문장 · 데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」 · 팀2</footer>
+
+<script>
+/*CORE-START*/
+var PII=[[/(?<!\d)\d{6}\s*-\s*[1-4]\d{6}(?!\d)/g,"[주민번호]"],[/(?<!\d)(?:\d{4}[\s-]?){3}\d{4}(?!\d)/g,"[카드번호]"],[/(?<!\d)01[016789][\s.-]?\d{3,4}[\s.-]?\d{4}(?!\d)/g,"[전화번호]"],[/(?<!\d)0\d{1,2}[\s.-]\d{3,4}[\s.-]\d{4}(?!\d)/g,"[전화번호]"],[/[\w.+-]+@[\w-]+\.[\w.-]+/g,"[이메일]"],[/(?<!\d)\d{9,}(?!\d)/g,"[번호]"]];
+var SURN="김이박최정강조윤장임한오서신권황안송류유홍전고문양손배백허남심노하곽성차주우구민진나지엄채원천방공현함변염여추";
+var NSTOP=["이번","이거","이게","이건","이제","이미","이상","오늘","오전","오후","정말","전화","주문","배송","하나","한번","조금","지금","장난","최근","최대","최소","고객","기사","상담","선생","사장","과장","부장","팀장","원장","회장","손님","주인","안녕","신청","신발","전부","정도","한참","남편","양말","우리","유통","구매","구입","반품","교환","취소","환불","적립","결제","주소","문의","확인","처리","접수","차례","백화","나중","이따","방금","하루","이틀","사흘"];
+var NAME1=new RegExp("((?:제\\s*)?(?:이름은|성함은|이름이|성함이|명의는|받는\\s*사람은)\\s*)(["+SURN+"][가-힣]{1,3}?)(?=\\s|이고|입니다|이에요|예요|이요|요|고요|$|[,.])","g");
+var NAME2=new RegExp("(^|[\\s,.])(["+SURN+"][가-힣]{2})(?=\\s*(?:고객님|고객|님|씨|이고요|이고|입니다|이에요|예요))","g");
+var ASTOP=["그대로","마음대로","정말로","진짜로","실제로","따로따로","새로","주로","서로","별로","바로","따로","억지로"];
+var ADDR1=/[가-힣]{2,}(?:특별시|광역시|특별자치시|특별자치도|시|도)\s+[가-힣]{1,}(?:시|군|구)(?:\s+[가-힣]{1,}구)?(?:\s+[가-힣0-9]{1,}(?:동|읍|면|로|길|가))?(?:\s*\d{1,5}(?:-\d{1,5})?(?:번지)?)?/g;
+var ADDR2=/([가-힣0-9]{2,}(?:로|길))\s?\d{1,5}(?:-\d{1,5})?(?:번길\s?\d{1,5})?/g;
+var ADDR3=/\d{1,4}\s?동\s?\d{1,4}\s?호/g;
+function okName(s){return NSTOP.every(function(w){return s.indexOf(w)!==0;});}
+function mask(t){var n=0; t=String(t||""); PII.forEach(function(p){t=t.replace(p[0],function(){n++; return p[1];});});
+  t=t.replace(ADDR1,function(){n++; return "[주소]";});
+  t=t.replace(ADDR2,function(m,w){if(ASTOP.indexOf(w)>=0) return m; n++; return "[주소]";});
+  t=t.replace(ADDR3,function(){n++; return "[동호수]";});
+  t=t.replace(NAME1,function(m,p,nm){if(!okName(nm)) return m; n++; return p+"[이름]";});
+  t=t.replace(NAME2,function(m,p,nm){if(!okName(nm)) return m; n++; return p+"[이름]";});
+  return {text:t,n:n};}
+
+var R3=[
+  [/(책임자|윗사람|상급자|상관|팀장|관리자|매니저|사장|대표)\s*(님)?\s*(나와|바꿔|연결|불러|좀|데려|통화)/,"책임자 요구"],
+  [/(사람|상담사|상담원|직원)\s*(이랑|하고|과|와|한테|에게)?\s*(연결|바꿔|통화|얘기|이야기)/,"사람 연결 요구"],
+  [/신고|소비자\s*(원|보호|센터)|공정위|공정거래|고소|고발|소송|변호사|법적|경찰|언론|기자|방송국|제보|인터넷에\s*(올|글)|리뷰.{0,6}(폭탄|테러)/,"신고·법적 조치 위협"],
+  [/(다시는|두\s*번\s*다시).{0,10}(안|않|이용|사|주문)|탈퇴|해지|끊(을|겠|어)|불매/,"이탈 위협"],
+  [/씨발|시발|ㅅㅂ|ㅆㅂ|개새|병신|ㅂㅅ|미친|꺼져|죽여|죽을래|좆|존나|지랄|엿\s*먹/,"욕설·강한 격앙"],
+  [/보상(금|해|하)|배상|위자료|정신적\s*(피해|고통)|손해\s*배상|돈\s*(으로|을)?\s*물어/,"규정 밖 요구(보상)"]
+];
+var R2=[/몇\s*번(이나|째)|(세|네|다섯)\s*번째|또\s*(이|그|안|못)|아직도|도대체|대체\s*왜|어이(가)?\s*없|황당|말이\s*(돼|되)|장난(해|하|치)|짜증|화가|화나|열(받|불)|답답|실망|최악|엉망|책임\s*(져|지|을)|준다더니|한다더니|해준다며|약속.{0,6}(안|어기|어겼)|기다렸는데|언제까지|일\s*처리.{0,4}(이|가)?\s*(왜|이따위|엉망)|이따위|무슨\s*(서비스|회사)|제대로\s*(하|좀)/];
+var R1=/안\s*(와|왔|오|옴)|아직|고장|불량|파손|깨(져|졌)|찢어|작동|켜지지|안\s*(켜|돼|되)|이상(해|하|한)|다른\s*(상품|게|색|사이즈)|잘못\s*(왔|온|배송)|오배송|누락|빠졌|환불|반품|교환|취소|하자|냄새|얼룩|흠집|늦(어|게|네)|안\s*맞|작아|커서|커요|문제/;
+function ruleJudge(text){
+  var t=String(text||"").trim();
+  if(!/[가-힣a-zA-Z0-9]/.test(t)||/^[ㄱ-ㅎㅏ-ㅣ\s.?!~]+$/.test(t)&&!/ㅅㅂ|ㅆㅂ|ㅂㅅ/.test(t)) return {label:9,reason:"의미를 읽을 수 있는 말이 없음",cue:"",trigger:""};
+  for(var i=0;i<R3.length;i++){var m=t.match(R3[i][0]); if(m) return {label:3,reason:R3[i][1],cue:m[0],trigger:R3[i][1]};}
+  for(i=0;i<R2.length;i++){m=t.match(R2[i]); if(m) return {label:2,reason:"반복 호소·지연 항의·불만 평가 표현",cue:m[0],trigger:""};}
+  m=t.match(R1); if(m) return {label:1,reason:"문제를 사실로 설명",cue:m[0],trigger:""};
+  return {label:0,reason:"문제 제기 없음",cue:"",trigger:""};
+}
+
+var ASK_MSG="불편을 드려 죄송합니다. 지금까지 말씀을 보니 상담사가 직접 도와드리는 게 좋을 것 같습니다. 상담사에게 연결해 드릴까요? (아니요라고 하시면 제가 계속 도와드릴게요.)";
+var HANDOFF_MSG={
+  consent:"네, 상담사에게 연결해 드릴게요. 지금까지 말씀하신 내용은 그대로 전달되니 다시 설명하지 않으셔도 됩니다.",
+  immediate:"불편을 드려 정말 죄송합니다. 이 건은 상담사가 직접 도와드리는 게 맞겠습니다. 지금 상담사에게 연결해 드릴게요. 앞의 대화 내용은 그대로 전달되니 다시 설명하지 않으셔도 됩니다.",
+  cumulative:"여러 번 불편을 겪게 해 드려 죄송합니다. 더 정확하게 도와드리기 위해 상담사에게 연결해 드릴게요. 지금까지 말씀하신 내용은 그대로 전달됩니다."
+};
+var LNAME={0:"정상·절차",1:"중립 문제 제기",2:"명시적 불만",3:"즉시 이관",9:"판단 불가"};
+
+function consentIntent(raw){
+  var s=String(raw||"").trim();
+  if(/(연결|상담사|상담원|사람|직원).{0,8}(안\s*해|말고|필요\s*없|싫|안\s*돼)/.test(s)) return "no";
+  if(/연결|상담사|상담원|사람(이랑|하고|과|한테)|직원/.test(s)) return "yes";
+  if(/^(아니|아뇨|괜찮|됐어요|됐습니다|필요\s*없|싫)|그냥\s*(알려|해\s*주|말해|챗봇)|계속\s*(해|도와|알려)/.test(s)) return "no";
+  if(/^(네|넵|예|응|어\s|좋아요|좋습니다|그래요|그렇게|부탁|해\s*주세요|해주세요|ㅇㅇ)/.test(s)) return "yes";
+  return "other";
+}
+
+function decide(conv,lab){
+  if(lab===3) return {kind:"immediate",why:"이번 발화가 3 (즉시 이관)"};
+  var w=conv.turns.slice(-3).map(function(t){return t.label;}), n=w.filter(function(x){return x===2||x===3;}).length;
+  if(conv.askedOnce) return (lab===2||lab===3)? {kind:"cumulative",why:(conv.declined?"앞서 연결을 사양했지만":"연결 여부를 물은 뒤")+" 불만이 다시 나옴 (이번 발화 "+lab+")"} : null;
+  if(n>=2) return {kind:"cumulative",why:"최근 고객 발화 "+w.length+"개 중 불만 "+n+"개"};
+  return null;
+}
+
+function botReply(raw,label){
+  raw=String(raw||"");
+  if(label===9) return "죄송합니다, 말씀을 이해하지 못했어요. 주문·배송·교환·반품 중 어떤 일로 문의하셨나요?";
+  var pre=label===2?"불편을 드려 죄송합니다. ":"";
+  if(/고장|불량|파손|안\s*켜|하자/.test(raw)) return pre+"상품에 문제가 있었군요. 불량 접수를 도와드릴게요. 상품 상태를 조금 더 알려 주시겠어요?";
+  if(/교환/.test(raw)) return pre+"교환은 주문 내역에서 신청하실 수 있어요. 원하시면 제가 교환 접수를 도와드릴게요.";
+  if(/반품|환불/.test(raw)) return pre+"반품은 주문 내역에서 신청하실 수 있어요. 원하시면 제가 반품 접수를 도와드릴게요.";
+  if(/취소/.test(raw)) return pre+"주문 취소는 주문 내역에서 하실 수 있어요. 이미 출고된 상품은 반품으로 진행돼요.";
+  if(/배송|택배|안\s*(와|왔|오)|출발|도착/.test(raw)) return pre+"배송 상황은 주문 내역의 배송 조회에서 확인하실 수 있어요. 지연이 계속되면 제가 확인 요청을 접수해 드릴게요.";
+  if(label===0&&/^\s*(네|감사|알겠|고마)/.test(raw)) return pre+"네, 더 도와드릴 일이 있으실까요?";
+  return pre+"네, 확인했습니다. 주문·배송·교환·반품 중 어떤 도움이 필요하신지 알려 주세요.";
+}
+
+function newConv(id,now){
+  return {id:id,startedAt:now,status:"bot",msgs:[{who:"bot",text:"안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?",at:now}],turns:[],handoff:null,ask:null,askedOnce:false,declined:false};
+}
+
+function step(conv,raw,now){
+  raw=String(raw==null?"":raw);
+  if(conv.status==="waiting"||conv.status==="done"||conv.status==="ended") return conv;
+  conv.msgs.push({who:"me",text:mask(raw).text,at:now});
+  if(conv.status==="serving") return conv;
+  if(conv.ask){
+    var ci=consentIntent(raw), ask=conv.ask;
+    conv.ask=null; conv.askedOnce=true;
+    if(ci==="yes"){
+      conv.handoff={kind:"cumulative",why:ask.why+" · 고객이 연결에 동의",at:now,consent:"동의"};
+      conv.status="waiting"; conv.msgs.push({who:"bot",text:HANDOFF_MSG.consent,at:now}); return conv;
+    }
+    if(ci==="no"){
+      conv.declined=true; conv.status="bot";
+      conv.msgs.push({who:"bot",text:"네, 제가 계속 도와드릴게요. 어떤 점을 도와드릴까요?",at:now}); return conv;
+    }
+    conv.status="bot";
+  }
+  var j=ruleJudge(raw);
+  conv.turns.push({n:conv.turns.length+1,text:mask(raw).text,label:j.label,reason:j.reason,cue:j.cue,at:now});
+  var d=decide(conv,j.label);
+  if(d&&d.kind==="immediate"){
+    conv.handoff={kind:"immediate",why:d.why,at:now,trigger:j.trigger};
+    conv.status="waiting"; conv.msgs.push({who:"bot",text:HANDOFF_MSG.immediate,at:now});
+  }else if(d&&!conv.askedOnce){
+    conv.ask={why:d.why}; conv.status="ask"; conv.msgs.push({who:"bot",text:ASK_MSG,at:now});
+  }else if(d){
+    conv.handoff={kind:"cumulative",why:d.why,at:now,consent:conv.declined?"사양 후 재불만":"확인 후 재불만"};
+    conv.status="waiting"; conv.msgs.push({who:"bot",text:HANDOFF_MSG.cumulative,at:now});
+  }else{
+    conv.msgs.push({who:"bot",text:botReply(raw,j.label),at:now});
+  }
+  return conv;
+}
+var Core={mask:mask,ruleJudge:ruleJudge,consentIntent:consentIntent,newConv:newConv,step:step,botReply:botReply};
+/*CORE-END*/
+
+/* ===== 화면 ===== */
+var KEY="handoffMockup.v1";
+var memStore=null;
+function $(id){return document.getElementById(id);}
+function el(tag,cls,text){var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e;}
+function newId(){return "c"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function fresh(){var c=Core.newConv(newId(),Date.now()); return {convs:[c],currentId:c.id};}
+function loadStore(){
+  var s=null;
+  try{var raw=localStorage.getItem(KEY); if(raw) s=JSON.parse(raw);}catch(e){s=null;}
+  if(!s||!Array.isArray(s.convs)) s=memStore||fresh();
+  if(!s.convs.some(function(c){return c.id===s.currentId;})){
+    if(s.convs.length) s.currentId=s.convs[s.convs.length-1].id; else s=fresh();
+  }
+  memStore=s; return s;
+}
+function saveStore(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){} memStore=store;}
+var store=loadStore();
+function cur(){return store.convs.filter(function(c){return c.id===store.currentId;})[0];}
+function act(fn){store=loadStore(); fn(); saveStore(); render();}
+function find(id){return store.convs.filter(function(c){return c.id===id;})[0];}
+function customerCount(c){return c.msgs.filter(function(m){return m.who==="me";}).length;}
+function hhmm(ms){var d=new Date(ms); return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2);}
+
+function startNew(){
+  var c=cur();
+  if(c&&(c.status==="bot"||c.status==="ask")&&customerCount(c)>=1) c.status="ended";
+  var n=Core.newConv(newId(),Date.now()); store.convs.push(n); store.currentId=n.id;
+}
+function send(text){
+  text=String(text||"").trim(); if(!text) return;
+  act(function(){Core.step(cur(),text,Date.now());});
+}
+
+/* 모드 */
+var MODES=["customer","admin","both"];
+function setMode(m){
+  if(MODES.indexOf(m)<0) m="customer";
+  if(location.hash!=="#"+m){try{location.hash="#"+m;}catch(e){}}
+  applyMode();
+}
+function applyMode(){
+  var h=(location.hash||"").replace("#",""), m=MODES.indexOf(h)>=0?h:(window.innerWidth>=900?"both":"customer");
+  document.body.setAttribute("data-mode",m);
+  Array.prototype.forEach.call(document.querySelectorAll(".modes button"),function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-m")===m));});
+}
+
+/* 고객 */
+var CHIPS=["주문한 게 일주일째 안 와요","교환하고 싶은데 어떻게 해요?","벌써 세 번째 문의인데 아직도 처리가 안 됐네요","됐고 책임자 바꿔요","소비자원에 신고할 거예요"];
+var DEMOS={
+  immediate:["주문한 블렌더가 전원이 안 켜져요","팀장님 바꿔 주세요"],
+  cumulative:["주문한 가방이 아직 안 왔어요","지난주에 보냈다면서 왜 아직도 안 오는 거예요","벌써 두 번째 문의하는 건데 정말 답답하네요","네"],
+  none:["어제 온다던 택배가 안 와서 짜증나네요","아 지금 조회해 보니 오늘 출발했다고 나오네요","네 그럼 내일까지 기다려 볼게요"]
+};
+var demoRun=0, demoTimers=[];
+function stopDemo(){demoRun++; demoTimers.forEach(clearTimeout); demoTimers=[];}
+function runDemo(key){
+  stopDemo(); var id=demoRun;
+  act(startNew);
+  DEMOS[key].forEach(function(line,i){
+    demoTimers.push(setTimeout(function(){if(id===demoRun) send(line);},900*(i+1)));
+  });
+}
+function renderCustomer(){
+  var c=cur(), chat=$("chat"); chat.textContent="";
+  c.msgs.forEach(function(m){
+    var b=el("div","b "+m.who);
+    if(m.who==="agent"){b.appendChild(el("span","who","상담사"));}
+    b.appendChild(document.createTextNode(m.text));
+    chat.appendChild(b);
+  });
+  chat.scrollTop=chat.scrollHeight;
+  var st=c.status, blocked=(st==="waiting"||st==="done"||st==="ended");
+  $("askRow").hidden=st!=="ask";
+  var nt=$("notice");
+  nt.hidden=!blocked;
+  nt.textContent=st==="waiting"?"상담사 연결 대기 중…":st==="done"?"상담이 종료되었습니다":st==="ended"?"종료된 대화예요. 새 대화를 시작해 주세요.":"";
+  $("text").disabled=blocked; $("sendBtn").disabled=blocked;
+}
+function initCustomer(){
+  var chips=$("chips");
+  CHIPS.forEach(function(t){var b=el("button",null,t); b.type="button"; b.addEventListener("click",function(){stopDemo(); send(t);}); chips.appendChild(b);});
+  $("form").addEventListener("submit",function(e){e.preventDefault(); var v=$("text").value; $("text").value=""; stopDemo(); send(v);});
+  $("yesBtn").addEventListener("click",function(){stopDemo(); send("네, 연결해 주세요");});
+  $("noBtn").addEventListener("click",function(){stopDemo(); send("아니요, 계속할게요");});
+  $("newBtn").addEventListener("click",function(){stopDemo(); act(startNew);});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-demo]"),function(b){b.addEventListener("click",function(){runDemo(b.getAttribute("data-demo"));});});
+}
+
+/* 관리자 */
+var drafts={}, openSet={};
+function labelBadge(l){return el("span","lb l"+l,l+" "+LNAME[l]);}
+function renderAdmin(){
+  var active=document.activeElement, keep=null;
+  if(active&&active.getAttribute&&active.getAttribute("data-draft")){keep={id:active.getAttribute("data-draft"),s:active.selectionStart};}
+  var real=store.convs.filter(function(c){return customerCount(c)>=1;});
+  var tiles=$("tiles"); tiles.textContent="";
+  [["전체 대화",real.length],
+   ["즉시 이관",real.filter(function(c){return c.handoff&&c.handoff.kind==="immediate";}).length],
+   ["누적 이관",real.filter(function(c){return c.handoff&&c.handoff.kind==="cumulative";}).length],
+   ["대기 중",real.filter(function(c){return c.status==="waiting";}).length],
+   ["봇이 끝낸 대화",real.filter(function(c){return c.status==="ended";}).length]
+  ].forEach(function(t){var d=el("div","tile"); d.appendChild(el("div","n",String(t[1]))); d.appendChild(el("div","t",t[0])); tiles.appendChild(d);});
+
+  var q=$("queue"); q.textContent="";
+  var ord={waiting:0,serving:1,done:2}, STL={waiting:"대기",serving:"응대 중",done:"완료"};
+  var hs=store.convs.filter(function(c){return c.handoff;}).sort(function(a,b){
+    var oa=ord[a.status]==null?3:ord[a.status], ob=ord[b.status]==null?3:ord[b.status];
+    return oa!==ob?oa-ob:b.handoff.at-a.handoff.at;});
+  if(!hs.length) q.appendChild(el("div","empty","아직 이관된 대화가 없어요. 고객 모드에서 대화를 시작해 보세요."));
+  hs.forEach(function(c){
+    var card=el("div","hc"), h=c.handoff, r1=el("div","row");
+    r1.appendChild(el("span","st "+c.status,STL[c.status]||c.status));
+    r1.appendChild(el("span","kind "+h.kind,h.kind==="immediate"?"즉시 이관":"누적 이관"));
+    r1.appendChild(el("span",null,hhmm(h.at)));
+    card.appendChild(r1);
+    var r2=el("div","row k"); var b=el("b",null,"이유 "); r2.appendChild(b);
+    r2.appendChild(document.createTextNode(h.why+(h.trigger?" · "+h.trigger:"")));
+    card.appendChild(r2);
+    var last=null; c.turns.forEach(function(t){if(t.label>=1&&t.label<=3) last=t;});
+    var r3=el("div","row k"); r3.appendChild(el("b",null,"고객 마지막 요청 ")); r3.appendChild(document.createTextNode(last?last.text:"-")); card.appendChild(r3);
+    var det=el("details"); det.appendChild(el("summary",null,"대화 전체"));
+    if(openSet[c.id]) det.open=true;
+    det.addEventListener("toggle",function(){openSet[c.id]=det.open;});
+    var ul=el("ul"), tmap={};
+    c.turns.forEach(function(t){tmap[t.at+"|"+t.text]=t;});
+    c.msgs.forEach(function(m){
+      var li=el("li"), nm=m.who==="me"?"고객":m.who==="bot"?"챗봇":m.who==="agent"?"상담사":"안내";
+      li.appendChild(el("b",null,nm+" "));
+      li.appendChild(document.createTextNode(m.text+" "));
+      if(m.who==="me"){var t=tmap[m.at+"|"+m.text]; if(t) li.appendChild(labelBadge(t.label));}
+      ul.appendChild(li);
+    });
+    det.appendChild(ul); card.appendChild(det);
+    var ac=el("div","act");
+    if(c.status==="waiting"){
+      var s=el("button",null,"상담 시작"); s.type="button";
+      s.addEventListener("click",function(){act(function(){var x=find(c.id); if(x&&x.status==="waiting"){x.status="serving"; x.msgs.push({who:"sys",text:"상담사가 연결되었습니다.",at:Date.now()});}});});
+      ac.appendChild(s);
+    }else if(c.status==="serving"){
+      var inp=el("input"); inp.type="text"; inp.placeholder="고객에게 보낼 답장"; inp.setAttribute("data-draft",c.id); inp.setAttribute("aria-label","답장 입력"); inp.value=drafts[c.id]||"";
+      inp.addEventListener("input",function(){drafts[c.id]=inp.value;});
+      var doSend=function(){var v=inp.value.trim(); if(!v) return; drafts[c.id]=""; act(function(){var x=find(c.id); if(x&&x.status==="serving") x.msgs.push({who:"agent",text:v,at:Date.now()});});};
+      inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault(); doSend();}});
+      var sb=el("button",null,"보내기"); sb.type="button"; sb.addEventListener("click",doSend);
+      var dn=el("button","alt","처리 완료"); dn.type="button";
+      dn.addEventListener("click",function(){act(function(){var x=find(c.id); if(x&&x.status==="serving"){x.status="done"; x.msgs.push({who:"sys",text:"상담이 종료되었습니다.",at:Date.now()});}});});
+      ac.appendChild(inp); ac.appendChild(sb); ac.appendChild(dn);
+    }
+    if(ac.childNodes.length) card.appendChild(ac);
+    q.appendChild(card);
+  });
+  if(keep){var ni=document.querySelector('input[data-draft="'+keep.id+'"]'); if(ni){ni.focus(); try{ni.setSelectionRange(keep.s,keep.s);}catch(e){}}}
+
+  var jt=$("judge"); jt.textContent="";
+  var c0=cur();
+  if(!c0.turns.length) jt.appendChild(el("div","empty","아직 판정한 발화가 없어요."));
+  else{
+    var tb=el("table"), th=el("tr");
+    ["턴","고객 말(가린 글)","라벨","판정 이유","잡힌 표현"].forEach(function(h){th.appendChild(el("th",null,h));});
+    tb.appendChild(th);
+    c0.turns.forEach(function(t){
+      var tr=el("tr"); tr.appendChild(el("td",null,String(t.n))); tr.appendChild(el("td",null,t.text));
+      var td=el("td"); td.appendChild(labelBadge(t.label)); tr.appendChild(td);
+      tr.appendChild(el("td",null,t.reason)); tr.appendChild(el("td",null,t.cue||"-")); tb.appendChild(tr);
+    });
+    jt.appendChild(tb);
+  }
+
+  var cnt={0:0,1:0,2:0,3:0,9:0}, mx=0;
+  store.convs.forEach(function(c){c.turns.forEach(function(t){if(cnt[t.label]!=null) cnt[t.label]++;});});
+  [0,1,2,3,9].forEach(function(k){if(cnt[k]>mx) mx=cnt[k];});
+  var dist=$("dist"); dist.textContent="";
+  [0,1,2,3,9].forEach(function(k){
+    var row=el("div","bar"); row.appendChild(labelBadge(k));
+    var tr=el("div","tr"), f=el("div","fill"); f.style.width=(mx?cnt[k]/mx*100:0)+"%"; f.style.background="var(--bar"+k+")"; tr.appendChild(f);
+    row.appendChild(tr); row.appendChild(el("div","c",String(cnt[k]))); dist.appendChild(row);
+  });
+}
+
+var resetTimer=null;
+function initAdmin(){
+  var rb=$("resetBtn");
+  rb.addEventListener("click",function(){
+    if(!rb.classList.contains("confirm")){
+      rb.classList.add("confirm"); rb.textContent="한 번 더 누르면 지워요";
+      resetTimer=setTimeout(function(){rb.classList.remove("confirm"); rb.textContent="전체 초기화";},4000);
+      return;
+    }
+    clearTimeout(resetTimer); rb.classList.remove("confirm"); rb.textContent="전체 초기화";
+    stopDemo(); drafts={}; openSet={};
+    store=fresh(); try{localStorage.removeItem(KEY);}catch(e){} saveStore(); render();
+  });
+}
+
+function render(){renderCustomer(); renderAdmin();}
+
+/* 시작 */
+Array.prototype.forEach.call(document.querySelectorAll(".modes button"),function(b){b.addEventListener("click",function(){setMode(b.getAttribute("data-m"));});});
+window.addEventListener("hashchange",applyMode);
+window.addEventListener("resize",function(){if(!location.hash) applyMode();});
+window.addEventListener("storage",function(e){if(e.key===null||e.key===KEY){store=loadStore(); render();}});
+initCustomer(); initAdmin(); applyMode();
+saveStore(); render();
+function getStore(){return store;}
+window.__mock={Core:Core,getStore:getStore,send:send,setMode:setMode};
+</script>
+</body>
+</html>
