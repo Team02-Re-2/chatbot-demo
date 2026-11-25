@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude로 판정해 보기</title>
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="icon" href="data:,">
+<style>
+:root{--paper:#F2F2F7;--card:#FFFFFF;--ink:#111111;--muted:#6C6C70;--line:#C6C6C8;--blue:#0A84FF;--blue-btn:#0071E3;--blue-link:#0066CC;--fill:#E5E5EA;--hair:rgba(0,0,0,.08);--sh:0 1px 2px rgba(0,0,0,.06)}
+@media (prefers-color-scheme:dark){:root{--paper:#000000;--card:#1C1C1E;--ink:#F2F2F7;--muted:#98989F;--line:#38383A;--blue-link:#4DA3FF;--fill:#2C2C2E;--hair:rgba(255,255,255,.1)}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px;background:var(--paper);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;letter-spacing:-.01em}
+main{width:100%;max-width:460px;background:var(--card);border:1px solid var(--hair);border-radius:18px;box-shadow:var(--sh);padding:28px 24px 24px}
+.logo{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:22px;margin:0 auto 12px}
+h1{font-size:22px;font-weight:700;margin:0 0 4px;text-align:center}
+.lead{margin:0 0 20px;text-align:center;color:var(--muted);font-size:13px}
+ol{margin:0 0 20px;padding:0;list-style:none}
+li{padding:12px 0;border-top:.5px solid var(--line)}
+li b{display:block;font-size:15px;font-weight:600}
+li span{color:var(--muted);font-size:13px}
+.btns{display:grid;gap:8px}
+.btn{display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none}
+.btn.main{background:var(--blue-btn);color:#fff}
+.btn.sub{background:var(--fill);color:var(--ink);font-weight:500}
+.btn[aria-disabled="true"]{background:var(--fill);color:var(--muted);cursor:default}
+.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.fine{margin:16px 0 0;color:var(--muted);font-size:12px}
+.back{display:block;margin-top:12px;text-align:center;color:var(--blue-link);font-size:15px;text-decoration:none;min-height:44px;line-height:44px}
+</style>
+</head>
+<body>
+<main>
+  <div class="logo" aria-hidden="true">K</div>
+  <h1>Claude로 판정해 보기</h1>
+  <p class="lead">고객 문장을 규칙과 Claude가 각각 판정해, 결과를 나란히 볼 수 있어요.</p>
+  <ol>
+    <li><b>Claude에 로그인해요</b><span>claude.ai 계정이 있으면 누구나 쓸 수 있어요. 사용량은 본인 계정에서 나가요.</span></li>
+    <li><b>허용 창에서 허용을 눌러요</b><span>처음 한 번 Claude 사용을 묻는 창이 떠요. 안 보이면 새로고침해 주세요.</span></li>
+    <li><b>문장을 보내고 모니터를 봐요</b><span>오른쪽 판정 모니터에 규칙 판정과 Claude 판정이 한 줄씩 쌓여요.</span></li>
+  </ol>
+  <div class="btns">
+    <a class="btn main" data-link="claude" data-wait="준비 중" href="#">Claude에서 열기</a>
+    <a class="btn sub" href="../chatbot1/">규칙 모드로 체험</a>
+  </div>
+  <p class="fine">열리지 않으면 아직 공개 전이거나 로그인이 필요해요. 그때는 규칙 모드로 체험해 주세요. 입력한 문장은 Claude로 전송되니 실제 개인정보는 넣지 마세요. 이 창의 결과는 체험용이며 발표 수치에 들어가지 않아요.</p>
+  <a class="back" href="../">첫 화면으로</a>
+</main>
+<script src="../assets/links.js"></script>
+</body>
+</html>

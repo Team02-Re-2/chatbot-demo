@@ -71,7 +71,7 @@
   <h2>더 보기</h2>
   <ul class="links">
     <li><a href="../map/">프로젝트 지도</a><span>데이터에서 챗봇까지 한눈에 봐요</span></li>
-    <li><a href="../slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
+    <li><a data-link="slides" href="../slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
     <li><a href="../replay/">녹화된 Claude 판정</a><span>Claude가 40문장에 낸 판정을 3회분 그대로 봐요</span></li>
     <li><a href="../benchmark/">결과표</a><span>엔진 4개를 같은 시험지로 잰 표예요</span></li>
     <li><a href="../verify/">검증</a><span>이 브라우저에서 점수를 다시 재 봐요</span></li>
@@ -86,6 +86,7 @@
 </footer>
 
 <script src="../assets/nums.js"></script>
+<script src="../assets/links.js"></script>
 <script>
 Team2Nums.ready.then(function(m){
   function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}

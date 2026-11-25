@@ -16,7 +16,7 @@
     <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small><span data-tpl>전체 {{total_dialogs:vu}}</span><span class="wide" data-tpl> 기준선 {{th_a}}에서 {{th_c}}로</span></small></div>
     <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small data-tpl>표본 {{sample_dialogs:vu}} 가중 추정</small></div>
     <nav class="top-links" aria-label="바로 가기">
-      <a href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a>
+      <a data-link="slides" href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a><a href="claude/" target="_blank" rel="noopener">클로드</a>
     </nav>
   </div>
   <details class="more"><summary>더 보기</summary>
@@ -25,7 +25,7 @@
         <div class="nchip"><b><span>기준선 </span><span data-n="th_c"></span></b><small>팀 결정</small></div>
         <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small data-tpl>전체 {{total_dialogs:vu}}</small></div>
         <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small data-tpl>표본 {{sample_dialogs:vu}} 가중 추정</small></div>
-        <a href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a>
+        <a data-link="slides" href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a><a href="claude/" target="_blank" rel="noopener">클로드</a>
       </div>
       <a href="overview/">숫자 전체</a><a href="map/">지도</a><a href="stage-demo/">단계 추천</a><a href="replay/">녹화 Claude</a><a href="chatbot2/">원본 화면</a>
     </div>
@@ -48,6 +48,7 @@
   </section>
 </main>
 <script src="assets/nums.js"></script>
+<script src="assets/links.js"></script>
 <script>
 /* 껍데기만 합니다. 기록은 customer-chat이 남기고, 여기서는 읽기만 합니다. */
 (function(){
