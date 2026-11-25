@@ -281,7 +281,7 @@ body.split-page{--paper:#F2F2F7;--card:#FFFFFF;--ink:#111111;--muted:#6C6C70;--l
 .more-pan .only-narrow{display:none}
 #badge{color:var(--red-ink);font-weight:600}
 .split-tabs{display:none}
-.split{flex:1 1 0;min-height:0;display:grid;grid-template-columns:55fr 45fr;gap:16px;padding:16px;background:var(--paper)}
+.split{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(0,min(690px,56%)) minmax(0,1fr);gap:16px;padding:16px;background:var(--paper)}
 .pane{background:var(--card);border:1px solid var(--hair);border-radius:18px;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
 .pane-h{display:flex;align-items:center;gap:10px;min-height:52px;padding:4px 8px 4px 16px;background:var(--card);border-bottom:.5px solid var(--line)}
 .pane-h .pt{flex:1;min-width:0;line-height:1.25}

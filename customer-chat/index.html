@@ -25,7 +25,16 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
 .dchip b.t-red{color:var(--red)}.dchip b.t-blue{color:var(--blue-l)}
 .dchip.next{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
 /* 낮은 화면(노트북 등)에서는 시연 문장 띠를 한 줄로 두고 옆으로 넘겨 대화 영역을 지킨다 */
-@media (max-height:820px){.demo{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.demo::-webkit-scrollbar{display:none}.demo .dgrp{display:inline-flex;gap:8px;flex:none}.demo .dchip,.demo .dl{flex:none;white-space:nowrap}}
+@media (max-width:539px) and (max-height:820px){.demo{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.demo::-webkit-scrollbar{display:none}.demo .dgrp{display:inline-flex;gap:8px;flex:none}.demo .dchip,.demo .dl{flex:none;white-space:nowrap}}
+/* 넓은 화면(540px 이상): 시연 문장을 채팅 창 왼쪽에 세로 목록으로 둔다 */
+@media (min-width:540px){
+  body.cc.demo-on{flex-direction:row;align-items:stretch}
+  body.cc.demo-on .demo{width:clamp(180px,32%,230px);flex:none;flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;gap:8px;padding:12px 0 12px 12px;overflow-y:auto}
+  body.cc.demo-on .demo .dl{padding:2px 4px}
+  body.cc.demo-on .dgrp{display:flex;flex-direction:column;gap:8px}
+  body.cc.demo-on .dchip{flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 12px;line-height:1.35;width:100%}
+  body.cc.demo-on .card{flex:1 1 0;width:auto;min-width:0;margin:12px 12px 12px 12px;max-width:440px}
+}
 .dgrp{display:inline-flex;flex-wrap:wrap;gap:6px}
 .card{flex:1 1 0;min-height:0;width:100%;max-width:440px;margin:0 auto;padding:0;display:flex;flex-direction:column;background:var(--logbg);border:0;border-top:0;position:relative;overflow:hidden}
 .card:first-of-type{margin-top:0}
@@ -225,7 +234,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     if(sendToEngine(text)&&idx!=null){ seq=idx+1; markNext(); }
   }
   if(demo){
-    var bx=$("demo"); bx.hidden=false; bx.append(el("span","dl","시연 문장"));
+    var bx=$("demo"); bx.hidden=false; document.body.classList.add("demo-on"); bx.append(el("span","dl","시연 문장"));
     function chip(tag,text,fresh,idx,parent){
       var c=el("button","dchip"); c.type="button"; c.append(el("b",tag.indexOf("먼저")===0?"t-blue":"t-red",tag),document.createTextNode(text));
       c.onclick=function(){ demoSend(text,fresh,idx); }; parent.append(c); return c;
