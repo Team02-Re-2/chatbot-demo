@@ -11,6 +11,7 @@
 - `verify/`: 지어낸 40문장을 이 브라우저의 v2로 다시 채점해 파이썬 채점값과 맞춰 봅니다 (`bench40.json`).
 - `map/`: 프로젝트 지도(mermaid) 8장. `handoff-map.html`은 대화형 지도입니다.
 - `slides/`: 발표 슬라이드와 `insert/` 추가 그림 5장.
+- `replay/`: 녹화된 Claude 판정. 지어낸 40문장에 Claude가 3회 낸 판정을 `claude40.json`으로 보여 줍니다(실시간 아님).
 - `benchmark/`: 판정 엔진 4개 벤치마크 결과표.
 - `stage-demo/`: 단계 인지형 답변 추천 시연판 (변경 없음).
 - `assets/`: `numbers.json`(화면에 나오는 모든 숫자의 한 곳), `nums.js`, `bridge.js`, `site.css`.

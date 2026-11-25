@@ -26,14 +26,6 @@
   <h2>직접 열어 보세요</h2>
   <p class="prose note">고객 말이 챗봇을 거쳐 상담사에게 넘어가는 과정을 세 화면으로 볼 수 있어요.</p>
   <div class="tickets">
-    <article class="ticket t-l1">
-      <div class="tk-head">고객 → 챗봇 1</div>
-      <h3>고객용 챗봇</h3>
-      <p class="tk-body">매뉴얼 근거 카드(<span data-n="cards_n"></span>)로 답하고 접수까지 해 봐요.</p>
-      <div class="cut-line"></div>
-      <p class="tk-live"><b>여기서 실제로 도는 판정</b>규칙 모드예요. Claude 연동은 claude.ai 안에서만 돼요.</p>
-      <a class="btn" href="chatbot1/">챗봇 1 열기</a>
-    </article>
     <article class="ticket t-l3">
       <div class="tk-head">챗봇 2 → 상담사</div>
       <h3>팀 모델 v2 이관 챗봇</h3>
@@ -49,6 +41,14 @@
       <div class="cut-line"></div>
       <p class="tk-live"><b>여기서 실제로 도는 판정</b>이 브라우저에서 한 시연 기록만 보여요. 서버에는 저장하지 않아요.</p>
       <a class="btn" href="admin/">관리자 화면 열기</a>
+    </article>
+    <article class="ticket t-l1">
+      <div class="tk-head">고객 → 챗봇 1</div>
+      <h3>고객용 챗봇</h3>
+      <p class="tk-body">매뉴얼 근거 카드(<span data-n="cards_n"></span>)로 답하고 접수까지 해 봐요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b>규칙 모드예요. Claude 연동은 claude.ai 안에서만 돼요.</p>
+      <a class="btn" href="chatbot1/">챗봇 1 열기</a>
     </article>
   </div>
 </section>
@@ -71,6 +71,7 @@
   <ul class="links">
     <li><a href="map/">프로젝트 지도</a><span>데이터에서 챗봇까지 한눈에 봐요</span></li>
     <li><a href="slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
+    <li><a href="replay/">녹화된 Claude 판정</a><span>Claude가 40문장에 낸 판정을 3회분 그대로 봐요</span></li>
     <li><a href="benchmark/">결과표</a><span>엔진 4개를 같은 시험지로 잰 표예요</span></li>
     <li><a href="verify/">검증</a><span>이 브라우저에서 점수를 다시 재 봐요</span></li>
     <li><a href="stage-demo/">단계 인지형 추천</a><span>상담 단계에 맞춰 답변을 추천해요</span></li>
@@ -109,9 +110,9 @@ Team2Nums.ready.then(function(m){
       row.append(el("dt",null,r.label),dd); dl.append(row); });
     g.append(dl); box.append(g);
   });
-  var E=[["rule","규칙","live","챗봇 2 로딩 중"],["v2","팀 모델 v2 단독","",""],["v2rule","팀 모델 v2 + 규칙","live","챗봇 2 준비 후"],["claude","Claude","gray","claude.ai 안에서만"]];
+  var E=[["rule","규칙","live","챗봇 2 로딩 중"],["v2","팀 모델 v2 단독","",""],["v2rule","팀 모델 v2 + 규칙","live","챗봇 2 준비 후"],["claude","Claude","gray","녹화본 보기"]];
   var tr=el("tr"); tr.append(el("th",null,"항목"));
-  E.forEach(function(e){ var th=el("th",e[2],e[1]); if(e[3]) th.append(el("div","note",e[3])); tr.append(th); });
+  E.forEach(function(e){ var th=el("th",e[2],e[1]); if(e[3]){ var nd=el("div","note"); if(e[0]==="claude"){ var a=el("a",null,e[3]); a.href="replay/"; nd.append(a); } else nd.textContent=e[3]; th.append(nd); } tr.append(th); });
   document.querySelector("#engtbl thead").append(tr);
   document.getElementById("engtag").textContent=m.eng_agree_rule.condition;
   ["eng_agree_","eng_imm_","eng_over_"].forEach(function(p){

@@ -477,5 +477,22 @@
   "unit": "MB",
   "condition": "챗봇 2 시연",
   "source": "chatbot2/app/index.html"
+ },
+ {
+  "key": "claude_runs",
+  "label": "Claude 회차별 3분류 일치",
+  "value": "37·38·39",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "claude_unstable",
+  "label": "Claude 회차마다 라벨이 달랐던 문장",
+  "value": "4",
+  "unit": "문장",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표",
+  "detail": "#14, #16, #32, #38"
  }
 ]
