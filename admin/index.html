@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>관리자 · 상담 관리</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -50,7 +51,7 @@
     for(i=t.length-1;i>=0;i--) if(t[i]&&t[i].text) return String(t[i].text);
     return "";
   }
-  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"챗봇 응대 중"); }
+  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"응대 중"); }
   if(window.top===window) document.getElementById("sb").hidden=false;
   Team2Nums.ready.then(function(m){ var v=m&&m.th_c?parseFloat(m.th_c.value):NaN; TH=isNaN(v)?null:v; render(true); }).catch(function(){});
 
@@ -73,10 +74,10 @@
     ["대기","상담중","완료"].forEach(function(k){ var sp=el("span",null,k); sp.append(el("b",null,String(cnt[k]))); qs.append(sp); });
     /* 지우기 (2단계) */
     var c=document.getElementById("clr"); c.textContent="";
-    if(!asking){ var b=el("button","btn sec","기록 지우기"); b.type="button"; b.onclick=function(){asking=true; render(true);}; c.append(b); }
+    if(!asking){ var b=el("button","btn txt danger","기록 지우기"); b.type="button"; b.onclick=function(){asking=true; render(true);}; c.append(b); }
     else { c.append(el("span","note","모두 지울까요? "));
-      var y=el("button","btn","네, 지웁니다"); y.type="button"; y.onclick=function(){ try{localStorage.removeItem(KEY); localStorage.removeItem(AKEY);}catch(e){} asking=false; sel=null; picked=false; follow=null; sigs={}; seenH={}; prevKey=""; prevLen=-1; render(true); };
-      var n=el("button","btn sec","취소"); n.type="button"; n.onclick=function(){asking=false; render(true);}; c.append(y,n); }
+      var y=el("button","btn txt danger","네, 지웁니다"); y.type="button"; y.onclick=function(){ try{localStorage.removeItem(KEY); localStorage.removeItem(AKEY);}catch(e){} asking=false; sel=null; picked=false; follow=null; sigs={}; seenH={}; prevKey=""; prevLen=-1; render(true); };
+      var n=el("button","btn txt","취소"); n.type="button"; n.onclick=function(){asking=false; render(true);}; c.append(y,n); }
     /* 지금 보여 줄 상담 */
     var curId=(picked&&sel&&ids[sel])?sel:follow;
     cur=null; ss.forEach(function(s){ if(s.id===curId) cur=s; });
@@ -90,7 +91,7 @@
       if(h) seenH[s.id]=1;
       var row=el("button","qrow"+(h?" hand":"")+(st==="완료"?" k-done":"")+(isNew?" new":"")+((cur&&cur.id===s.id)?" sel":""));
       row.type="button"; row.onclick=function(){sel=s.id; picked=true; render(true);};
-      var l1=el("div","l1"); l1.append(el("b",null,stateText(s)));
+      var l1=el("div","l1"); l1.append(el("b","spill"+((h&&KCLS[h.kind])?" "+KCLS[h.kind]:""),stateText(s)));
       if(h) l1.append(el("span","stt "+SCLS[st],st));
       l1.append(el("span","tm",hhmm(h?h.at:s.startedAt)));
       row.append(l1,el("div","l2",lastSay(s)||"—"));
@@ -109,11 +110,12 @@
     var tabNow=hasConv?tab:"log";
     /* 머리 */
     var hd=el("div","dhead");
+    hd.append(el("h2","dtitle","상담 상세"));
     hd.append(el("span","who","고객용 챗봇"),el("span","note","시작 "+hhmm(cur.startedAt)));
-    hd.append(el("b",null,stateText(cur)));
+    hd.append(el("b","spill"+((cur.handoff&&KCLS[cur.handoff.kind])?" "+KCLS[cur.handoff.kind]:""),stateText(cur)));
     if(H) hd.append(el("span","stt "+SCLS[st2],st2));
     if(H){
-      var ac=el("div","acts"), b1=el("button","btn sec","상담 시작"); b1.type="button"; b1.disabled=st2!=="대기";
+      var ac=el("div","acts"), b1=el("button","btn","상담 시작"); b1.type="button"; b1.disabled=st2!=="대기";
       b1.onclick=function(){var a=loadA(); a.status[cur.id]="상담중"; saveA(a); render(true);};
       var b2=el("button","btn sec","처리 완료"); b2.type="button"; b2.disabled=st2==="완료";
       b2.onclick=function(){var a=loadA(); a.status[cur.id]="완료"; saveA(a); render(true);};
@@ -126,9 +128,13 @@
       var box=el("div","ccard"), lt=null;
       turns.forEach(function(t){ if(t.scores) lt=t; });
       var he=H.engine||(turns.length?turns[turns.length-1].engine:"")||"";
-      var tg=el("div","tags"); tg.append(el("span","tag",H.kind+" 이관"),el("span","tag","엔진 "+(ENG[he]||he)));
+      box.append(el("div","ctitle","인계 정보"));
+      var tg=el("div","tags"); tg.append(el("span","tag"+(KCLS[H.kind]?" "+KCLS[H.kind]:""),H.kind+" 이관"),el("span","tag","엔진 "+(ENG[he]||he)));
       box.append(tg,el("h3",null,H.why||""));
-      var dl=el("dl"); Object.keys(H.fields||{}).forEach(function(k){ dl.append(el("dt",null,k),el("dd",null,two(H.fields[k]))); }); box.append(dl);
+      var dl=el("dl"); Object.keys(H.fields||{}).forEach(function(k){
+        /* 점수는 bridge가 3자리로 줄여 저장하므로 글자를 다시 줄이지 않고, 막대와 같은 원래 점수로 한 번만 둘째 자리로 줄인다 */
+        var val=(k==="v2 점수"&&lt&&lt.scores)?("불만 "+Number(lt.scores.complaint).toFixed(2)+" 즉시 "+Number(lt.scores.immediate).toFixed(2)):two(H.fields[k]);
+        dl.append(el("dt",null,k),el("dd",null,val)); }); box.append(dl);
       if(lt&&lt.scores){
         [["불만",lt.scores.complaint],["즉시",lt.scores.immediate]].forEach(function(p){
           var r=el("div","sbar"), v=Math.max(0,Math.min(1,Number(p[1])||0)), trk=el("div","trk"), i=el("i");
