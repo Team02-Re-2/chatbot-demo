@@ -3,176 +3,128 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>팀2 챗봇 진행 현황</title>
-<style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#1c2330;--sub:#5b6676;--line:#dfe3ea;--accent:#1f5fbf;--ok:#17734a;--warn:#a25b00;--bad:#b3261e;--chip:#eaf0fb}
-@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1b2029;--ink:#e8ecf2;--sub:#a3adbb;--line:#2e3542;--accent:#7fb0ff;--ok:#5fd09a;--warn:#f0b35a;--bad:#ff8a80;--chip:#232c3c}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
-header{padding:28px 16px 12px;max-width:920px;margin:0 auto}
-h1{font-size:26px;margin:0 0 6px}
-.meta{color:var(--sub);font-size:14px}
-nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:2}
-nav div{max-width:920px;margin:0 auto;padding:10px 16px;display:flex;gap:8px;overflow-x:auto}
-nav a{flex:none;padding:6px 12px;border-radius:999px;background:var(--chip);color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
-main{max-width:920px;margin:0 auto;padding:8px 16px 60px}
-section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0;scroll-margin-top:60px}
-h2{font-size:20px;margin:0 0 10px}
-h3{font-size:16px;margin:18px 0 6px}
-p{margin:8px 0}
-ul{margin:6px 0;padding-left:20px}
-li{margin:4px 0}
-.tw{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
-th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
-th{color:var(--sub);font-weight:600;white-space:nowrap}
-.tag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:13px;font-weight:700;white-space:nowrap}
-.ok{color:var(--ok);border:1px solid var(--ok)}
-.warn{color:var(--warn);border:1px solid var(--warn)}
-.bad{color:var(--bad);border:1px solid var(--bad)}
-.btn{display:inline-block;margin:6px 8px 0 0;padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--card);text-decoration:none;font-weight:700}
-.note{color:var(--sub);font-size:14px}
-a{color:var(--accent)}
-code{background:var(--chip);padding:1px 5px;border-radius:5px;font-size:.92em}
-footer{max-width:920px;margin:0 auto;padding:0 16px 40px;color:var(--sub);font-size:13px}
-</style>
+<title>챗봇이 버틸 때와 사람에게 넘길 때 · 팀2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<header>
-  <h1>팀2 챗봇 진행 현황</h1>
-  <div class="meta">쇼핑 상담 챗봇: 사람이 꼭 필요한 순간만 상담사에게 넘기기 · 2026-11-24 기준</div>
+<header class="wrap" style="padding-top:32px">
+  <h1 class="prose">챗봇이 버틸 때와 사람에게 넘길 때</h1>
+  <p class="prose" data-tpl style="margin-top:12px">쇼핑몰 상담 {{total_dialogs:vu}}로 상담사 이관 기준을 정한 팀2 프로젝트예요.</p>
+  <div class="ladder" role="img" aria-label="라벨 사다리: 0 정상, 1 문제 제기, 2 불만, 3 즉시 이관. 기준선은 2와 3 사이">
+    <div class="rung r0"><b>0</b><span>정상</span></div>
+    <div class="rung r1"><b>1</b><span>문제 제기</span></div>
+    <div class="rung r2"><b>2</b><span>불만</span></div>
+    <div class="rung r3"><b>3</b><span>즉시 이관</span></div>
+    <span class="cut">기준선 <span data-n="th_c"></span></span>
+  </div>
 </header>
-<nav><div>
-  <a href="#mockup">이관 목업</a><a href="#sum">1 한눈에</a><a href="#bot1">2 고객용 챗봇</a><a href="#bot2">3 팀 모델 챗봇</a><a href="#stage">4 단계 인지형 추천</a><a href="#merge">5 합치는 방법</a><a href="#deploy">6 배포</a><a href="#todo">7 정할 것</a><a href="#files">8 문서 위치</a>
-</div></nav>
-<main>
 
-<section id="mockup">
-  <h2>상담 이관 챗봇 목업 <span class="tag ok">11-25 추가</span></h2>
-  <p>이관 흐름만 남겨 단순하게 만든 화면입니다. 고객 화면에서 불만이 나오면 관리자 화면 대기열에 인계 카드가 도착합니다.</p>
-  <a class="btn" href="handoff/#both">나란히 보기</a>
-  <a class="btn" href="handoff/#customer">고객 모드</a>
-  <a class="btn" href="handoff/#admin">관리자 모드</a>
-  <p class="note">키워드 규칙으로 판정합니다. 팀 모델 v2와 Claude 판정은 들어 있지 않습니다. 대화 내용은 여는 사람의 브라우저에만 저장됩니다.</p>
+<main class="wrap">
+
+<section class="flow" id="demo">
+  <h2>직접 열어 보세요</h2>
+  <p class="prose note">고객 말이 챗봇을 거쳐 상담사에게 넘어가는 과정을 세 화면으로 볼 수 있어요.</p>
+  <div class="tickets">
+    <article class="ticket t-l1">
+      <div class="tk-head">고객 → 챗봇 1</div>
+      <h3>고객용 챗봇</h3>
+      <p class="tk-body">매뉴얼 근거 카드(<span data-n="cards_n"></span>)로 답하고 접수까지 해 봐요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b>규칙 모드예요. Claude 연동은 claude.ai 안에서만 돼요.</p>
+      <a class="btn" href="chatbot1/">챗봇 1 열기</a>
+    </article>
+    <article class="ticket t-l3">
+      <div class="tk-head">챗봇 2 → 상담사</div>
+      <h3>팀 모델 v2 이관 챗봇</h3>
+      <p class="tk-body">고객 말마다 불만·즉시 이관 점수를 내고 넘길지 정해요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b><span data-tpl>모델 {{model_mb:vu}}를 받는 동안은 규칙만, 받은 뒤에는 팀 모델 v2와 규칙 안전장치예요. 휴대폰은 챗봇 1을 권해요.</span></p>
+      <a class="btn" href="chatbot2/">챗봇 2 열기</a>
+    </article>
+    <article class="ticket">
+      <div class="tk-head">챗봇 → 관리자 화면</div>
+      <h3>관리자 화면</h3>
+      <p class="tk-body">넘어온 상담이 인계 카드로 도착해요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b>이 브라우저에서 한 시연 기록만 보여요. 서버에는 저장하지 않아요.</p>
+      <a class="btn" href="admin/">관리자 화면 열기</a>
+    </article>
+  </div>
 </section>
 
-<section id="sum">
-  <h2>1. 한눈에 보기</h2>
-  <p>11월 24일 새벽부터 오전까지 챗봇 두 개와 실험 화면 하나를 실제로 열어 대화해 보고, 고칠 것은 고치고, 합치는 방법을 정리했습니다.</p>
-  <div class="tw"><table>
-    <tr><th>한 일</th><th>결과</th><th>상태</th></tr>
-    <tr><td>고객용 챗봇을 브라우저에서 대화 검증</td><td>이관 기준은 지킴. 잘못된 답 2건을 찾아 고침</td><td><span class="tag ok">반영 완료</span></td></tr>
-    <tr><td>팀 모델 v2 챗봇 확인</td><td>모델이 화면에서 실제로 판정함. 약한 불만 문장은 놓침</td><td><span class="tag warn">제안 전달</span></td></tr>
-    <tr><td>단계 인지형 추천 시연판</td><td>결함 4건을 고치고 시연 순서를 적음</td><td><span class="tag ok">시연 가능</span></td></tr>
-    <tr><td>두 챗봇을 합치는 설계안</td><td>판정은 팀 모델 v2, 답변과 접수는 고객용 챗봇</td><td><span class="tag warn">수요일 결정</span></td></tr>
-    <tr><td>배포 가능성 확인</td><td>공개 저장소를 따로 두면 링크 하나로 열림</td><td><span class="tag ok">이 페이지가 그 방식</span></td></tr>
-  </table></div>
+<section class="flow" id="numbers">
+  <h2>발표 숫자</h2>
+  <p class="prose note">숫자마다 잰 조건이 달라요. 조건이 다른 숫자는 섞어 읽지 마세요.</p>
+  <div id="sum"></div>
 </section>
 
-<section id="bot1">
-  <h2>2. 고객용 챗봇 (검증하고 고친 것)</h2>
-  <p>고객이 주문을 고르고, 교환·반품을 접수하고, 필요하면 상담사에게 넘어가는 챗봇입니다. 파일 하나(0.6MB)로 되어 있습니다.</p>
-  <h3>확인한 것</h3>
-  <ul>
-    <li>대화 6가지를 규칙 모드와 Claude 연결 모드에서 각각 해 봤습니다.</li>
-    <li>"책임자 바꿔 주세요"는 바로 상담사에게 넘어가고 인계 카드가 나옵니다.</li>
-    <li>불만이 두 번 쌓이면 넘어갑니다. 교환 접수는 접수번호 발급과 진행 조회까지 됩니다.</li>
-    <li>지어낸 숫자는 없었습니다.</li>
-  </ul>
-  <h3>찾아서 고친 것</h3>
-  <div class="tw"><table>
-    <tr><th>문제</th><th>고친 뒤</th></tr>
-    <tr><td>"환불은 며칠 걸려요?"에 배송 기간(3~5일)을 답함</td><td>결제수단을 알면 그에 맞는 안내, 모르면 숫자 없이 결제수단을 되물음</td></tr>
-    <tr><td>이미 배송완료인 주문을 고르면 접수 카드로 넘어감</td><td>"이미 배송완료" 안내가 나옴</td></tr>
-  </table></div>
-  <p class="note">자동 평가 4종을 다시 돌려 통과를 확인하고 저장소에 합쳤습니다. 아직 못 본 것: Gemini 연결 모드, 낮은 중요도 문제 6건.</p>
+<section class="flow" id="engines">
+  <h2>판정 엔진 4개 비교</h2>
+  <p class="note"><span class="tag" id="engtag"></span></p>
+  <div class="tw"><table id="engtbl"><thead></thead><tbody></tbody></table></div>
+  <p class="prose s">이 사이트에서 직접 돌려 볼 수 있는 것: 규칙(챗봇 2 로딩 중), v2+규칙(챗봇 2 준비 후). 칸 바탕이 칠해진 곳이에요.</p>
 </section>
 
-<section id="bot2">
-  <h2>3. 팀 모델 v2 챗봇 (팀원 제작, 확인만 함)</h2>
-  <p>우리가 만든 팀 모델 v2(RoBERTa)가 페이지 안에서 직접 돌아가며 고객 말마다 불만 점수와 즉시 이관 점수를 냅니다. 기준선은 0.7입니다. 이 챗봇은 고치지 않았고, 본 것을 제안으로 정리했습니다.</p>
-  <div class="tw"><table>
-    <tr><th>시험</th><th>결과</th><th>판단</th></tr>
-    <tr><td>모델 로딩</td><td>성공. 약 5분 걸림(안내는 1~3분)</td><td><span class="tag warn">미리 열어 두기</span></td></tr>
-    <tr><td>"책임자 바꿔 주세요", "상담원 연결해 주세요"</td><td>바로 연결되고 인계 카드가 나옴</td><td><span class="tag ok">정상</span></td></tr>
-    <tr><td>"배송이 너무 늦어서 답답하네요"</td><td>불만 점수 0.20. 기준선 0.7에 못 미침</td><td><span class="tag bad">놓침</span></td></tr>
-    <tr><td>"그래도 짜증나요 계속 늦어요"</td><td>불만 점수 0.65. 연결 질문이 뜨지 않음</td><td><span class="tag bad">놓침</span></td></tr>
-    <tr><td>강한 불만 두 번 → "아니요" → 다시 불만</td><td>먼저 묻고, 사양한 뒤 다시 불만이 나오면 바로 연결</td><td><span class="tag ok">정상</span></td></tr>
-    <tr><td>중간 세기 불만</td><td>즉시 이관 점수 0.74~0.83으로 묻지 않고 연결되는 경우가 있음</td><td><span class="tag warn">기준 논의</span></td></tr>
-  </table></div>
-  <p class="note">한 PC에서 한 번 확인한 결과입니다. Claude 판정·답변과 접수 흐름은 보지 못했습니다.</p>
-</section>
-
-<section id="stage">
-  <h2>4. 단계 인지형 답변 추천 (시연판)</h2>
-  <p>상담사가 고객에게 보낼 답변을 상담 단계에 맞춰 추천하는 화면입니다. 본인확인 전에는 주문 정보를 말하지 않고, 조회한 정보와 어긋나는 문장은 보내기 전에 막습니다. 고객용 챗봇과는 별개의 실험물이고, 팀 공용 기능으로 정해진 것은 아닙니다.</p>
-  <a class="btn" href="stage-demo/">시연판 열기</a>
-  <h3>3분 시연 순서</h3>
-  <ol id="demo-steps"><li>위쪽 가상 상담 버튼에서 “배송 지연”을 누릅니다.</li><li>본인확인 전에는 “먼저 성함과 전화번호 뒷자리를 말씀해 주시겠습니까?” 한 줄만 추천됩니다. 주문 정보 문장은 나오지 않습니다.</li><li>“본인확인 완료”를 누르면 “추천 없음 / 조회 정보를 확인해 주세요.”가 나옵니다.</li><li>“조회 정보 확인”을 누르면 배송 예정일이 지난 것이 보이고, 배송 기간 안내는 추천되지 않습니다.</li><li>“회신 시점” 칸에 “오늘 오후 5시”를 쓰면 사과와 회신 약속 문장이 1순위로 뜹니다. “이 답변 보내기”를 누릅니다.</li><li>상담사 답변 칸에 “내일 도착합니다.”를 직접 써서 보내면 “보내기 차단”이 나옵니다.</li></ol>
-  <h3>이번에 고친 것</h3>
-  <div class="tw"><table id="demo-fixes"><tr><th>문제</th><th>고친 뒤</th></tr><tr><td>배송 예정일이 지났는데 “내일 도착합니다” 같은 약속 문장이 보내짐</td><td>도착을 약속하는 문장은 보내기 전에 막음</td></tr><tr><td>입금 전 주문에 “3~5일 이내 배송” 문장을 추천</td><td>입금 기한을 입력한 뒤 입금 안내 문장만 추천</td></tr><tr><td>끝인사 문장이 매번 다시 1순위로 뜸</td><td>한 번 보낸 뒤에는 다시 추천하지 않음</td></tr><tr><td>본인확인 전에 고객이 취소를 말하면 주문 상태 문장이 바로 추천됨</td><td>본인확인 질문만 추천</td></tr></table></div>
-  <p class="note">자동 테스트 5종(단언 39개와 화면 점검 2종)을 통과했습니다. 실제 브라우저에서 눈으로 본 것은 고치기 전 판이고, 고친 판은 자동 테스트로만 확인했습니다. 배송 문의 외 유형의 검사와 Claude 연결 경로는 아직 손대지 않았습니다. 시연판 문장은 팀이 쓴 매뉴얼 문장과 지어낸 상담이며, 상담 원문과 문장 단위로 겹치는 것이 없음을 확인했습니다.</p>
-</section>
-
-<section id="merge">
-  <h2>5. 두 챗봇을 합치는 방법 (제안)</h2>
-  <p><b>판정은 팀 모델 v2, 답변·주문 조회·접수·평가는 고객용 챗봇</b>을 쓰는 방식을 권합니다. 고객용 챗봇에는 바깥에서 만든 판정을 받아 넣는 자리가 이미 있습니다.</p>
-  <div class="tw"><table>
-    <tr><th>순서</th><th>할 일</th><th>끝났는지 보는 법</th></tr>
-    <tr><td>0</td><td>팀 모델 v2 챗봇 소스를 저장소에 올림(시점은 만든 팀원이 정함)</td><td>저장소에서 파일이 보임</td></tr>
-    <tr><td>1</td><td>공통 시험 문장 30~40개와 기대 라벨을 정함</td><td>표 하나로 합의</td></tr>
-    <tr><td>2</td><td>같은 문장으로 세 판정(팀 모델 v2, Claude, 규칙)을 비교</td><td>문장별 결과표</td></tr>
-    <tr><td>3</td><td>고객용 챗봇에 팀 모델 v2 판정을 넣음</td><td>화면에 점수 표시, 기존 평가 4종 통과</td></tr>
-    <tr><td>4</td><td>"연결해 드릴까요?" 먼저 묻기 흐름을 옮김</td><td>묻기 → 아니요 → 재불만 → 연결 시험 통과</td></tr>
-    <tr><td>5</td><td>모델을 못 받을 때 규칙으로 내려가는지 확인</td><td>인터넷 없이 끝까지 대화</td></tr>
-  </table></div>
-  <h3>합치기 전에 정할 것</h3>
-  <ul>
-    <li>약한 불만 문장(점수 0.20, 0.65)을 어떻게 잡을지. 그대로 둘지, 규칙과 함께 볼지, 기준선을 낮출지.</li>
-    <li>중간 세기 불만이 묻지 않고 바로 연결되는 것을 그대로 둘지.</li>
-    <li>기준선 0.7은 팀 결정이라, 바꾸려면 팀 합의가 필요합니다.</li>
-  </ul>
-  <p class="note">시간이 모자라면 발표에서는 두 링크를 나란히 보여 주고 합치는 일은 뒤로 미룰 수 있습니다.</p>
-</section>
-
-<section id="deploy">
-  <h2>6. 배포</h2>
-  <div class="tw"><table>
-    <tr><th>방법</th><th>되는 것</th><th>안 되는 것</th></tr>
-    <tr><td>claude.ai 아티팩트 링크</td><td>팀 모델 v2와 Claude 답변 전부</td><td>보는 사람이 claude.ai에 로그인해야 함</td></tr>
-    <tr><td>GitHub Pages(공개 저장소)</td><td>규칙 판정과 답변. 누구나 링크로 열림</td><td>Claude 답변(아티팩트 안에서만 동작)</td></tr>
-  </table></div>
-  <ul>
-    <li>팀 저장소는 비공개이고 무료 요금제라 그 안에서는 Pages를 켤 수 없습니다.</li>
-    <li>그래서 이 페이지처럼 보여 줄 파일만 담은 공개 저장소를 따로 만들었습니다. 원본 데이터와 팀 문서는 들어 있지 않습니다.</li>
-    <li>고객용 챗봇을 여기에 올릴지는 수요일에 정합니다. 올리기 전에 근거 카드에 상담 원문이 없는지 다시 확인해야 합니다.</li>
+<section class="flow" id="links">
+  <h2>더 보기</h2>
+  <ul class="links">
+    <li><a href="map/">프로젝트 지도</a><span>데이터에서 챗봇까지 한눈에 봐요</span></li>
+    <li><a href="slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
+    <li><a href="benchmark/">결과표</a><span>엔진 4개를 같은 시험지로 잰 표예요</span></li>
+    <li><a href="verify/">검증</a><span>이 브라우저에서 점수를 다시 재 봐요</span></li>
+    <li><a href="stage-demo/">단계 인지형 추천</a><span>상담 단계에 맞춰 답변을 추천해요</span></li>
   </ul>
 </section>
-
-<section id="todo">
-  <h2>7. 수요일에 팀이 정할 것</h2>
-  <ul>
-    <li>두 챗봇을 합칠지, 하나만 고를지. 판정 엔진은 무엇으로 할지.</li>
-    <li>고객용 챗봇도 공개 링크로 올릴지, 아티팩트 링크만 쓸지.</li>
-    <li>팀 모델 v2 챗봇 코드를 저장소에 넣을지와 넣을 위치.</li>
-    <li>누적 이관 때 "먼저 묻기"를 쓸지.</li>
-    <li>공통 시험 문장 세트를 만들어 판정 방식을 비교할지.</li>
-  </ul>
-</section>
-
-<section id="files">
-  <h2>8. 문서 위치 (팀원 전용, 비공개 저장소)</h2>
-  <div class="tw"><table>
-    <tr><th>보고 싶은 것</th><th>저장소 안 위치</th></tr>
-    <tr><td>처음 보는 사람용 안내</td><td><code>README.md</code> 맨 위 "처음 오신 분께"</td></tr>
-    <tr><td>이번 검증 기록 4건</td><td><code>docs/진행기록_20261124/</code></td></tr>
-    <tr><td>합치는 설계안 전문</td><td><code>docs/챗봇_통합_설계안.md</code></td></tr>
-    <tr><td>고객용 챗봇 코드와 평가</td><td><code>챗봇팀2/11단계_1…/artifact/customer_bot/</code></td></tr>
-    <tr><td>단계 인지형 추천 코드와 시연 순서</td><td><code>챗봇팀2/11단계_1…/artifact/stage_recommendation/</code></td></tr>
-  </table></div>
-</section>
-
 </main>
-<footer>데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」. 이 페이지의 시험 문장은 모두 지어낸 문장이며, 성능 숫자는 예비 결과입니다.</footer>
+
+<footer class="foot">
+  <p>데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」</p>
+  <p>40문장은 팀이 지어낸 문장이고, 기대 라벨은 팀 제안값이에요. 실제 상담 원문이 아니에요.</p>
+</footer>
+
+<script src="assets/nums.js"></script>
+<script>
+Team2Nums.ready.then(function(m){
+  function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
+  var groups=[
+    ["total_dialogs","total_utts"],
+    ["link_a","link_b","link_c","link_d","handoff_total","handoff_immediate","handoff_cumulative","bot_keep"],
+    ["sample_link_a","sample_link_b","risk_capture"],
+    ["recall_a","recall_b","recall_c"],
+    ["train_rows","auc_complaint","auc_immediate","roberta_auc"],
+    ["corr_turns","backchannel"],
+    ["bot1_hit","bot1_faith","bot1_forbid","bot1_safety_link","bot1_done","bot1_link","bot1_safety_recall","cards_n"]
+  ];
+  var box=document.getElementById("sum");
+  groups.forEach(function(keys){
+    var first=m[keys[0]]; if(!first) return;
+    var g=el("div","grp"); g.append(el("h3","grp-h",first.condition));
+    var dl=el("dl","nums");
+    keys.forEach(function(k){ var r=m[k]; if(!r) return;
+      var row=el("div"), dd=el("dd");
+      dd.append(el("b",null,Team2Nums.vu(r)));
+      if(r.detail) dd.append(el("small",null,r.detail));
+      dd.append(el("small",null,"출처 "+r.source));
+      row.append(el("dt",null,r.label),dd); dl.append(row); });
+    g.append(dl); box.append(g);
+  });
+  var E=[["rule","규칙","live","챗봇 2 로딩 중"],["v2","팀 모델 v2 단독","",""],["v2rule","팀 모델 v2 + 규칙","live","챗봇 2 준비 후"],["claude","Claude","gray","claude.ai 안에서만"]];
+  var tr=el("tr"); tr.append(el("th",null,"항목"));
+  E.forEach(function(e){ var th=el("th",e[2],e[1]); if(e[3]) th.append(el("div","note",e[3])); tr.append(th); });
+  document.querySelector("#engtbl thead").append(tr);
+  document.getElementById("engtag").textContent=m.eng_agree_rule.condition;
+  ["eng_agree_","eng_imm_","eng_over_"].forEach(function(p){
+    var row=el("tr"); row.append(el("td",null,m[p+"rule"].label));
+    E.forEach(function(e){ var r=m[p+e[0]];
+      var td=el("td",e[2],Team2Nums.vu(r)+(r.detail&&p==="eng_over_"?" ("+r.detail+")":""));
+      if(r.detail&&p!=="eng_over_") td.append(el("div","note",r.detail));
+      if(p!=="eng_over_"){ var q=String(r.value).split("/"), w=Math.round(100*parseInt(q[0],10)/parseInt(q[1],10));
+        var b=el("span","cellbar"), i=el("i"); i.style.width=w+"%"; b.append(i); td.append(b); }
+      row.append(td); });
+    document.querySelector("#engtbl tbody").append(row);
+  });
+});
+</script>
 </body>
 </html>

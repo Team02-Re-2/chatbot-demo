@@ -1,0 +1,447 @@
+<title>팀2 이관 챗봇 지도</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 레이아웃: 한 단 문서. 위에서 아래로 과정 → 판정 → 기준선 실험 → 설명 → 비교 → 한계. 색은 코드북 라벨 0·1·2·3·9에 하나씩 고정. */
+:root{
+  --bg:#f5f8f8; --surface:#ffffff; --sunk:#ebf0f1; --ink:#15242a; --muted:#566970; --line:#d5dfe1;
+  --accent:#0d6b78; --accent-ink:#ffffff;
+  --l0:#74868c; --l1:#2c6db3; --l2:#b9730d; --l3:#c13a3a; --l9:#8d7fae;
+  --ok:#237a4b; --bad:#c13a3a;
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f171a; --surface:#172126; --sunk:#1f2c31; --ink:#e5eef0; --muted:#9bafb5; --line:#2c3b40;
+  --accent:#5fc4d1; --accent-ink:#0f171a;
+  --l0:#93a4aa; --l1:#73aceb; --l2:#e4ab4c; --l3:#f08080; --l9:#b6aad0;
+  --ok:#5fcf8f; --bad:#f08080; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f171a; --surface:#172126; --sunk:#1f2c31; --ink:#e5eef0; --muted:#9bafb5; --line:#2c3b40;
+  --accent:#5fc4d1; --accent-ink:#0f171a;
+  --l0:#93a4aa; --l1:#73aceb; --l2:#e4ab4c; --l3:#f08080; --l9:#b6aad0;
+  --ok:#5fcf8f; --bad:#f08080; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1{font-size:clamp(1.7rem,4.4vw,2.5rem);line-height:1.2;margin:0;font-weight:700;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:1.4rem;line-height:1.3;margin:0;font-weight:700;text-wrap:balance}
+h3{font-size:1.02rem;margin:0;font-weight:600}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+section{display:flex;flex-direction:column;gap:16px}
+.head{display:flex;flex-direction:column;gap:6px}
+nav{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.9rem}
+nav a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+nav a:hover,nav a:focus-visible{border-bottom-color:var(--accent)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.scroll{overflow-x:auto}
+/* 숫자 띠 */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border-block:1px solid var(--line)}
+.fact{padding:14px 14px 14px 0;display:flex;flex-direction:column;gap:2px;min-width:0}
+.fact b{font-family:var(--mono);font-size:1.5rem;font-weight:500;line-height:1.2;font-variant-numeric:tabular-nums}
+.fact span{font-size:.84rem;color:var(--muted)}
+/* 라벨 칩 */
+.lab{display:inline-flex;align-items:center;justify-content:center;min-width:1.7em;height:1.7em;padding:0 .45em;border-radius:5px;
+  font-family:var(--mono);font-size:.8rem;font-weight:500;color:#fff;background:var(--l0);white-space:nowrap}
+.lab.k1{background:var(--l1)} .lab.k2{background:var(--l2)} .lab.k3{background:var(--l3)} .lab.k9{background:var(--l9)}
+:root[data-theme="dark"] .lab{color:#0f171a}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .lab{color:#0f171a} }
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.86rem;color:var(--muted)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+pre.mermaid{margin:0;background:transparent;font-family:var(--sans);text-align:center;min-width:560px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+/* 조작부 */
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px 24px;align-items:end}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctl label{font-size:.86rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.ctl output{font-family:var(--mono);color:var(--ink);font-size:1rem}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+button{font:inherit;font-size:.88rem;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:5px 11px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.check{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
+select{font:inherit;font-size:.9rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 8px;max-width:100%}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.tile{background:var(--sunk);border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile b{font-family:var(--mono);font-weight:500;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.tile span{font-size:.8rem;color:var(--muted)}
+.tile em{font-style:normal;font-size:.8rem}
+.good{color:var(--ok)} .warn{color:var(--bad)}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:11px}
+svg .axis{stroke:var(--line);stroke-width:1}
+svg .thr{stroke:var(--accent);stroke-width:2}
+svg .thr-t{fill:var(--accent)}
+.d0{fill:var(--l0)} .d2{fill:var(--l2)} .d3{fill:var(--l3)}
+.sweep{display:flex;align-items:flex-end;gap:3px;height:92px}
+.sweep i{flex:1;background:var(--l0);opacity:.45;border-radius:2px 2px 0 0;min-width:4px}
+.sweep i.on{background:var(--accent);opacity:1}
+.sweepx{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:720px}
+th,td{padding:7px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.76rem;font-weight:600;color:var(--muted);letter-spacing:.03em;white-space:nowrap}
+td.n{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+tr.chg td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.bar{position:relative;height:14px;width:120px;background:var(--sunk);border-radius:3px}
+.bar .f{position:absolute;inset:0 auto 0 0;border-radius:3px;background:var(--l0)}
+.bar .f.hit{background:var(--l2)} .bar.h .f.hit{background:var(--l3)}
+.bar .m{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--accent)}
+.sc{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.cellbar{display:flex;gap:8px;align-items:center}
+.tag{font-size:.74rem;color:var(--accent);white-space:nowrap}
+/* 설명 */
+.words{display:flex;flex-wrap:wrap;gap:8px}
+.w{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 10px;border-radius:7px;border:1px solid var(--line);font-size:1.05rem}
+.w small{font-family:var(--mono);font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;font-size:.9rem;align-items:baseline}
+.kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0}
+.ctx{font-size:.84rem;color:var(--muted);background:var(--sunk);border-radius:6px;padding:8px 10px;overflow-wrap:anywhere}
+.read{font-size:1rem;border-left:3px solid var(--accent);padding-left:12px}
+.lens{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.lens div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lens p{font-size:.9rem;color:var(--muted)}
+/* 막대 */
+.hb{display:grid;grid-template-columns:minmax(120px,170px) 1fr max-content;gap:6px 10px;align-items:center;font-size:.88rem}
+.hb .t{height:16px;background:var(--sunk);border-radius:3px;min-width:0}
+.hb .t i{display:block;height:100%;border-radius:3px;background:var(--accent)}
+.hb .t i.alt{background:var(--l0)}
+ul.plain{margin:0;padding-left:1.15em;display:flex;flex-direction:column;gap:6px;max-width:72ch}
+footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion: no-preference){ .bar .f,.bar .m,.sweep i{transition:all .15s} }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <span class="eyebrow">팀2 · 쇼핑 콜센터 이관 챗봇</span>
+    <h1>챗봇은 언제 상담사에게 넘겨야 하는가</h1>
+    <p class="muted">챗봇이 고객을 응대하다가 불만이나 위험 신호를 읽으면 상담사에게 넘깁니다. 이 페이지는 그 판단을 만든 과정과, 예시 문장이 기준선에 따라 어떻게 달리 판정되는지를 보여 줍니다.</p>
+    <nav aria-label="목차">
+      <a href="#flow">전체 과정</a><a href="#judge">판정 흐름</a><a href="#threshold">기준선 실험</a><a href="#explain">판정 이유</a><a href="#engines">엔진 비교</a><a href="#map">한눈에 보기</a><a href="#limits">한계</a>
+    </nav>
+  </header>
+
+  <div class="facts">
+    <div class="fact"><b>26,270</b><span>상담 대화</span></div>
+    <div class="fact"><b>445,972</b><span>고객 발화</span></div>
+    <div class="fact"><b>60</b><span>사람 정답(즉시 이관 14건)</span></div>
+    <div class="fact"><b>18,267</b><span>AI 라벨러(Jev) 학습 보조 라벨</span></div>
+    <div class="fact"><b>0.921 · 0.944</b><span>팀 모델 v2 AUC(불만 · 즉시 이관)</span></div>
+    <div class="fact"><b>0.7 / 0.7</b><span>팀이 정한 기준선</span></div>
+  </div>
+
+  <section id="flow">
+    <div class="head"><span class="eyebrow">전체 과정</span><h2>9월 19일부터 11월 25일까지 여섯 단계</h2>
+      <p class="muted">실선은 이어진 단계, 점선은 시도했지만 쓰지 않은 방법입니다.</p></div>
+    <div class="panel scroll"><pre class="mermaid">
+flowchart TD
+  A["A. 주제·데이터 (9/19~10/7)<br/>쇼핑 데이터 채택 · 이관 관점 확정"]
+  B["B. 탐색 분석 (10/8~11/2)<br/>턴 수와 불만 상관 -0.19 · 긴 대화 가설 기각"]
+  C["C. 판정 기준 (10/12~11/20)<br/>코드북 v1.0 · 사람 정답 60건 · Jev 라벨 18,267건"]
+  D["D. 모델 (10/21~11/1)<br/>klue/roberta-base + 로지스틱 회귀 · 팀 모델 v2"]
+  E["E. 기준선과 검증 (10/24~11/23)<br/>기준선 0.3에서 0.7로 · 숫자 검증 47/47"]
+  F["F. 답변과 챗봇 (11/8~11/25)<br/>고객용 규칙형 챗봇 · v2 탑재 이관 챗봇"]
+  A --> B --> C --> D --> E --> F
+  A -.-> A0["쓰지 않음: 금융보험 데이터, 상담사 말투 관점"]
+  B -.-> B0["쓰지 않음: 기존 감정 분석 모델<br/>라벨 1을 분노로 98% 오탐"]
+  D -.-> D0["쓰지 않음: 파인튜닝 A·B·C, Optuna 앙상블"]
+  F -.-> F0["시제품으로 남김: 답변 추천 대시보드, RAG 챗봇"]
+</pre></div>
+    <div class="legend" aria-label="코드북 라벨">
+      <span><i class="lab">0</i>정상·절차</span><span><i class="lab k1">1</i>중립 문제 제기</span><span><i class="lab k2">2</i>명시적 불만</span><span><i class="lab k3">3</i>즉시 이관</span><span><i class="lab k9">9</i>판단 불가</span>
+    </div>
+  </section>
+
+  <section id="judge">
+    <div class="head"><span class="eyebrow">판정 흐름</span><h2>발화 하나가 들어오면 일어나는 일</h2>
+      <p class="muted">v2 탑재 이관 챗봇의 동작입니다. 규칙이 먼저 위험한 말을 잡고, 나머지는 팀 모델 v2의 점수 두 개를 기준선과 비교합니다.</p></div>
+    <div class="two">
+      <div class="panel scroll"><h3>결정 순서</h3><pre class="mermaid">
+flowchart TD
+  U["고객 발화"] --> R{"규칙 안전장치<br/>욕설 · 신고 · 책임자 요구 등"}
+  R -- 걸림 --> H3["라벨 3"]
+  R -- 안 걸림 --> M["팀 모델 v2<br/>불만 점수 · 즉시 이관 점수"]
+  M --> T1{"즉시 이관 점수가<br/>기준선 이상"}
+  T1 -- 예 --> H3
+  T1 -- 아니요 --> T2{"불만 점수가<br/>기준선 이상"}
+  T2 -- 아니요 --> K["챗봇이 계속 응대"]
+  T2 -- 예 --> L2["라벨 2"]
+  L2 --> W{"최근 고객 발화 3개 중<br/>불만 2개 이상"}
+  W -- 아니요 --> K
+  W -- 예 --> Q["상담사에게 연결해 드릴까요?"]
+  Q -- 네 --> HO["상담사 이관"]
+  Q -- 아니요 --> K
+  H3 -- 묻지 않고 바로 --> HO
+</pre></div>
+      <div class="panel scroll"><h3>대화로 보면 (코드북 기준 기대 동작)</h3><pre class="mermaid">
+sequenceDiagram
+  actor C as 고객
+  participant B as 챗봇
+  participant J as 판정 엔진
+  participant A as 상담사
+  C->>B: 주문한 운동화가 아직 안 왔어요
+  B->>J: 발화와 앞 문맥
+  J-->>B: 라벨 1, 문제를 사실로 설명
+  B-->>C: 응대 계속
+  C->>B: 지난주에 보냈다면서 왜 아직도 안 오는 거예요
+  J-->>B: 라벨 2, 불만 1개째
+  B-->>C: 응대 계속
+  C->>B: 벌써 두 번째 문의하는 건데 정말 답답하네요
+  J-->>B: 라벨 2, 최근 3개 중 불만 2개
+  B-->>C: 상담사에게 연결해 드릴까요?
+  C->>B: 네
+  B->>A: 누적 이관
+  Note over C,A: 즉시 이관은 묻지 않습니다
+  C->>B: 팀장님 바꿔 주세요
+  J-->>B: 라벨 3, 책임자 요구
+  B->>A: 즉시 이관
+</pre></div>
+    </div>
+  </section>
+
+  <section id="threshold">
+    <div class="head"><span class="eyebrow">기준선 실험</span><h2>기준선을 움직이면 같은 문장의 결과가 달라집니다</h2>
+      <p class="muted">공통 시험문장 40개에 팀 모델 v2가 매긴 실제 점수입니다. 점수가 기준선 이상이면 잡힙니다. 문장은 팀이 지어낸 것이고 기대 라벨은 팀 제안값입니다.</p></div>
+    <div class="panel" style="display:flex;flex-direction:column;gap:18px">
+      <div class="controls">
+        <div class="ctl"><label for="tc">불만 기준선 <output id="tcv" class="num">0.70</output></label><input id="tc" type="range" min="0.05" max="0.95" step="0.05" value="0.7"></div>
+        <div class="ctl"><label for="th">즉시 이관 기준선 <output id="thv" class="num">0.70</output></label><input id="th" type="range" min="0.05" max="0.95" step="0.05" value="0.7"></div>
+        <div class="row">
+          <button type="button" data-p="0.3">0.3</button><button type="button" data-p="0.5">0.5</button><button type="button" data-p="0.7">0.7 팀 결정</button>
+        </div>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="tie" checked> 두 기준선 같이 움직이기</label>
+        <label class="check"><input type="checkbox" id="safe"> 규칙 안전장치 켜기</label>
+        <label class="check"><input type="checkbox" id="only"> 0.7과 결과가 달라지는 문장만</label>
+      </div>
+      <div class="tiles" id="tiles"></div>
+      <div class="two">
+        <div><h3>불만 점수 분포</h3><svg id="s1" viewBox="0 0 600 96" width="100%" role="img" aria-label="문장 40개의 불만 점수와 기준선"></svg></div>
+        <div><h3>즉시 이관 점수 분포</h3><svg id="s2" viewBox="0 0 600 96" width="100%" role="img" aria-label="문장 40개의 즉시 이관 점수와 기준선"></svg></div>
+      </div>
+      <div class="legend"><span><svg width="12" height="12"><circle class="d0" cx="6" cy="6" r="5"/></svg>기대: 그 외(0·1·9·경계)</span><span><svg width="12" height="12"><circle class="d2" cx="6" cy="6" r="5"/></svg>기대: 불만(2)</span><span><svg width="12" height="12"><circle class="d3" cx="6" cy="6" r="5"/></svg>기대: 즉시 이관(3)</span></div>
+      <div>
+        <h3>기준선별 일치 문장 수 <span class="muted small">(두 기준선을 같은 값으로 둘 때, 40문장 중)</span></h3>
+        <div class="sweep" id="sweep" role="img" aria-label="기준선 0.05부터 0.95까지의 3분류 일치 문장 수"></div>
+        <div class="sweepx"><span>0.05</span><span>0.50</span><span>0.95</span></div>
+        <p class="small muted" id="sweepnote"></p>
+      </div>
+      <div class="scroll"><table><thead><tr><th>#</th><th>문장</th><th>기대</th><th>불만 점수</th><th>즉시 이관 점수</th><th>판정</th><th>일치</th></tr></thead><tbody id="tb"></tbody></table></div>
+    </div>
+    <div class="panel">
+      <h3>사람 정답 60건으로 본 기준선 0.3 · 0.5 · 0.7</h3>
+      <p class="small muted" style="margin:4px 0 12px">위 실험과 다른 자료입니다. 실제 상담 발화에 팀원이 붙인 정답 기준입니다. 기준선을 올리면 상담사에게 가는 대화는 줄지만 놓치는 즉시 이관도 늘어납니다.</p>
+      <div class="hb">
+        <span>즉시 이관 재현율 0.3</span><div class="t"><i style="width:86%"></i></div><span class="num">86%</span>
+        <span>즉시 이관 재현율 0.5</span><div class="t"><i style="width:79%"></i></div><span class="num">79%</span>
+        <span>즉시 이관 재현율 0.7</span><div class="t"><i style="width:71%"></i></div><span class="num">71%</span>
+        <span>이관 대화 비율 0.3</span><div class="t"><i class="alt" style="width:22.2%"></i></div><span class="num">22.2%</span>
+        <span>이관 대화 비율 0.5</span><div class="t"><i class="alt" style="width:15.7%"></i></div><span class="num">15.7%</span>
+        <span>이관 대화 비율 0.7</span><div class="t"><i class="alt" style="width:10.9%"></i></div><span class="num">10.9%</span>
+      </div>
+      <p class="small muted" style="margin-top:12px">AI 정답(Claude Haiku가 코드북으로 라벨링한 시험 표본 419개) 기준으로는 0.7에서 넘겨야 할 72건 중 71건을 잡았습니다. 사람 정답 기준 숫자와 섞어 읽지 않습니다.</p>
+    </div>
+  </section>
+
+  <section id="explain">
+    <div class="head"><span class="eyebrow">판정 이유</span><h2>왜 그 점수가 나왔는지 어절을 하나씩 빼서 확인합니다</h2>
+      <p class="muted">팀 모델 v2는 문장을 숫자 768개로 바꾼 뒤 선형식으로 점수를 냅니다. 계수가 단어가 아니라 숫자 차원에 붙어 있어 그대로는 읽을 수 없습니다. 그래서 어절 하나를 지운 문장을 다시 채점해 점수가 얼마나 떨어지는지를 쟀습니다(어절 제거법, occlusion).</p></div>
+    <div class="panel" style="display:flex;flex-direction:column;gap:16px">
+      <div class="row" id="picks"></div>
+      <div class="row">
+        <label class="small muted" for="sel">전체 문장</label><select id="sel"></select>
+        <button type="button" id="k0" aria-pressed="true">불만 점수</button><button type="button" id="k1" aria-pressed="false">즉시 이관 점수</button>
+      </div>
+      <div class="words" id="words"></div>
+      <p class="read" id="read"></p>
+      <dl class="kv" id="kv"></dl>
+      <div class="ctx" id="ctx"></div>
+      <p class="small muted">색이 진할수록 그 어절을 뺐을 때 점수가 많이 떨어집니다. 아래 숫자는 떨어진 폭이고, 음수는 뺐더니 오히려 점수가 오른 경우입니다. 어절 사이의 상호작용은 이 방법으로 보이지 않습니다.</p>
+    </div>
+    <div class="panel lens">
+      <div><h3>모델을 설명하는 법</h3><p>어절 제거법. 모델 안을 열지 않고 입력을 바꿔 가며 점수 변화를 봅니다. 문맥을 비운 채점도 같이 넣어 앞 대화의 영향을 따로 봅니다.</p></div>
+      <div><h3>규칙을 설명하는 법</h3><p>규칙은 걸린 패턴 이름이 곧 이유입니다. 예: 책임자 요구, 신고·법적 조치 위협, 욕설·강한 격앙.</p></div>
+      <div><h3>Claude를 설명하는 법</h3><p>판정과 함께 사유 문장을 받습니다. 같은 문장을 세 번 물어 답이 흔들리는지도 봅니다. 40문장 중 4문장에서 답이 달랐습니다.</p></div>
+    </div>
+  </section>
+
+  <section id="engines">
+    <div class="head"><span class="eyebrow">엔진 비교</span><h2>같은 40문장을 판정 엔진 네 개에 물었습니다</h2>
+      <p class="muted">기준선 0.7 / 0.7, 측정일 11월 25일. 팀 모델 v2 단독은 말로 하는 요구(책임자·상담원 요구, 신고, 탈퇴, 보상)를 거의 잡지 못해 규칙 안전장치를 붙였습니다.</p></div>
+    <div class="two">
+      <div class="panel"><h3 style="margin-bottom:12px">3분류 일치 (40문장 중)</h3><div class="hb">
+        <span>규칙</span><div class="t"><i style="width:90%"></i></div><span class="num">36</span>
+        <span>팀 모델 v2 단독</span><div class="t"><i style="width:62.5%"></i></div><span class="num">25</span>
+        <span>v2 + 규칙 안전장치</span><div class="t"><i style="width:72.5%"></i></div><span class="num">29</span>
+        <span>Claude 3회 다수결</span><div class="t"><i style="width:95%"></i></div><span class="num">38</span>
+      </div></div>
+      <div class="panel"><h3 style="margin-bottom:12px">즉시 이관 포착 (8문장 중)</h3><div class="hb">
+        <span>규칙</span><div class="t"><i style="width:62.5%"></i></div><span class="num">5</span>
+        <span>팀 모델 v2 단독</span><div class="t"><i style="width:12.5%"></i></div><span class="num">1</span>
+        <span>v2 + 규칙 안전장치</span><div class="t"><i style="width:62.5%"></i></div><span class="num">5</span>
+        <span>Claude 3회 다수결</span><div class="t"><i style="width:87.5%"></i></div><span class="num">7</span>
+      </div></div>
+    </div>
+    <ul class="plain small">
+      <li>불필요한 즉시 이관은 규칙 0, v2 단독 2, v2 + 규칙 2, Claude 0입니다.</li>
+      <li>Claude가 가장 잘 맞았지만 claude.ai 안에서만 돌아갑니다. 공개 배포에서는 규칙 모드만 작동합니다.</li>
+      <li>네 엔진 모두 "제 체형이면 이 원피스 입었을 때 뚱뚱해 보일까요?"(#31)를 놓쳤습니다.</li>
+    </ul>
+  </section>
+
+  <section id="map">
+    <div class="head"><span class="eyebrow">한눈에 보기</span><h2>시도한 방법 지도</h2></div>
+    <div class="panel scroll"><pre class="mermaid">
+mindmap
+  root((팀2 이관 챗봇))
+    A 주제와 데이터
+      쇼핑 데이터 채택
+      챗봇이 넘길 시점을 문제로 정함
+    B 탐색 분석
+      임베딩과 TF-IDF
+      긴 대화 가설 기각
+      기존 감정 모델은 쓰지 않음
+    C 판정 기준
+      코드북 v1.0
+      사람 정답 60건
+      Jev 라벨 18267건
+      AI 시험 정답 표본 419개
+    D 모델
+      한국어 모델 8개 비교
+      roberta 고정과 로지스틱 회귀
+      팀 모델 v2 채택
+      파인튜닝과 앙상블은 쓰지 않음
+    E 기준선과 검증
+      기준선 세 가지 비교
+      팀 결정 0.7
+      숫자 검증 스크립트 통과
+    F 답변과 챗봇
+      상담사 매뉴얼 v1
+      답변 추천과 RAG 시제품
+      고객용 규칙형 챗봇
+      v2 탑재 이관 챗봇
+</pre></div>
+  </section>
+
+  <section id="limits">
+    <div class="head"><span class="eyebrow">한계</span><h2>이 숫자들을 읽을 때</h2></div>
+    <ul class="plain">
+      <li>모든 모델 점수는 예비 결과입니다. 사람 정답은 60건(즉시 이관 14건)뿐이고 학습 자료 대부분이 AI(Jev) 라벨입니다.</li>
+      <li>시험문장 40개는 팀이 지어낸 문장이고 기대 라벨도 팀 제안값입니다. 성능을 일반화할 수 없습니다.</li>
+      <li>팀 모델 v2는 앞 문맥에 민감합니다. 같은 문장도 문맥에 따라 점수가 크게 달라지므로, 여기 점수는 "챗봇 첫 인사말과 앞 고객 발화"를 문맥으로 넣은 조건에서만 유효합니다. 문맥 없이 잰 점수는 학습 때와 다른 입력이라 참고용입니다.</li>
+      <li>어절 제거법은 이 모델이 이 문장에서 보인 반응을 보여 줄 뿐, 모델이 옳다는 근거는 아닙니다.</li>
+    </ul>
+  </section>
+
+  <footer>데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」(쇼핑). 시험문장 40개는 원문이 아니라 팀이 지어낸 문장입니다. 기준일 2026-11-25.</footer>
+</div>
+
+<script type="application/json" id="d">[{"n":1,"set":"","t":"주문한 상품 배송 조회는 어디서 하나요?","e":"0","why":"단순 문의(코드북 0: 문제 제기 없음)","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0042,"h":0.0,"nc":[0.0037,0.0],"w":["주문한","상품","배송","조회는","어디서","하나요?"],"d":[[0.0014,0.0],[0.0028,0.0],[0.0024,0.0],[0.0032,0.0],[0.0016,0.0],[0.0029,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":2,"set":"","t":"반품하려면 어떻게 해요?","e":"0","why":"절차 문의(코드북 0)","r":1,"rr":"문제를 사실로 설명","cl":[0,0,0],"c":0.0031,"h":0.0,"nc":[0.2441,0.0],"w":["반품하려면","어떻게","해요?"],"d":[[0.0009,0.0],[0.0008,0.0],[0.0021,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":3,"set":"","t":"네 알겠습니다","e":"0","why":"수긍·맞장구(코드북 0, 누적 창에서도 빠짐)","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0001,"h":0.0,"nc":[0.0135,0.0],"w":["네","알겠습니다"],"d":[[0.0002,0.0],[0.0,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":4,"set":"","t":"카드로 결제할게요","e":"0","why":"절차 진행 응답(코드북 0 예시 \"카드로 할게요\")","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0007,"h":0.0,"nc":[0.0404,0.0],"w":["카드로","결제할게요"],"d":[[0.0004,0.0],[0.0001,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":5,"set":"","t":"사이즈 교환은 몇 번까지 가능한가요?","e":"0","why":"교환 규정을 묻는 단순 문의. \"교환\"이라는 단어만으로 1이 되지 않음(헷갈릴 때 규칙 1)","r":1,"rr":"문제를 사실로 설명","cl":[0,0,0],"c":0.0005,"h":0.0,"nc":[0.0003,0.0],"w":["사이즈","교환은","몇","번까지","가능한가요?"],"d":[[0.0009,0.0],[0.0002,0.0],[0.0003,0.0],[0.0001,0.0],[0.0004,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":6,"set":"","t":"배송지를 회사 주소로 바꾸고 싶어요","e":"0","why":"정보 변경 요청, 문제 제기 없음(코드북 0)","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0004,"h":0.0,"nc":[0.0,0.0],"w":["배송지를","회사","주소로","바꾸고","싶어요"],"d":[[0.0007,0.0],[0.0005,0.0],[0.0003,0.0],[0.0003,0.0],[0.0003,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":7,"set":"","t":"주문한 블렌더가 전원이 안 켜져요","e":"1","why":"상품 고장을 처음 사실로 설명(확정 결정 1번)","r":1,"rr":"문제를 사실로 설명","cl":[1,1,1],"c":0.0844,"h":0.0,"nc":[0.5438,0.0],"w":["주문한","블렌더가","전원이","안","켜져요"],"d":[[0.0307,0.0],[0.1156,0.0],[0.028,0.0],[0.0031,0.0],[0.0075,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":8,"set":"","t":"받은 티셔츠 색이 주문한 것과 달라요","e":"1","why":"오배송을 감정 없이 설명(코드북 1)","r":0,"rr":"문제 제기 없음","cl":[1,1,1],"c":0.1179,"h":0.0,"nc":[0.9892,0.0],"w":["받은","티셔츠","색이","주문한","것과","달라요"],"d":[[0.0935,0.0],[0.0375,0.0],[0.0161,0.0],[0.0649,0.0],[0.007,0.0],[0.0103,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":9,"set":"","t":"택배 상자가 찌그러진 채로 왔어요","e":"1","why":"포장 파손을 사실로 설명(코드북 1)","r":0,"rr":"문제 제기 없음","cl":[1,1,1],"c":0.0531,"h":0.0,"nc":[0.8511,0.0],"w":["택배","상자가","찌그러진","채로","왔어요"],"d":[[0.0468,0.0],[0.0534,0.0],[0.0069,0.0],[0.0239,0.0],[0.0168,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":10,"set":"","t":"주문한 지 닷새째인데 아직 출발 전으로 나와요","e":"1","why":"배송 지연을 사실로 설명. \"아직\"은 단어만으로 2가 아님(확정 결정 2번)","r":1,"rr":"문제를 사실로 설명","cl":[1,1,1],"c":0.1672,"h":0.0,"nc":[0.5499,0.0],"w":["주문한","지","닷새째인데","아직","출발","전으로","나와요"],"d":[[0.1777,0.0],[0.2033,0.0],[0.0067,0.0],[0.0313,0.0],[0.1816,0.0],[0.3515,0.0],[0.028,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":11,"set":"","t":"세트 구성품 중 하나가 빠져 있어요","e":"1","why":"구성품 누락을 사실로 설명(코드북 1)","r":0,"rr":"문제 제기 없음","cl":[1,1,1],"c":0.0042,"h":0.0,"nc":[0.0163,0.0],"w":["세트","구성품","중","하나가","빠져","있어요"],"d":[[0.0033,0.0],[0.0008,0.0],[0.0127,0.0],[0.0003,0.0],[0.0006,0.0],[0.0003,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":12,"set":"","t":"냄비 손잡이가 흔들려서 쓰기가 불편해요","e":"1","why":"\"불편해요\"는 사용 불편의 사실 설명에 가까움(확정 결정 1번)","r":0,"rr":"문제 제기 없음","cl":[1,1,1],"c":0.2652,"h":0.0,"nc":[0.987,0.0],"w":["냄비","손잡이가","흔들려서","쓰기가","불편해요"],"d":[[0.3627,0.0],[0.1941,0.0],[0.2884,0.0],[0.0576,0.0],[0.1136,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":13,"set":"","t":"배송이 너무 늦어서 답답하네요","e":"경계(1 또는 2)","why":"\"너무 늦어서\"는 사실(1번 결정), \"답답하네요\"는 감정 표현. 2 쪽을 제안","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.2014,"h":0.0001,"nc":[0.9933,0.002],"w":["배송이","너무","늦어서","답답하네요"],"d":[[0.1208,0.0],[0.1023,0.0],[0.1482,0.0001],[0.0189,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":14,"set":"","t":"왜 이렇게 늦는지 답답하네요","e":"2","why":"\"왜 이렇게 늦는지\"는 처리 지연 항의, 감정 표현이 붙음(2번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[1,1,2],"c":0.45,"h":0.0007,"nc":[1.0,0.7227],"w":["왜","이렇게","늦는지","답답하네요"],"d":[[0.1114,0.0001],[0.2315,0.0001],[0.194,0.0002],[0.0524,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":15,"set":"","t":"그래도 짜증나요 계속 늦어요","e":"2","why":"짜증 표현과 지연이 계속된다는 호소(반복 호소). \"그래도\"는 앞 대화를 전제함","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.6287,"h":0.0025,"nc":[0.9999,0.3539],"w":["그래도","짜증나요","계속","늦어요"],"d":[[0.2336,0.0008],[0.0988,0.0],[0.3589,0.0004],[0.0824,0.0001]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":16,"set":"","t":"생각보다 품질이 좀 별로네요","e":"경계(1 또는 2)","why":"불만 평가이지만 대상과 문제가 막연함. 1과 2 사이","r":0,"rr":"문제 제기 없음","cl":[2,2,1],"c":0.1886,"h":0.0,"nc":[0.9986,0.0],"w":["생각보다","품질이","좀","별로네요"],"d":[[0.122,0.0],[0.0496,0.0],[0.1074,0.0],[0.0555,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":17,"set":"","t":"솔직히 좀 실망스럽네요","e":"2","why":"\"실망\"은 불만 평가(2번 결정). 대상이 없어 약한 불만","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.0699,"h":0.0,"nc":[0.9966,0.0],"w":["솔직히","좀","실망스럽네요"],"d":[[0.0783,0.0],[0.0342,0.0],[0.0011,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":18,"set":"","t":"아직 안 왔는데 언제쯤 오는 건가요?","e":"1","why":"\"아직\"이 있어도 기능은 도착 시점 문의(2번 결정: 단어만으로 2가 아님)","r":1,"rr":"문제를 사실로 설명","cl":[1,1,1],"c":0.0639,"h":0.0,"nc":[0.7126,0.0],"w":["아직","안","왔는데","언제쯤","오는","건가요?"],"d":[[0.1212,0.0],[0.02,0.0],[0.0395,0.0],[0.0486,0.0],[0.0533,0.0],[0.1782,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":19,"set":"","t":"어제도 내일 온다더니 짜증나요","e":"2","why":"약속 불이행(\"온다더니\") + 짜증. 반복 호소(2번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9377,"h":0.0047,"nc":[1.0,0.4139],"w":["어제도","내일","온다더니","짜증나요"],"d":[[0.3818,0.0],[0.8855,0.0044],[0.5033,0.0005],[0.2371,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":20,"set":"","t":"배송이 계속 늦어서 정말 짜증나고 답답해요","e":"2","why":"지연 반복 + 강한 짜증. 사람 요구·위협이 없어 3은 아님(3번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.3904,"h":0.0842,"nc":[0.9894,0.9957],"w":["배송이","계속","늦어서","정말","짜증나고","답답해요"],"d":[[0.2258,0.0238],[0.1642,0.0119],[0.3133,0.0564],[0.2578,0.0053],[0.3382,0.004],[0.1367,0.0016]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":21,"set":"","t":"벌써 세 번째 문의하는데 아직도 해결이 안 됐어요","e":"2","why":"반복 문의 호소 + 미해결 항의(2번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9571,"h":0.0093,"nc":[1.0,0.9975],"w":["벌써","세","번째","문의하는데","아직도","해결이","안","됐어요"],"d":[[0.8906,0.0003],[0.9618,0.01],[0.9865,0.0042],[0.8415,0.0002],[0.8132,0.0026],[0.8761,0.0008],[0.7393,0.0006],[0.9567,0.003]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":22,"set":"","t":"환불해 준다더니 일주일째 소식이 없네요","e":"2","why":"약속 불이행 + 처리 지연 항의(2번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9827,"h":0.4373,"nc":[1.0,0.9998],"w":["환불해","준다더니","일주일째","소식이","없네요"],"d":[[0.9198,0.0127],[0.9293,0.0322],[0.88,0.0149],[0.9517,0.183],[0.9449,0.0102]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":23,"set":"","t":"이게 무슨 서비스예요 일 처리가 엉망이네요","e":"2","why":"불만 평가·책임 추궁. 욕설·위협은 없음(2번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9718,"h":0.8996,"nc":[0.9997,0.9993],"w":["이게","무슨","서비스예요","일","처리가","엉망이네요"],"d":[[0.8966,0.1447],[0.9453,0.061],[0.8928,0.1996],[0.9423,0.6186],[0.9029,0.7954],[0.5623,0.0087]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":24,"set":"","t":"팀장님 바꿔 주세요","e":"3","why":"상급자 요구(3번 결정)","r":3,"rr":"책임자 요구","cl":[3,3,3],"c":0.0013,"h":0.0,"nc":[0.0353,0.0],"w":["팀장님","바꿔","주세요"],"d":[[0.0034,0.0],[0.0001,0.0],[0.0,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":25,"set":"","t":"챗봇 말고 상담원이랑 직접 통화하고 싶어요","e":"3","why":"사람 상담원 요구(코드북 3: 책임자·상담사 요구)","r":0,"rr":"문제 제기 없음","cl":[3,3,3],"c":0.0231,"h":0.0001,"nc":[0.3825,0.0155],"w":["챗봇","말고","상담원이랑","직접","통화하고","싶어요"],"d":[[0.0188,0.0],[0.0024,0.0],[0.0148,0.0],[0.0303,0.0007],[0.011,0.0],[0.0381,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":26,"set":"","t":"소비자원에 정식으로 신고할게요","e":"3","why":"신고 위협(3번 결정: 법적 조치)","r":3,"rr":"신고·법적 조치 위협","cl":[3,3,3],"c":0.0362,"h":0.0009,"nc":[0.2968,0.5276],"w":["소비자원에","정식으로","신고할게요"],"d":[[0.0164,0.0],[0.006,0.0003],[0.0333,0.0004]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":27,"set":"","t":"진짜 미친 거 아니에요? 2주째 안 오잖아요","e":"3","why":"욕설 섞인 격앙(\"미친\")(3번 결정: 욕설)","r":3,"rr":"욕설·강한 격앙","cl":[3,3,3],"c":0.9967,"h":0.9753,"nc":[1.0,0.9984],"w":["진짜","미친","거","아니에요?","2주째","안","오잖아요"],"d":[[0.9784,0.6597],[0.9823,0.214],[0.995,0.8899],[0.9924,0.2587],[0.9567,0.0454],[0.9898,0.7737],[0.9778,0.8014]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":28,"set":"","t":"다시는 여기서 안 사요 회원 탈퇴할게요","e":"3","why":"강한 이탈·해지 의사(3번 결정)","r":3,"rr":"이탈 위협","cl":[3,3,3],"c":0.0014,"h":0.0,"nc":[0.0007,0.0058],"w":["다시는","여기서","안","사요","회원","탈퇴할게요"],"d":[[0.0044,0.0001],[0.0036,0.0],[0.0024,0.0],[0.0025,0.0001],[0.0028,0.0001],[0.0003,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":29,"set":"","t":"배송 늦어서 손해 본 거 보상금으로 물어 주세요","e":"3","why":"규정 밖 보상 요구(3번 결정: 규정 밖 요구)","r":3,"rr":"규정 밖 요구(보상)","cl":[3,3,3],"c":0.2335,"h":0.0021,"nc":[0.9011,0.4782],"w":["배송","늦어서","손해","본","거","보상금으로","물어","주세요"],"d":[[0.1172,0.001],[0.1464,0.0018],[0.1672,0.0001],[0.5311,0.0005],[0.1487,0.0001],[0.0744,0.0001],[0.0646,0.0006],[0.0647,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":30,"set":"","t":"반품 기한 지났지만 그냥 전액 환불해 주세요","e":"3","why":"기한 밖 예외 처리 요구(3번 결정: 규정 밖 요구, P046형)","r":1,"rr":"문제를 사실로 설명","cl":[3,3,3],"c":0.5613,"h":0.0531,"nc":[0.9987,0.896],"w":["반품","기한","지났지만","그냥","전액","환불해","주세요"],"d":[[0.7722,0.1604],[0.3182,0.0448],[0.214,0.0007],[0.4289,0.0078],[0.3921,0.0216],[0.1009,0.0003],[0.0721,0.0003]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":31,"set":"","t":"제 체형이면 이 원피스 입었을 때 뚱뚱해 보일까요?","e":"3","why":"챗봇이 답하기 곤란한 체형 질문(3번 결정: P013형, 초안 5장 예민한질문)","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0106,"h":0.0,"nc":[0.0748,0.0017],"w":["제","체형이면","이","원피스","입었을","때","뚱뚱해","보일까요?"],"d":[[0.0061,0.0],[0.0126,0.0],[0.0069,0.0],[0.0023,0.0],[0.0043,0.0],[0.0187,0.0],[0.0037,0.0],[0.0271,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":32,"set":"","t":"ㅋㅋㅋㅋㅋ","e":"9","why":"읽을 수 있는 내용 없음(4번 결정: 판단 불가, 학습·평가 제외)","r":9,"rr":"의미를 읽을 수 있는 말이 없음","cl":[0,9,9],"c":0.0002,"h":0.0,"nc":[0.0,0.0],"w":["ㅋㅋㅋㅋㅋ"],"d":[],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":33,"set":"","t":"저기 그 그거 있잖아요","e":"9","why":"말 조각뿐이라 무엇을 묻는지 알 수 없음. 공식 9 정의(마스킹·음성 인식 오류)를 채팅에 맞게 넓혀 적용","r":0,"rr":"문제 제기 없음","cl":[9,9,9],"c":0.0078,"h":0.0,"nc":[0.0087,0.0],"w":["저기","그","그거","있잖아요"],"d":[[0.017,0.0],[0.0046,0.0],[0.0038,0.0],[0.0044,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":34,"set":"","t":"오늘 저녁 메뉴 추천해 줄래요?","e":"경계(0 또는 9)","why":"쇼핑과 무관한 잡담. 공식 코드북엔 정의 없음, Claude 프롬프트는 0, 과제 분류는 9","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.0053,"h":0.0,"nc":[0.5091,0.0],"w":["오늘","저녁","메뉴","추천해","줄래요?"],"d":[[0.0012,0.0],[0.0044,0.0],[0.0015,0.0],[0.0035,0.0],[0.0025,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":35,"set":"A-1","t":"주문한 운동화가 아직 안 왔어요","e":"1","why":"배송 지연을 처음 사실로 설명(1번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[1,1,1],"c":0.1681,"h":0.0,"nc":[0.9987,0.0],"w":["주문한","운동화가","아직","안","왔어요"],"d":[[0.0802,0.0],[0.0559,0.0],[0.1523,0.0],[0.0484,0.0],[0.0737,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":36,"set":"A-2","t":"지난주에 보냈다면서 왜 아직도 안 오는 거예요","e":"2","why":"약속 불이행 + \"왜 아직도\" 지연 항의(2번 결정). 불만 1개째","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9983,"h":0.0416,"nc":[1.0,0.7436],"w":["지난주에","보냈다면서","왜","아직도","안","오는","거예요"],"d":[[0.9977,0.0225],[0.996,0.0052],[0.9955,0.0023],[0.9962,0.0351],[0.9963,0.008],[0.9975,0.0426],[0.9985,0.0172]],"ctx":"[고객] 주문한 운동화가 아직 안 왔어요 [상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":37,"set":"A-3","t":"벌써 두 번째 문의하는 건데 정말 답답하네요","e":"2","why":"반복 문의 + 답답함(2번 결정). 최근 3개 중 불만 2개가 되어 누적 이관(5번 결정)","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[2,2,2],"c":0.9997,"h":0.978,"nc":[0.9999,0.9998],"w":["벌써","두","번째","문의하는","건데","정말","답답하네요"],"d":[[0.999,0.9124],[0.9994,0.963],[0.9997,0.9858],[0.9997,0.9798],[0.9997,0.9832],[0.9995,0.9275],[0.9993,0.9174]],"ctx":"[고객] 지난주에 보냈다면서 왜 아직도 안 오는 거예요 [고객] 주문한 운동화가 아직 안 왔어요 [상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":38,"set":"B-1","t":"어제 온다던 택배가 안 와서 짜증나네요","e":"2","why":"약속 불이행 + 짜증(2번 결정). 불만 1개째","r":2,"rr":"반복 호소·지연 항의·불만 평가 표현","cl":[1,2,2],"c":0.7874,"h":0.0003,"nc":[1.0,0.0072],"w":["어제","온다던","택배가","안","와서","짜증나네요"],"d":[[0.7023,0.0001],[0.4208,0.0003],[0.9668,0.002],[0.4143,0.0],[0.9165,0.0004],[0.1324,0.0]],"ctx":"[상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":39,"set":"B-2","t":"아 지금 조회해 보니 오늘 출발했다고 나오네요","e":"0","why":"조회 결과를 확인하는 정보 응답(코드북 0)","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.9379,"h":0.0037,"nc":[0.3664,0.0],"w":["아","지금","조회해","보니","오늘","출발했다고","나오네요"],"d":[[0.9519,0.0025],[0.9442,0.0036],[0.955,0.0054],[0.9787,0.0452],[0.9636,0.0158],[0.9062,0.0013],[0.8879,0.0027]],"ctx":"[고객] 어제 온다던 택배가 안 와서 짜증나네요 [상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"},{"n":40,"set":"B-3","t":"네 그럼 내일까지 기다려 볼게요","e":"0","why":"수긍·절차 응답(코드북 0). 최근 3개 중 불만 1개뿐이라 누적 이관 아님","r":0,"rr":"문제 제기 없음","cl":[0,0,0],"c":0.8992,"h":0.0034,"nc":[0.9997,0.0],"w":["네","그럼","내일까지","기다려","볼게요"],"d":[[0.9179,0.005],[0.871,0.0026],[0.8071,0.0044],[0.8085,0.0019],[0.8759,0.0025]],"ctx":"[고객] 아 지금 조회해 보니 오늘 출발했다고 나오네요 [고객] 어제 온다던 택배가 안 와서 짜증나네요 [상담사] 안녕하세요, K쇼핑 상담 챗봇입니다. 무엇을 도와드릴까요?"}]</script>
+<script>
+(function(){
+var D=JSON.parse(document.getElementById("d").textContent);
+var $=function(i){return document.getElementById(i);};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+function coarse(l){return l===3?"즉시":l===2?"불만":"그 외";}
+function expOk(e,l){var c=coarse(l);
+  if(e.indexOf("경계(1 또는 2)")===0)return c!=="즉시";
+  if(e.indexOf("경계(0 또는 9)")===0)return c==="그 외";
+  return c===coarse(parseInt(e,10));}
+function expClass(e){return e==="3"?3:e==="2"?2:0;}
+function v2lab(r,tc,th,safe){if(safe&&r.r===3)return 3;return r.h>=th?3:(r.c>=tc?2:0);}
+function sim(ls){var w=[];for(var i=0;i<ls.length;i++){var l=ls[i];if(l===9)continue;w.push(l);
+  if(l===3)return (i+1)+"턴째 즉시 이관";
+  if(w.slice(-3).filter(function(x){return x===2||x===3;}).length>=2)return (i+1)+"턴째 연결 질문";}
+  return "이관 없음";}
+function score(tc,th,safe){var L={},ag=0,rec=0,over=0;
+  D.forEach(function(r){var l=v2lab(r,tc,th,safe);L[r.n]=l;if(expOk(r.e,l))ag++;
+    if(r.n>=24&&r.n<=31&&l===3)rec++;if(r.e!=="3"&&l===3)over++;});
+  return {L:L,ag:ag,rec:rec,over:over,A:sim([L[35],L[36],L[37]]),B:sim([L[38],L[39],L[40]])};}
+function chip(l){var s=el("span","lab"+(l?" k"+l:""),String(l));return s;}
+function expChip(e){if(/^\d$/.test(e))return chip(parseInt(e,10));var s=el("span","small muted",e.replace("경계","경계 "));return s;}
+var NS="http://www.w3.org/2000/svg";
+function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+function strip(id,key,t){var s=$(id);s.textContent="";var x0=16,w=568;
+  s.appendChild(sv("line",{x1:x0,y1:70,x2:x0+w,y2:70,"class":"axis"}));
+  [0,0.25,0.5,0.75,1].forEach(function(v){var tx=sv("text",{x:x0+v*w,y:88,"text-anchor":"middle"});tx.textContent=v.toFixed(2);s.appendChild(tx);});
+  var bins={};
+  D.forEach(function(r){var v=r[key],b=Math.round(v*56);bins[b]=(bins[b]||0)+1;var k=bins[b]-1;
+    var c=sv("circle",{cx:x0+(b/56)*w,cy:62-(k%7)*8.4-Math.floor(k/7)*0,r:3.6,"class":"d"+expClass(r.e),opacity:k>=7?0:1});
+    var ti=sv("title",{});ti.textContent="#"+r.n+" "+r.t+" · "+v.toFixed(2);c.appendChild(ti);s.appendChild(c);});
+  Object.keys(bins).forEach(function(b){if(bins[b]>7){var tx=sv("text",{x:x0+(b/56)*w+7,y:10});tx.textContent=bins[b]+"개";s.appendChild(tx);}});
+  var tx2=x0+t*w;s.appendChild(sv("line",{x1:tx2,y1:2,x2:tx2,y2:74,"class":"thr"}));
+  var lb=sv("text",{x:Math.min(tx2+6,x0+w-64),y:24,"class":"thr-t"});lb.textContent="기준선 "+t.toFixed(2);s.appendChild(lb);}
+var BASE=score(0.7,0.7,false);
+function render(){
+  var tc=parseFloat($("tc").value),th=parseFloat($("th").value),safe=$("safe").checked,only=$("only").checked;
+  $("tcv").textContent=tc.toFixed(2);$("thv").textContent=th.toFixed(2);
+  var S=score(tc,th,safe),ref=score(0.7,0.7,safe);
+  var T=$("tiles");T.textContent="";
+  function tile(v,lbl,note,cls){var d=el("div","tile");d.appendChild(el("b",null,v));d.appendChild(el("span",null,lbl));if(note)d.appendChild(el("em",cls,note));T.appendChild(d);}
+  tile(S.ag+" / 40","3분류 일치",S.ag-ref.ag===0?"0.7과 같음":"0.7보다 "+(S.ag>ref.ag?"+":"")+(S.ag-ref.ag),S.ag>=ref.ag?"good":"warn");
+  tile(S.rec+" / 8","즉시 이관 포착 (#24~31)",S.rec-ref.rec===0?"0.7과 같음":"0.7보다 "+(S.rec>ref.rec?"+":"")+(S.rec-ref.rec),S.rec>=ref.rec?"good":"warn");
+  tile(String(S.over),"불필요한 즉시 이관",S.over?"기대 3이 아닌데 3으로 판정":"없음",S.over?"warn":"good");
+  tile(S.A,"연속 세트 A",S.A==="3턴째 연결 질문"?"기대와 같음":"기대: 3턴째 연결 질문",S.A==="3턴째 연결 질문"?"good":"warn");
+  tile(S.B,"연속 세트 B",S.B==="이관 없음"?"기대와 같음":"기대: 이관 없음",S.B==="이관 없음"?"good":"warn");
+  strip("s1","c",tc);strip("s2","h",th);
+  var sw=$("sweep");sw.textContent="";var best=0,bt=[];
+  for(var i=1;i<=19;i++){var t=i*0.05,a=score(t,t,safe).ag;if(a>best){best=a;bt=[t];}else if(a===best)bt.push(t);
+    var b=el("i",Math.abs(t-tc)<0.001?"on":"");b.style.height=(a/40*100)+"%";b.title=t.toFixed(2)+" → "+a+" / 40";sw.appendChild(b);}
+  $("sweepnote").textContent="이 40문장에서는 "+bt.map(function(x){return x.toFixed(2);}).join(", ")+"에서 "+best+"문장으로 가장 많이 맞습니다. 지어낸 40문장 기준이라 기준선을 고르는 근거로 쓰기에는 부족합니다.";
+  var tb=$("tb");tb.textContent="";
+  D.forEach(function(r){var l=S.L[r.n],chg=l!==ref.L[r.n];if(only&&!chg)return;
+    var tr=el("tr",chg?"chg":"");
+    tr.appendChild(el("td","n","#"+r.n+(r.set?" "+r.set:"")));
+    tr.appendChild(el("td",null,r.t));
+    var te=el("td");te.appendChild(expChip(r.e));tr.appendChild(te);
+    [["c",tc,""],["h",th," h"]].forEach(function(k){var td=el("td"),w=el("div","cellbar"),b=el("div","bar"+k[2]),f=el("div","f"+(r[k[0]]>=k[1]?" hit":"")),m=el("div","m");
+      f.style.width=(r[k[0]]*100)+"%";m.style.left="calc("+(k[1]*100)+"% - 1px)";b.appendChild(f);b.appendChild(m);w.appendChild(b);w.appendChild(el("span","sc",r[k[0]].toFixed(2)));td.appendChild(w);tr.appendChild(td);});
+    var tl=el("td");tl.appendChild(chip(l));if(safe&&r.r===3&&r.h<th){tl.appendChild(document.createTextNode(" "));tl.appendChild(el("span","tag","규칙: "+r.rr));}
+    if(chg){tl.appendChild(document.createTextNode(" "));tl.appendChild(el("span","tag","0.7에서는 "+ref.L[r.n]));}tr.appendChild(tl);
+    var ok=expOk(r.e,l);tr.appendChild(el("td",ok?"good":"warn",ok?"일치":"불일치"));tb.appendChild(tr);});
+  if(!tb.children.length){var tr=el("tr"),td=el("td","muted","기준선 0.7 / 0.7과 결과가 달라지는 문장이 없습니다.");td.colSpan=7;tr.appendChild(td);tb.appendChild(tr);}
+}
+$("tc").addEventListener("input",function(){if($("tie").checked)$("th").value=$("tc").value;render();});
+$("th").addEventListener("input",function(){if($("tie").checked)$("tc").value=$("th").value;render();});
+["tie","safe","only"].forEach(function(i){$(i).addEventListener("change",function(){if(i==="tie"&&$("tie").checked)$("th").value=$("tc").value;render();});});
+Array.prototype.forEach.call(document.querySelectorAll("button[data-p]"),function(b){b.addEventListener("click",function(){$("tc").value=b.dataset.p;$("th").value=b.dataset.p;render();});});
+render();
+
+/* 판정 이유 */
+var cur=19,key=0,PICK=[19,23,27,30,38,39,24,25];
+var by={};D.forEach(function(r){by[r.n]=r;});
+PICK.forEach(function(n){var b=el("button",null,"#"+n+" "+by[n].t);b.type="button";b.dataset.n=n;b.addEventListener("click",function(){cur=n;xr();});$("picks").appendChild(b);});
+D.forEach(function(r){var o=el("option",null,"#"+r.n+" "+r.t);o.value=r.n;$("sel").appendChild(o);});
+$("sel").addEventListener("change",function(){cur=parseInt($("sel").value,10);xr();});
+$("k0").addEventListener("click",function(){key=0;xr();});$("k1").addEventListener("click",function(){key=1;xr();});
+function xr(){var r=by[cur],nm=key?"즉시 이관 점수":"불만 점수",base=key?r.h:r.c;
+  $("sel").value=cur;$("k0").setAttribute("aria-pressed",key===0);$("k1").setAttribute("aria-pressed",key===1);
+  Array.prototype.forEach.call($("picks").children,function(b){b.setAttribute("aria-pressed",String(parseInt(b.dataset.n,10)===cur));});
+  var W=$("words");W.textContent="";var top=-1,tv=0;
+  r.w.forEach(function(w,i){var d=r.d.length?base-r.d[i][key]:0;if(Math.abs(d)>Math.abs(tv)){tv=d;top=i;}
+    var s=el("span","w");s.appendChild(el("span",null,w));s.appendChild(el("small",null,r.d.length?(d>=0?"−":"+")+Math.abs(d).toFixed(2):"–"));
+    var p=Math.min(100,Math.round(Math.abs(d)*100));
+    s.style.background="color-mix(in srgb, var("+(d>=0?(key?"--l3":"--l2"):"--l1")+") "+Math.round(p*0.7)+"%, transparent)";W.appendChild(s);});
+  var t;
+  if(!r.d.length)t="어절이 하나뿐이라 뺄 수 없습니다. "+nm+"는 "+base.toFixed(2)+"입니다.";
+  else if(Math.abs(tv)>=0.05)t="‘"+r.w[top]+"’를 빼면 "+nm+"가 "+base.toFixed(2)+"에서 "+r.d[top][key].toFixed(2)+"로 "+(tv>0?"내려갑니다":"올라갑니다")+". 이 문장에서 모델이 가장 크게 반응한 어절입니다.";
+  else if(base<0.1)t="어느 어절을 빼도 "+nm+"가 0 근처에 머뭅니다. 모델은 이 문장에서 신호를 읽지 못했습니다.";
+  else t="어느 어절을 빼도 "+nm+"가 거의 그대로입니다("+base.toFixed(2)+"). 어절 하나가 아니라 문장 전체나 앞 문맥이 점수를 만든 경우입니다.";
+  $("read").textContent=t;
+  var kv=$("kv");kv.textContent="";
+  function add(k,node){kv.appendChild(el("dt",null,k));var dd=el("dd");if(typeof node==="string")dd.textContent=node;else dd.appendChild(node);kv.appendChild(dd);}
+  add("팀 모델 v2","불만 "+r.c.toFixed(2)+" · 즉시 이관 "+r.h.toFixed(2)+" (문맥 포함)");
+  add("문맥을 비우면","불만 "+r.nc[0].toFixed(2)+" · 즉시 이관 "+r.nc[1].toFixed(2));
+  var f=document.createDocumentFragment();f.appendChild(expChip(r.e));f.appendChild(document.createTextNode(" "+r.why));add("기대 라벨",f);
+  var g=document.createDocumentFragment();g.appendChild(chip(r.r));g.appendChild(document.createTextNode(" "+r.rr));add("규칙 판정",g);
+  var h=document.createDocumentFragment();r.cl.forEach(function(x){h.appendChild(chip(x));h.appendChild(document.createTextNode(" "));});
+  h.appendChild(document.createTextNode(r.cl[0]===r.cl[1]&&r.cl[1]===r.cl[2]?"세 번 모두 같음":"회차마다 다름"));add("Claude 3회",h);
+  $("ctx").textContent="모델에 함께 넣은 앞 문맥: "+r.ctx;}
+xr();
+})();
+</script>

@@ -1,0 +1,481 @@
+[
+ {
+  "key": "total_dialogs",
+  "label": "전체 대화",
+  "value": "26,270",
+  "unit": "대화",
+  "condition": "전체 데이터",
+  "source": "발표 덱 4장"
+ },
+ {
+  "key": "total_utts",
+  "label": "전체 고객 발화",
+  "value": "445,972",
+  "unit": "개",
+  "condition": "전체 데이터",
+  "source": "발표 덱 4장"
+ },
+ {
+  "key": "th_a",
+  "label": "기준선 (1)",
+  "value": "0.3",
+  "unit": "",
+  "condition": "이관 기준선",
+  "source": "덱 9장"
+ },
+ {
+  "key": "th_b",
+  "label": "기준선 (2)",
+  "value": "0.5",
+  "unit": "",
+  "condition": "이관 기준선",
+  "source": "덱 9장"
+ },
+ {
+  "key": "th_c",
+  "label": "기준선 (팀 결정)",
+  "value": "0.7",
+  "unit": "",
+  "condition": "이관 기준선",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "th_d",
+  "label": "기준선 (4)",
+  "value": "0.75",
+  "unit": "",
+  "condition": "이관 기준선",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "link_a",
+  "label": "연결 비율 · 기준선 0.3",
+  "value": "22.2",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "link_b",
+  "label": "연결 비율 · 기준선 0.5",
+  "value": "15.7",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "link_c",
+  "label": "연결 비율 · 기준선 0.7",
+  "value": "10.9",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "link_d",
+  "label": "연결 비율 · 기준선 0.75",
+  "value": "9.9",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "덱 9장 · 지도 5"
+ },
+ {
+  "key": "sample_link_a",
+  "label": "표본 연결 비율 · 시작값",
+  "value": "23.5",
+  "unit": "%",
+  "condition": "표본 419대화 · AI 라벨",
+  "source": "덱 9장"
+ },
+ {
+  "key": "sample_link_b",
+  "label": "표본 연결 비율 · 최종값",
+  "value": "8.3",
+  "unit": "%",
+  "condition": "표본 419대화 · AI 라벨",
+  "source": "덱 9장"
+ },
+ {
+  "key": "risk_capture",
+  "label": "위험 포착률",
+  "value": "99.1",
+  "unit": "%",
+  "condition": "표본 419대화 · AI 라벨",
+  "source": "덱 9장",
+  "detail": "72건 중 71건 · 놓친 1건 ID 2611"
+ },
+ {
+  "key": "sample_dialogs",
+  "label": "시험 표본",
+  "value": "419",
+  "unit": "대화",
+  "condition": "표본 419대화 · AI 라벨",
+  "source": "덱 9장"
+ },
+ {
+  "key": "handoff_total",
+  "label": "상담사 이관",
+  "value": "2,874",
+  "unit": "대화",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "지도 6"
+ },
+ {
+  "key": "handoff_immediate",
+  "label": "즉시 이관",
+  "value": "1,789",
+  "unit": "대화",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "지도 6"
+ },
+ {
+  "key": "handoff_cumulative",
+  "label": "누적 이관",
+  "value": "1,085",
+  "unit": "대화",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "지도 6"
+ },
+ {
+  "key": "bot_keep",
+  "label": "챗봇이 끝까지 응대",
+  "value": "23,396",
+  "unit": "대화",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "지도 6"
+ },
+ {
+  "key": "share_with_train",
+  "label": "학습에 쓴 발화가 든 대화 비율",
+  "value": "31.8",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 팀 모델 v2 · 파이썬 채점",
+  "source": "지도 6"
+ },
+ {
+  "key": "recall_a",
+  "label": "즉시 이관 재현율 · 기준선 0.3",
+  "value": "86",
+  "unit": "%",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "모델 카드 · 슬라이드 4장"
+ },
+ {
+  "key": "recall_b",
+  "label": "즉시 이관 재현율 · 기준선 0.5",
+  "value": "79",
+  "unit": "%",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "모델 카드 · 슬라이드 4장"
+ },
+ {
+  "key": "recall_c",
+  "label": "즉시 이관 재현율 · 기준선 0.7",
+  "value": "71",
+  "unit": "%",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "모델 카드 · 슬라이드 4장",
+  "detail": "14건 중 10건"
+ },
+ {
+  "key": "recall_miss",
+  "label": "기준선 0.7에서 놓친 즉시 이관",
+  "value": "4",
+  "unit": "건",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "지도 숫자 읽을 때",
+  "detail": "14건 중 4건"
+ },
+ {
+  "key": "human_gold",
+  "label": "사람 합의 정답",
+  "value": "60",
+  "unit": "건",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "human_immediate",
+  "label": "그중 즉시 이관",
+  "value": "14",
+  "unit": "건",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "지도 1"
+ },
+ {
+  "key": "jev_labels",
+  "label": "Jev 학습 라벨",
+  "value": "18,267",
+  "unit": "건",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "train_rows",
+  "label": "학습 자료",
+  "value": "18,327",
+  "unit": "행",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4",
+  "detail": "Jev 18,267 + 사람 60"
+ },
+ {
+  "key": "auc_complaint",
+  "label": "불만 AUC",
+  "value": "0.921",
+  "unit": "",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "auc_immediate",
+  "label": "즉시 이관 AUC",
+  "value": "0.944",
+  "unit": "",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "models_compared",
+  "label": "비교한 언어 모델",
+  "value": "8",
+  "unit": "개",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "roberta_auc",
+  "label": "RoBERTa 1위 AUC",
+  "value": "0.900",
+  "unit": "",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 1·4"
+ },
+ {
+  "key": "ft_auc_range",
+  "label": "통째 재학습 AUC",
+  "value": "0.63~0.76",
+  "unit": "",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 4"
+ },
+ {
+  "key": "ens_gain",
+  "label": "앙상블 효과",
+  "value": "+0.012",
+  "unit": "",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 4"
+ },
+ {
+  "key": "v2_immediate_phrase",
+  "label": "'상담원 연결해 주세요'의 v2 즉시 이관 점수",
+  "value": "0.02",
+  "unit": "",
+  "condition": "사람 정답 60건(즉시 14건)",
+  "source": "지도 숫자 읽을 때"
+ },
+ {
+  "key": "embed_dim",
+  "label": "문장을 바꾼 숫자 개수",
+  "value": "768",
+  "unit": "개",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 3"
+ },
+ {
+  "key": "sentiment_fp",
+  "label": "기존 감정 모델 오탐",
+  "value": "98",
+  "unit": "%",
+  "condition": "학습 자료 · 모델 비교",
+  "source": "지도 4"
+ },
+ {
+  "key": "corr_turns",
+  "label": "턴 수와 불만 상관",
+  "value": "-0.19",
+  "unit": "",
+  "condition": "전체 26,270대화 · 탐색 분석",
+  "source": "발표 덱 4·5장"
+ },
+ {
+  "key": "backchannel",
+  "label": "단순 맞장구 비율",
+  "value": "40.9",
+  "unit": "%",
+  "condition": "전체 26,270대화 · 탐색 분석",
+  "source": "발표 덱 4·5장"
+ },
+ {
+  "key": "eng_agree_rule",
+  "label": "3분류 일치 (40문장)",
+  "value": "36/40",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_agree_v2",
+  "label": "3분류 일치 (40문장)",
+  "value": "25/40",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_agree_v2rule",
+  "label": "3분류 일치 (40문장)",
+  "value": "29/40",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_agree_claude",
+  "label": "3분류 일치 (40문장)",
+  "value": "38/40",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표",
+  "detail": "Claude는 3회 다수결 · 회차 37·38·39"
+ },
+ {
+  "key": "eng_imm_rule",
+  "label": "즉시 이관 재현 (8문장)",
+  "value": "5/8",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_imm_v2",
+  "label": "즉시 이관 재현 (8문장)",
+  "value": "1/8",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_imm_v2rule",
+  "label": "즉시 이관 재현 (8문장)",
+  "value": "5/8",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_imm_claude",
+  "label": "즉시 이관 재현 (8문장)",
+  "value": "7/8",
+  "unit": "",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_over_rule",
+  "label": "불필요한 즉시 이관",
+  "value": "0",
+  "unit": "문장",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "eng_over_v2",
+  "label": "불필요한 즉시 이관",
+  "value": "2",
+  "unit": "문장",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표",
+  "detail": "#23, #37"
+ },
+ {
+  "key": "eng_over_v2rule",
+  "label": "불필요한 즉시 이관",
+  "value": "2",
+  "unit": "문장",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표",
+  "detail": "#23, #37"
+ },
+ {
+  "key": "eng_over_claude",
+  "label": "불필요한 즉시 이관",
+  "value": "0",
+  "unit": "문장",
+  "condition": "지어낸 40문장 · 엔진별",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_hit",
+  "label": "근거 적중",
+  "value": "50/50",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_faith",
+  "label": "근거 충실",
+  "value": "50/50",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_forbid",
+  "label": "금지 답변·근거 없는 숫자",
+  "value": "0/95",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_safety_link",
+  "label": "안전·법적·금전 분쟁 연결",
+  "value": "6/6",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_done",
+  "label": "봇 완결률",
+  "value": "82/100",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_link",
+  "label": "상담사 연결률",
+  "value": "18/100",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "bot1_safety_recall",
+  "label": "안전 연결 재현율",
+  "value": "12/12",
+  "unit": "",
+  "condition": "고객용 챗봇 규칙 모드 · node 평가",
+  "source": "벤치마크 결과표"
+ },
+ {
+  "key": "cards_n",
+  "label": "매뉴얼 근거 카드",
+  "value": "192",
+  "unit": "개",
+  "condition": "챗봇 1에만 해당",
+  "source": "customer.html"
+ },
+ {
+  "key": "model_mb",
+  "label": "챗봇 2 팀 모델 내려받기",
+  "value": "약 220",
+  "unit": "MB",
+  "condition": "챗봇 2 시연",
+  "source": "chatbot2/app/index.html"
+ }
+]

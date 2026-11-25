@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>검증 · 파이썬 점수와 브라우저 점수</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>iframe#hid{position:absolute;width:0;height:0;border:0;visibility:hidden}</style>
+</head>
+<body class="inner">
+<div class="site-bar"><div class="in"><b>팀2 · 상담사 이관 시연</b><span><a href="../">홈</a></span></div></div>
+<header class="wrap" style="padding-top:24px">
+  <h1>검증: 파이썬 채점과 브라우저 채점이 같은지 봐요</h1>
+  <p class="prose note">챗봇 2의 팀 모델 v2를 이 브라우저 안에서 돌려, 지어낸 40문장의 점수를 파이썬 채점값과 맞춰 봐요.</p>
+</header>
+<main class="wrap">
+<section class="flow">
+  <div id="status" role="status">시작 준비 중</div>
+  <div class="bar"><i id="prog"></i></div>
+  <p class="note"><span data-tpl>모델({{model_mb:vu}})을 처음 한 번 내려받아요. 휴대폰에서는 오래 걸릴 수 있어요.</span></p>
+</section>
+<section class="flow" id="checks"><h2>통과 기준</h2><div id="chk" class="prose" style="max-width:none"></div></section>
+<section class="flow"><details class="fold"><summary>문장별 결과 펼치기</summary>
+  <div class="tw"><table id="tbl"><thead><tr><th>번호</th><th>문장</th><th>파이썬 (불만/즉시)</th><th>브라우저 (불만/즉시)</th><th>차이</th><th>라벨 일치</th><th>규칙 일치</th></tr></thead><tbody></tbody></table></div>
+</details></section>
+</main>
+<iframe id="hid" src="../chatbot2/app/index.html" title="숨김 챗봇 2" aria-hidden="true" tabindex="-1"></iframe>
+<script src="../assets/nums.js"></script>
+<script>
+(async function(){
+  function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
+  var $=function(i){return document.getElementById(i);};
+  var M=await Team2Nums.load();
+  var B=await (await fetch("bench40.json")).json();
+  var items=B.items, TH=B.th, TOL=B.scoreTol, IMM=B.immediateNos;
+  var win=$("hid").contentWindow;
+  function first(s){return parseInt(String(s).split("/")[0],10);}
+  function nosOf(s){return (String(s||"").match(/#(\d+)/g)||[]).map(function(x){return parseInt(x.slice(1),10);});}
+  function coarse(l){return l===3?"즉시":l===2?"불만":"그 외";}
+  function expOk(exp,l){var c=coarse(l);
+    if(exp.indexOf("경계(1 또는 2)")===0) return c==="그 외"||c==="불만";
+    if(exp.indexOf("경계(0 또는 9)")===0) return c==="그 외";
+    return c===coarse(parseInt(exp,10));}
+  /* 모델 준비 기다리기 */
+  var st=$("status"), prog=$("prog");
+  while(true){
+    var V; try{ V=win.V2; }catch(e){ V=null; }
+    if(!V){ st.textContent="챗봇 2 불러오는 중"; }
+    else if(V.state==="ready") break;
+    else if(V.state==="fail"){ st.textContent="모델을 못 받았습니다: "+V.err; st.className="fail"; return; }
+    else { st.textContent=(V.state==="init"?"모델 여는 중":"모델 내려받는 중 "+Math.round(V.pct*100)+"%"); prog.style.width=Math.round((V.pct||0)*100)+"%"; }
+    await new Promise(function(r){setTimeout(r,400);});
+  }
+  prog.style.width="100%";
+  var tb=document.querySelector("#tbl tbody"), res=[];
+  for(var i=0;i<items.length;i++){
+    var it=items[i]; st.textContent="채점 중 "+(i+1)+" / "+items.length;
+    var sc=await win.v2score(it.utt,it.ctx);          /* 예외로 호출 허용된 함수 1 */
+    var rl=win.ruleJudge(it.utt).label;               /* 예외로 호출 허용된 함수 2 */
+    var c=Number(sc[0]), h=Number(sc[1]);
+    var dif=Math.max(Math.abs(c-it.py[0]),Math.abs(h-it.py[1]));
+    var pyLab=it.py[1]>=TH?3:(it.py[0]>=TH?2:0), brLab=h>=TH?3:(c>=TH?2:0);
+    var r={it:it,c:c,h:h,dif:dif,labOk:pyLab===brLab,ruleOk:rl===it.pyRule,v2:brLab,rule:rl,v2r:rl===3?3:brLab,scoreOk:Math.abs(c-it.py[0])<=TOL&&Math.abs(h-it.py[1])<=TOL};
+    res.push(r);
+    var tr=el("tr",(r.scoreOk&&r.labOk&&r.ruleOk)?"":"bad");
+    tr.append(el("td",null,String(it.no)),el("td",null,it.utt),el("td","num",it.py[0].toFixed(4)+" / "+it.py[1].toFixed(4)),el("td","num",c.toFixed(4)+" / "+h.toFixed(4)),
+      el("td","num",dif.toFixed(4)),el("td",r.labOk?"pass":"fail",r.labOk?"일치":"불일치"),el("td",r.ruleOk?"pass":"fail",r.ruleOk?"일치":"불일치"));
+    tb.append(tr);
+  }
+  st.textContent="채점 끝"; st.className="pass";
+  /* 집계 (score.py와 같은 방식) */
+  function agg(key){
+    var agree=0,rec=0,over=[];
+    res.forEach(function(r){var l=r[key];
+      if(expOk(r.it.expect,l)) agree++;
+      if(IMM.indexOf(r.it.no)>=0&&l===3) rec++;
+      if(r.it.expect!=="3"&&l===3) over.push(r.it.no);});
+    return {agree:agree,rec:rec,over:over};
+  }
+  var A={rule:agg("rule"),v2:agg("v2"),v2rule:agg("v2r")};
+  var checks=[];
+  var nScores=res.length*2, okScores=0; res.forEach(function(r){ if(Math.abs(r.c-r.it.py[0])<=TOL) okScores++; if(Math.abs(r.h-r.it.py[1])<=TOL) okScores++; });
+  var maxDif=Math.max.apply(null,res.map(function(r){return r.dif;}));
+  checks.push(["점수 차 "+TOL+" 이하 (점수 "+nScores+"개)",okScores+" / "+nScores+" · 최대 차 "+maxDif.toFixed(4),okScores===nScores]);
+  var labOk=res.filter(function(r){return r.labOk;}).length;
+  checks.push(["v2 라벨이 파이썬과 같음",labOk+" / "+res.length,labOk===res.length]);
+  var ruleOk=res.filter(function(r){return r.ruleOk;}).length;
+  checks.push(["규칙 판정이 파이썬과 같음",ruleOk+" / "+res.length,ruleOk===res.length]);
+  [["v2","v2"],["v2rule","v2rule"],["rule","rule"]].forEach(function(p){
+    var k=p[0], name={v2:"팀 모델 v2 단독",v2rule:"팀 모델 v2 + 규칙",rule:"규칙"}[k];
+    var ea=first(M["eng_agree_"+k].value), ei=first(M["eng_imm_"+k].value);
+    checks.push([name+" · 3분류 일치",A[k].agree+" / "+res.length+" (기대 "+M["eng_agree_"+k].value+")",A[k].agree===ea]);
+    checks.push([name+" · 즉시 이관 재현",A[k].rec+" / "+IMM.length+" (기대 "+M["eng_imm_"+k].value+")",A[k].rec===ei]);
+    var en=nosOf(M["eng_over_"+k].detail), want=parseInt(M["eng_over_"+k].value,10);
+    var same=A[k].over.length===want&&en.join()===A[k].over.join()||(want===0&&A[k].over.length===0);
+    checks.push([name+" · 불필요한 즉시 이관",A[k].over.length+"문장"+(A[k].over.length?" (#"+A[k].over.join(", #")+")":"")+" (기대 "+want+"문장"+(en.length?" #"+en.join(", #"):"")+")",same]);
+  });
+  var box=$("chk"); box.textContent="";
+  var all=true;
+  checks.forEach(function(c){ all=all&&c[2];
+    var row=el("div","chk"); var l=el("div"); l.append(el("div",null,c[0]),el("small",null,c[1]));
+    row.append(l,el("div","big "+(c[2]?"pass":"fail"),c[2]?"통과":"불일치")); box.append(row); });
+  var sum=el("div","big "+(all?"pass":"fail"),all?"전부 통과: 브라우저에서도 같은 결과가 나옵니다":"불일치가 있습니다. 위 빨간 항목을 확인하세요");
+  box.prepend(sum);
+})();
+</script>
+</body>
+</html>

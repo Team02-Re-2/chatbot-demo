@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>프로젝트 지도 · 팀2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="inner">
+<div class="site-bar"><div class="in"><b>팀2 · 상담사 이관 시연</b><span><a href="../">홈</a></span></div></div>
+<header class="wrap" style="padding-top:24px">
+  <h1>프로젝트 지도</h1>
+  <p class="prose note">데이터에서 챗봇까지, 그림 8장으로 봐요.</p>
+  <p><a class="btn" href="handoff-map.html">대화형 지도 열기</a></p>
+</header>
+<main class="wrap">
+
+<section class="card"><h2>1. 전체 지도</h2><div class="mm">
+<pre class="mermaid" data-tpl>
+mindmap
+  root((상담사 이관 최적화))
+    A 데이터
+      AI 허브 쇼핑 상담
+      {{total_dialogs:vu}}
+      고객 발화 {{total_utts:vu}}
+      관점: 챗봇이 응대하다 신호가 보이면 넘긴다
+    B EDA
+      턴 수와 불만 상관 {{corr_turns}}
+      단순 맞장구 {{backchannel:vu}}
+      기존 감정 모델은 못 씀
+    C 판정 기준
+      코드북 v1.0 · 라벨 0 1 2 3 9
+      사람 합의 {{human_gold:vu}} · 즉시 이관 {{human_immediate:vu}}
+      Jev 학습 라벨 {{jev_labels:vu}}
+      Haiku 시험 정답 · 표본 {{sample_dialogs:vu}}
+    D 모델
+      {{models_compared:vu}} 언어 모델 비교 · RoBERTa 1위
+      v1 사람 {{human_gold:vu}}만
+      v2 사람 {{human_gold}} + Jev · 최종
+      불만 AUC {{auc_complaint}} · 즉시 AUC {{auc_immediate}}
+    E 기준선
+      {{th_a}}에서 {{th_c}}로
+      연결 비율 {{link_a:vu}} → {{link_c:vu}}
+    F 챗봇
+      상담사 매뉴얼 v1
+      고객용 챗봇 · 규칙 기반
+      v2 탑재 챗봇 · 브라우저 판정
+</pre></div></section>
+
+<section class="card"><h2>2. 진행 순서</h2><div class="mm">
+<pre class="mermaid" data-tpl>
+timeline
+  title 팀2 진행 순서 2026
+  9월 : 9/19 쇼핑 데이터 선정
+       : 9/28~10/7 관점 확정 · 챗봇이 넘길 시점
+  10월 초중순 : 10/8~10/12 EDA
+              : 10/12~10/22 코드북 v1.0 · 사람 합의 {{human_gold:vu}}
+              : 10/21 언어 모델 {{models_compared:vu}} 비교
+  10월 하순 : 10/23~10/24 Jev 라벨 {{jev_labels:vu}}
+            : 10/24 v1 → v2 학습
+            : 10/29~11/1 앙상블 시도 · 미채택
+  11월 중순 : 11/8~11/11 상담사 매뉴얼 v1
+            : 11/12~11/16 답변 추천 · RAG 시제품
+            : 11/19~11/24 고객용 챗봇
+  11월 하순 : 11/20 Haiku 시험 정답 · v2 채점
+            : 기준선 {{th_c}} 결정
+            : 11/25 v2 탑재 이관 챗봇
+</pre></div></section>
+
+<section class="card"><h2>3. 모델 만들기와 챗봇에서 쓰기</h2>
+<p class="note">위쪽은 학습할 때, 아래쪽은 챗봇이 돌아갈 때. Jev는 학습할 때만, 코드북은 두 곳 모두.</p><div class="mm">
+<pre class="mermaid" data-tpl>
+flowchart LR
+  subgraph 학습["학습할 때"]
+    D["상담 데이터<br>{{total_dialogs:vu}}"] --> CB["코드북 v1.0<br>판정 기준"]
+    CB --> H["사람 정답 {{human_gold:vu}}"]
+    CB --> J["Jev 라벨<br>{{jev_labels:vu}}"]
+    H --> T["학습 자료<br>{{train_rows}}건"]
+    J --> T
+    T --> R["RoBERTa<br>문장 → 숫자 {{embed_dim:vu}}"]
+    R --> LR["로지스틱 회귀 2개<br>불만 · 즉시 이관"]
+    LR --> V2(["팀 모델 v2"])
+  end
+  subgraph 실행["챗봇이 돌아갈 때"]
+    U["고객 말"] --> C["문맥 붙이기<br>앞 고객 2 + 앞 챗봇 2"]
+    C --> S["v2 점수"]
+    S --> TH{"기준선 {{th_c}}"}
+    TH --> RL["규칙 안전장치<br>욕설 · 신고 · 책임자 요구"]
+    RL --> W{"이관 규칙<br>즉시 · 3개 중 2개"}
+    W -->|넘김| AG["상담사"]
+    W -->|유지| BOT["답변<br>매뉴얼 근거"]
+  end
+  V2 -.-> S
+  CB -.-> W
+</pre></div></section>
+
+<section class="card"><h2>4. 시도와 채택</h2><div class="mm">
+<pre class="mermaid" data-tpl>
+flowchart TB
+  Q["불만을 어떻게 잡을까"] --> E1["기존 감정 분석 모델"]
+  Q --> K["키워드 규칙"]
+  Q --> M["언어 모델 {{models_compared:vu}} 비교"]
+  E1 --> X1["라벨 1을 분노로 {{sentiment_fp:vu}} 오탐 · 버림"]
+  K --> X2["문맥을 못 읽음 · 안전장치로만 씀"]
+  M --> RB["RoBERTa 1위 · AUC {{roberta_auc}}"]
+  RB --> FT["언어 모델 통째 재학습"]
+  RB --> V1["v1 · 사람 {{human_gold:vu}}만"]
+  FT --> X3["AUC {{ft_auc_range}} · 버림"]
+  V1 --> V2["v2 · 사람 {{human_gold}} + Jev {{jev_labels}}"]
+  V2 --> EN["앙상블 · Optuna"]
+  EN --> X4["효과 {{ens_gain}} · 버림"]
+  V2 --> OK(["최종 채택 · 팀 모델 v2"])
+</pre></div></section>
+
+<section class="card"><h2>5. 기준선별 연결 비율</h2>
+<p class="note" data-tpl>전체 {{total_dialogs:vu}}에 v2를 적용했을 때 상담사에게 넘어가는 대화 비율. 출처: 팀 모델 v2 점수 파일에 이관 규칙을 적용해 다시 계산 (apply_rules.py, 2026-11-25)</p><div class="mm">
+<pre class="mermaid" data-tpl>
+xychart-beta
+  title "기준선별 연결 비율 (%) · 전체 {{total_dialogs:vu}}"
+  x-axis ["{{th_a}}", "{{th_b}}", "{{th_c}} 팀 결정", "{{th_d}}"]
+  y-axis "연결 비율 (%)" 0 --> 25
+  bar [{{link_a}}, {{link_b}}, {{link_c}}, {{link_d}}]
+</pre></div></section>
+
+<section class="card"><h2>6. 기준선 0.7을 적용한 결과</h2>
+<p data-tpl>{{total_dialogs:vu}} 중 {{handoff_total:vu}}({{link_c:vu}})가 상담사에게. 즉시 {{handoff_immediate}}, 누적 {{handoff_cumulative}}.</p>
+<p class="note" data-tpl>"{{link_c:vu}}는 모델 성능이 아니라 상담사에게 넘어가는 규모예요. {{share_with_train:vu}}의 대화에 학습에 쓴 발화가 들어 있어요."</p><div class="mm">
+<pre class="mermaid" data-tpl>
+xychart-beta
+  title "기준선 0.7 적용 결과 (대화 수)"
+  x-axis ["챗봇 유지", "즉시 이관", "누적 이관"]
+  y-axis "대화 수"
+  bar [{{bot_keep:n}}, {{handoff_immediate:n}}, {{handoff_cumulative:n}}]
+</pre></div></section>
+
+<section class="card"><h2>7. 챗봇 한 턴</h2><div class="mm">
+<pre class="mermaid" data-tpl>
+sequenceDiagram
+  actor 고객
+  participant 챗봇
+  participant v2 as 팀 모델 v2
+  participant 규칙 as 규칙 안전장치
+  participant 상담사
+  고객->>챗봇: "왜 이렇게 늦는지 답답하네요"
+  챗봇->>v2: 고객 말 + 앞 문맥 4개
+  v2-->>챗봇: 불만 점수 · 즉시 이관 점수
+  챗봇->>규칙: 욕설 · 신고 · 책임자 요구?
+  규칙-->>챗봇: 해당 없음
+  alt 즉시 이관 {{th_c}} 이상 또는 규칙 해당
+    챗봇->>상담사: 바로 연결 + 인계 카드
+  else 최근 3개 중 2개 불만
+    챗봇->>고객: 상담사에게 연결해 드릴까요?
+  else 그 밖
+    챗봇->>고객: 매뉴얼 근거 답변
+  end
+</pre></div>
+<p class="note">claude.ai 판에서는 이 단계에서 Claude가 답변을 만듭니다.</p></section>
+
+<section class="card"><h2>8. 이관 흐름</h2><div class="mm">
+<pre class="mermaid" data-tpl>
+stateDiagram-v2
+  [*] --> 응대
+  응대 --> 불만관찰: 불만 {{th_c}} 이상
+  불만관찰 --> 응대: 다음 말이 불만 아님
+  불만관찰 --> 연결질문: 최근 3개 중 2개 불만
+  연결질문 --> 상담사: 네
+  연결질문 --> 계속응대: 아니요
+  계속응대 --> 상담사: 불만이 다시 나옴
+  응대 --> 상담사: 즉시 이관 {{th_c}} 이상 또는 규칙
+  불만관찰 --> 상담사: 즉시 이관 {{th_c}} 이상 또는 규칙
+  상담사 --> [*]
+</pre></div></section>
+
+<section class="card"><h2>숫자 읽을 때</h2><ul>
+<li data-tpl>{{link_c:vu}}는 전체 {{total_dialogs:vu}} 기준, {{sample_link_b:vu}}와 {{risk_capture:vu}}는 시험 표본(AI 라벨) 기준이에요. 섞어 쓰지 않아요.</li>
+<li data-tpl>사람 정답 {{human_gold:vu}} 교차검증 기준으로 {{th_c}}의 즉시 이관 재현율은 {{recall_c:vu}}예요({{recall_miss:d}} 놓침).</li>
+<li data-tpl>v2는 "상담원 연결해 주세요"를 못 잡아서(즉시 이관 {{v2_immediate_phrase}}) 규칙 안전장치로 보완했어요.</li>
+</ul></section>
+</main>
+
+<script src="../assets/nums.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+Team2Nums.ready.then(function(){
+  if(typeof mermaid==="undefined"){ document.querySelectorAll("pre.mermaid").forEach(function(p){p.style.textAlign="left";}); return; }
+  var dark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({startOnLoad:false,theme:dark?"dark":"default",securityLevel:"strict",fontFamily:"inherit"});
+  mermaid.run({querySelector:"pre.mermaid"});
+});
+</script>
+</body>
+</html>

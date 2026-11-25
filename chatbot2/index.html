@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>챗봇 2 · 팀 모델 v2 이관 시연</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;overflow:hidden}
+iframe{flex:1;width:100%;border:0;min-height:0;background:var(--paper)}
+</style>
+</head>
+<body>
+<div class="band">
+  <div class="row">
+    <div class="st" id="st" role="status"><span class="dot" id="dot" aria-hidden="true"></span><span id="stt">지금 판정: 확인 중</span></div>
+    <div class="links2"><a href="../">홈</a><a href="../admin/">관리자</a></div>
+  </div>
+  <p class="sub">새로고침하지 말고 '새 상담 시작' 버튼을 쓰세요. <span data-tpl>팀 모델({{model_mb:vu}})은 처음 한 번 내려받아요.</span></p>
+  <div class="prog" aria-hidden="true"><i id="prog"></i></div>
+</div>
+<iframe id="app" src="app/index.html" title="팀 모델 v2 이관 챗봇"></iframe>
+<script src="../assets/nums.js"></script>
+<script src="../assets/bridge.js"></script>
+<script>
+(function(){
+  var st=document.getElementById("st"), stt=document.getElementById("stt"), dot=document.getElementById("dot"), prog=document.getElementById("prog"), th="0.7";
+  Team2Nums.ready.then(function(m){ if(m.th_c) th=m.th_c.value; });
+  Team2Bridge.watchChatbot2(document.getElementById("app"), function(i){
+    var t, cls="", d="dot", p=0;
+    if(i.state==="fail"){ t="모델을 못 받아 규칙으로 판정 중"; cls=" err"; d="dot err"; }
+    else if(i.mode==="v2"){ t="지금 판정: 팀 모델 v2 + 규칙 안전장치 (기준선 "+th+")"; d="dot v2"; }
+    else if(i.state==="ready"){ t="지금 판정: 규칙만 (판정 방식을 규칙으로 골랐어요)"; }
+    else if(i.state==="init"){ t="지금 판정: 규칙만 (팀 모델 여는 중)"; p=1; }
+    else { t="지금 판정: 규칙만 (팀 모델 받는 중 "+Math.round(i.pct*100)+"%)"; p=i.pct; }
+    stt.textContent=t; st.className="st"+cls; dot.className=d; prog.style.width=Math.round(p*100)+"%";
+  });
+})();
+</script>
+</body>
+</html>
