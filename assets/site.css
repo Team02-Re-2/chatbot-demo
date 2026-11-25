@@ -153,3 +153,102 @@ details.fold[open]>summary{margin-bottom:8px}
 .mm{overflow-x:auto;padding:4px 0}
 pre.mermaid{margin:0;background:transparent;font-family:inherit;white-space:pre;text-align:left;min-height:40px}
 code{background:var(--tint);padding:1px 5px;border-radius:4px;font-size:.92em}
+
+/* ── 관리자 콘솔 (admin/index.html) ── */
+body.console{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;font-size:14px;line-height:1.5}
+body.console .note,body.console small{font-size:12.5px}
+.console-head{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 10px;border-bottom:1px solid var(--line);background:var(--card);font-size:14px}
+.console-head .btn,.console-mid .btn{min-height:32px;margin:0 6px 0 0;padding:0 10px;font-size:13px}
+.console-counts{flex:none;display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 16px;padding:4px 10px;border-bottom:1px solid var(--line)}
+.console-counts div{display:flex;align-items:baseline;gap:5px}
+.console-counts b{font-size:18px;line-height:1.2}
+.console-counts span{font-size:12.5px;color:var(--muted)}
+.console-counts .src{margin-left:auto;font-size:12px;color:var(--muted)}
+.console-mid{flex:1 1 0;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,30%) minmax(0,1fr)}
+@media (min-width:520px){.console-mid{grid-template-columns:200px minmax(0,1fr);grid-template-rows:minmax(0,1fr)}}
+.console-queue{overflow-y:auto;padding:6px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.console-card{overflow-y:auto;padding:8px 10px;border-bottom:1px solid var(--line)}
+.console-log{flex:0 0 38%;min-height:120px;display:flex;flex-direction:column;min-width:0}
+.console-log h2{flex:none;font-size:13px;margin:0;padding:4px 10px;border-bottom:1px solid var(--line)}
+.console-log .tw{flex:1;min-height:0;overflow:auto}
+.console-log table{font-size:12.5px}
+.console-log th,.console-log td{padding:4px 8px}
+.console-log th{position:sticky;top:0;background:var(--card)}
+.qrow{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:var(--card);border:1px solid var(--line);border-left:8px solid var(--l2);border-radius:4px;padding:5px 8px;margin:0 0 6px;cursor:pointer;box-shadow:0 1px 2px rgba(20,33,61,.08)}
+.qrow.k-imm{border-left-color:var(--l3)}
+.qrow.k-done{border-left-color:var(--l0);opacity:.7}
+.qrow.sel{outline:2px solid var(--focus);outline-offset:1px}
+.qrow .l1,.qrow .l2{display:flex;flex-wrap:wrap;gap:2px 6px;align-items:center;font-size:12.5px}
+.qrow .tag{font-size:12px;padding:0 6px;line-height:1.5}
+.qrow.new{animation:drop .2s ease-out 1}
+@media (prefers-reduced-motion:reduce){.qrow.new{animation:none}}
+.ccard h3{font-size:14px;margin:0 0 4px}
+.ccard dl{margin:6px 0;display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:12.5px}
+.ccard dt{color:var(--muted)}.ccard dd{margin:0}
+.sbar{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:center;font-size:12.5px;margin:6px 0}
+.sbar .trk{position:relative;height:8px;background:var(--line);border-radius:2px}
+.sbar .trk i{display:block;height:100%;background:var(--ink);border-radius:2px}
+.sbar .trk u{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--l3);text-decoration:none}
+
+/* ── 첫 화면 3분할 시연판 ── */
+html.split-html{color-scheme:light}
+body.split-page{--paper:#F6F8FA;--card:#FFFFFF;--ink:#14213D;--muted:#5B6B7B;--line:#D5DDE5;--l0:#7A8794;--l1:#2F6FB2;--l2:#B7791F;--l3:#C8372D;--focus:#14213D;--tint:#E8EEF5;--btn-fg:#F6F8FA;
+  height:100vh;height:100dvh;overflow:hidden;display:flex;flex-direction:column;font-size:14px;line-height:1.5}
+.split-top{flex:none;position:relative;height:48px;display:flex;align-items:center;gap:16px;padding:0 12px;background:var(--card);border-bottom:1px solid var(--line);white-space:nowrap}
+.split-top h1{font-size:15px;margin:0;flex:none}
+.top-inline{display:flex;align-items:center;gap:16px;min-width:0;flex:1}
+.nchip{display:flex;flex-direction:column;line-height:1.2;flex:none}
+.nchip b{font-size:15px;font-weight:700}
+.nchip small{font-size:12px;color:var(--muted)}
+.nchip .wide{display:none}
+@media (min-width:1500px){.nchip .wide{display:inline}}
+.top-links{display:flex;gap:4px;margin-left:auto;flex:none}
+.top-links a,.more>summary{display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:13px;color:var(--ink);cursor:pointer}
+.more{position:relative;flex:none}
+.more>summary{list-style:none;border-radius:4px}
+.more>summary::-webkit-details-marker{display:none}
+.more-pan{position:absolute;right:0;top:100%;z-index:30;min-width:220px;max-width:92vw;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:8px 12px;box-shadow:0 2px 6px rgba(20,33,61,.12);white-space:normal}
+.more-pan a{display:flex;align-items:center;min-height:40px;font-size:14px}
+.more-pan .only-narrow{display:none}
+.split-prog{flex:none;height:3px;background:transparent}
+.split-prog i{display:block;height:100%;width:0;background:var(--ink)}
+.split-tabs{display:none}
+.split{flex:1 1 0;min-height:0;display:grid;grid-template-columns:29fr 29fr 42fr;gap:1px;background:var(--line)}
+.pane{background:var(--paper);display:grid;grid-template-rows:auto auto minmax(0,1fr);min-width:0;min-height:0}
+.pane-h{display:flex;align-items:center;gap:8px;min-height:36px;padding:2px 8px;background:var(--card);border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap;overflow:hidden}
+.pane-h b{flex:none}
+.pane-h .ps{display:flex;align-items:center;gap:6px;min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.pane-h .ps i{flex:none;width:9px;height:9px;border-radius:50%;background:var(--l0)}
+.pane-h .ps i.v2{background:var(--l1)}.pane-h .ps i.err{background:var(--l3)}
+.pane-h .pb{flex:none;display:inline-flex;align-items:center;min-height:28px;padding:0 8px;border:1px solid var(--ink);border-radius:4px;background:transparent;color:var(--ink);font:500 12.5px/1 "IBM Plex Sans KR","Malgun Gothic",sans-serif;text-decoration:none;cursor:pointer}
+.chipbar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;padding:4px 8px;background:var(--card);border-bottom:1px solid var(--line);font-size:12.5px}
+.chipbar:empty{display:none}
+.chipbar .cl{color:var(--muted);font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;min-height:28px;padding:1px 8px 1px 2px;border:1px solid var(--line);border-radius:4px;background:var(--paper);cursor:grab;font-size:12.5px;line-height:1.3}
+.chip .ct{flex:none;padding:0 6px;border:1.5px solid var(--l3);border-radius:3px;font-weight:700;font-size:12px;background:var(--card)}
+.chip .ct.q{border-color:var(--l2)}
+.chip .cs{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal}
+.chip.done::after{content:"\2713";font-weight:700;margin-left:2px}
+.chip.next{outline:2px solid var(--l2);outline-offset:1px}
+.chipgrp{display:inline-flex;flex-wrap:wrap;gap:4px;padding:2px;border:1.5px solid var(--l2);border-radius:6px}
+.vp{position:relative;overflow-y:auto;overflow-x:hidden;min-height:0;background:var(--paper)}
+.vp.plain{overflow:hidden}
+.sizer{overflow:hidden;margin:0 auto}
+.vp iframe{display:block;border:0;background:#fff;transform-origin:0 0}
+.vp.plain iframe{width:100%;height:100%}
+.toast{position:absolute;left:8px;right:8px;bottom:8px;z-index:10;padding:8px 12px;background:var(--ink);color:var(--btn-fg);border-radius:4px;font-size:13px;pointer-events:none;white-space:normal}
+.toast[hidden]{display:none}
+@media (max-width:1099px){
+  .split-top{height:44px}
+  .top-inline,.top-links{display:none}
+  .more{margin-left:auto}
+  .more-pan .only-narrow{display:block}
+  .more-pan .nchip{margin:6px 0}
+  .split-tabs{flex:none;display:flex;height:44px;background:var(--card);border-bottom:1px solid var(--line)}
+  .split-tabs button{flex:1;min-height:44px;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--muted);font:500 14px/1 "IBM Plex Sans KR","Malgun Gothic",sans-serif;cursor:pointer}
+  .split-tabs button[aria-selected="true"]{color:var(--ink);font-weight:700;border-bottom-color:var(--ink)}
+  .split{grid-template-columns:minmax(0,1fr)}
+  .pane{display:none}.pane.on{display:grid}
+  .pane-h .pb{min-height:36px}
+}
+.pane>.vp{grid-row:3}

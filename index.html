@@ -1,131 +1,238 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" class="split-html">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>챗봇이 버틸 때와 사람에게 넘길 때 · 팀2</title>
+<meta name="color-scheme" content="light">
+<title>팀2 상담 이관 시연</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
-<header class="wrap" style="padding-top:32px">
-  <h1 class="prose">챗봇이 버틸 때와 사람에게 넘길 때</h1>
-  <p class="prose" data-tpl style="margin-top:12px">쇼핑몰 상담 {{total_dialogs:vu}}로 상담사 이관 기준을 정한 팀2 프로젝트예요.</p>
-  <div class="ladder" role="img" aria-label="라벨 사다리: 0 정상, 1 문제 제기, 2 불만, 3 즉시 이관. 기준선은 2와 3 사이">
-    <div class="rung r0"><b>0</b><span>정상</span></div>
-    <div class="rung r1"><b>1</b><span>문제 제기</span></div>
-    <div class="rung r2"><b>2</b><span>불만</span></div>
-    <div class="rung r3"><b>3</b><span>즉시 이관</span></div>
-    <span class="cut">기준선 <span data-n="th_c"></span></span>
+<body class="split-page">
+<header class="split-top">
+  <h1>팀2 상담 이관 시연</h1>
+  <div class="top-inline">
+    <div class="nchip"><b><span>기준선 </span><span data-n="th_c"></span></b><small>팀 결정</small></div>
+    <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small><span data-tpl>전체 {{total_dialogs:vu}}</span><span class="wide" data-tpl> · 기준선 {{th_a}}→{{th_c}}</span></small></div>
+    <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small><span data-tpl>표본 {{sample_dialogs:vu}}</span><span class="wide" data-tpl> · {{risk_capture:d}}</span></small></div>
+    <nav class="top-links" aria-label="바로 가기">
+      <a href="slides/">슬라이드</a><a href="verify/">검증</a><a href="replay/">녹화 Claude</a><a href="benchmark/">결과표</a>
+    </nav>
   </div>
+  <details class="more"><summary>더 보기</summary>
+    <div class="more-pan">
+      <div class="only-narrow">
+        <div class="nchip"><b><span>기준선 </span><span data-n="th_c"></span></b><small>팀 결정</small></div>
+        <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small data-tpl>전체 {{total_dialogs:vu}}</small></div>
+        <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small data-tpl>표본 {{sample_dialogs:vu}}</small></div>
+        <a href="slides/">슬라이드</a><a href="verify/">검증</a><a href="replay/">녹화 Claude</a><a href="benchmark/">결과표</a>
+      </div>
+      <a href="overview/">숫자 전체</a><a href="map/">지도</a><a href="stage-demo/">단계 추천</a>
+    </div>
+  </details>
 </header>
-
-<main class="wrap">
-
-<section class="flow" id="demo">
-  <h2>직접 열어 보세요</h2>
-  <p class="prose note">고객 말이 챗봇을 거쳐 상담사에게 넘어가는 과정을 세 화면으로 볼 수 있어요.</p>
-  <div class="tickets">
-    <article class="ticket t-l3">
-      <div class="tk-head">챗봇 2 → 상담사</div>
-      <h3>팀 모델 v2 이관 챗봇</h3>
-      <p class="tk-body">고객 말마다 불만·즉시 이관 점수를 내고 넘길지 정해요.</p>
-      <div class="cut-line"></div>
-      <p class="tk-live"><b>여기서 실제로 도는 판정</b><span data-tpl>모델 {{model_mb:vu}}를 받는 동안은 규칙만, 받은 뒤에는 팀 모델 v2와 규칙 안전장치예요. 휴대폰은 챗봇 1을 권해요.</span></p>
-      <a class="btn" href="chatbot2/">챗봇 2 열기</a>
-    </article>
-    <article class="ticket">
-      <div class="tk-head">챗봇 → 관리자 화면</div>
-      <h3>관리자 화면</h3>
-      <p class="tk-body">넘어온 상담이 인계 카드로 도착해요.</p>
-      <div class="cut-line"></div>
-      <p class="tk-live"><b>여기서 실제로 도는 판정</b>이 브라우저에서 한 시연 기록만 보여요. 서버에는 저장하지 않아요.</p>
-      <a class="btn" href="admin/">관리자 화면 열기</a>
-    </article>
-    <article class="ticket t-l1">
-      <div class="tk-head">고객 → 챗봇 1</div>
-      <h3>고객용 챗봇</h3>
-      <p class="tk-body">매뉴얼 근거 카드(<span data-n="cards_n"></span>)로 답하고 접수까지 해 봐요.</p>
-      <div class="cut-line"></div>
-      <p class="tk-live"><b>여기서 실제로 도는 판정</b>규칙 모드예요. Claude 연동은 claude.ai 안에서만 돼요.</p>
-      <a class="btn" href="chatbot1/">챗봇 1 열기</a>
-    </article>
-  </div>
-</section>
-
-<section class="flow" id="numbers">
-  <h2>발표 숫자</h2>
-  <p class="prose note">숫자마다 잰 조건이 달라요. 조건이 다른 숫자는 섞어 읽지 마세요.</p>
-  <div id="sum"></div>
-</section>
-
-<section class="flow" id="engines">
-  <h2>판정 엔진 4개 비교</h2>
-  <p class="note"><span class="tag" id="engtag"></span></p>
-  <div class="tw"><table id="engtbl"><thead></thead><tbody></tbody></table></div>
-  <p class="prose s">이 사이트에서 직접 돌려 볼 수 있는 것: 규칙(챗봇 2 로딩 중), v2+규칙(챗봇 2 준비 후). 칸 바탕이 칠해진 곳이에요.</p>
-</section>
-
-<section class="flow" id="links">
-  <h2>더 보기</h2>
-  <ul class="links">
-    <li><a href="map/">프로젝트 지도</a><span>데이터에서 챗봇까지 한눈에 봐요</span></li>
-    <li><a href="slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
-    <li><a href="replay/">녹화된 Claude 판정</a><span>Claude가 40문장에 낸 판정을 3회분 그대로 봐요</span></li>
-    <li><a href="benchmark/">결과표</a><span>엔진 4개를 같은 시험지로 잰 표예요</span></li>
-    <li><a href="verify/">검증</a><span>이 브라우저에서 점수를 다시 재 봐요</span></li>
-    <li><a href="stage-demo/">단계 인지형 추천</a><span>상담 단계에 맞춰 답변을 추천해요</span></li>
-  </ul>
-</section>
+<div class="split-prog" aria-hidden="true"><i id="prog"></i></div>
+<div class="split-tabs" role="tablist" aria-label="화면 선택">
+  <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="p1">고객용</button>
+  <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="p2">주연님 v2</button>
+  <button type="button" role="tab" id="tab3" aria-selected="false" aria-controls="p3">관리자<span id="badge"></span></button>
+</div>
+<main class="split">
+  <section class="pane on" id="p1" aria-label="고객용 챗봇">
+    <div class="pane-h"><b>고객용 챗봇</b><span class="ps"><i></i><span>규칙 판정 (Claude 연결 없음)</span></span>
+      <button type="button" class="pb" data-act="pin">채팅</button><a class="pb" href="chatbot1/" target="_blank" rel="noopener" aria-label="챗봇 1 새 창">↗</a></div>
+    <div class="chipbar" id="cb1" aria-label="시연 문장"></div>
+    <div class="vp"><div class="sizer"><iframe id="f1" src="chatbot1/app/customer.html" title="고객용 챗봇"></iframe></div><div class="toast" hidden></div></div>
+  </section>
+  <section class="pane" id="p2" aria-label="주연님 v2 챗봇">
+    <div class="pane-h"><b>주연님 v2 챗봇</b><span class="ps"><i id="d2"></i><span id="s2">규칙만 · 확인 중</span></span>
+      <button type="button" class="pb" data-act="pin">채팅</button><button type="button" class="pb" data-act="newtop">새 상담 ↑</button><a class="pb" href="chatbot2/" target="_blank" rel="noopener" aria-label="챗봇 2 새 창">↗</a></div>
+    <div class="chipbar" id="cb2" aria-label="시연 문장"></div>
+    <div class="vp"><div class="sizer"><iframe id="f2" data-src="chatbot2/app/index.html" title="주연님 v2 챗봇"></iframe></div><div class="toast" hidden></div></div>
+  </section>
+  <section class="pane" id="p3" aria-label="관리자 콘솔">
+    <div class="pane-h"><b>관리자 · 상담사 콘솔</b><span class="ps"><span id="s3">대기 0 · 상담중 0 · 완료 0</span></span>
+      <a class="pb" href="admin/" target="_blank" rel="noopener" aria-label="관리자 새 창">↗</a></div>
+    <div class="chipbar" id="cb3"></div>
+    <div class="vp plain"><iframe id="f3" src="admin/" title="관리자 콘솔"></iframe></div>
+  </section>
 </main>
-
-<footer class="foot">
-  <p>데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」</p>
-  <p>40문장은 팀이 지어낸 문장이고, 기대 라벨은 팀 제안값이에요. 실제 상담 원문이 아니에요.</p>
-</footer>
-
 <script src="assets/nums.js"></script>
+<script src="assets/bridge.js"></script>
 <script>
-Team2Nums.ready.then(function(m){
-  function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
-  var groups=[
-    ["total_dialogs","total_utts"],
-    ["link_a","link_b","link_c","link_d","handoff_total","handoff_immediate","handoff_cumulative","bot_keep"],
-    ["sample_link_a","sample_link_b","risk_capture"],
-    ["recall_a","recall_b","recall_c"],
-    ["train_rows","auc_complaint","auc_immediate","roberta_auc"],
-    ["corr_turns","backchannel"],
-    ["bot1_hit","bot1_faith","bot1_forbid","bot1_safety_link","bot1_done","bot1_link","bot1_safety_recall","cards_n"]
+(function(){
+  var S_MIN=0.72, IW_MIN=360, IW_MAX=840, TH="";
+  var mq=window.matchMedia("(min-width:1100px)");
+  function tabMode(){ return !mq.matches; }
+  function $(id){ return document.getElementById(id); }
+  function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
+  Team2Nums.load().then(function(m){ if(m.th_c) TH=m.th_c.value; });
+
+  /* ── 칸 정의: N은 채팅 맨 위부터 입력창 아래까지의 대략 높이(실측 보정 대상) ── */
+  var P=[
+    {id:"p1", f:$("f1"), N:750, ref:"messages", pinned:true, lastSet:0, handoff:false, rows:0, pend:0},
+    {id:"p2", f:$("f2"), N:740, ref:"log", reset:"resetBtn", pinned:true, lastSet:0, st:null}
   ];
-  var box=document.getElementById("sum");
-  groups.forEach(function(keys){
-    var first=m[keys[0]]; if(!first) return;
-    var g=el("div","grp"); g.append(el("h3","grp-h",first.condition));
-    var dl=el("dl","nums");
-    keys.forEach(function(k){ var r=m[k]; if(!r) return;
-      var row=el("div"), dd=el("dd");
-      dd.append(el("b",null,Team2Nums.vu(r)));
-      if(r.detail) dd.append(el("small",null,r.detail));
-      dd.append(el("small",null,"출처 "+r.source));
-      row.append(el("dt",null,r.label),dd); dl.append(row); });
-    g.append(dl); box.append(g);
+  P.forEach(function(p){ var pane=$(p.id); p.pane=pane; p.vp=pane.querySelector(".vp"); p.sizer=pane.querySelector(".sizer"); p.toast=pane.querySelector(".toast"); p.s=1; p.iw=0; p.ih=0;
+    p.vp.addEventListener("scroll",function(){ if(Math.abs(p.vp.scrollTop-p.lastSet)>2) p.pinned=false; }); });
+
+  /* ── 로드: 넓은 화면은 모두, 좁은 화면은 처음 여는 탭부터 ── */
+  function ensureLoaded(p){ if(!p.f.getAttribute("src")&&p.f.getAttribute("data-src")) p.f.setAttribute("src",p.f.getAttribute("data-src")); }
+  function curTab(){ return $("p2").classList.contains("on")?1:$("p3").classList.contains("on")?2:0; }
+  function loadVisible(){ if(!tabMode()){ ensureLoaded(P[1]); } else if(curTab()===1) ensureLoaded(P[1]); }
+
+  /* ── 읽기 전용 측정 ── */
+  function topOf(node){ var t=0,e=node; while(e){ t+=e.offsetTop; e=e.offsetParent; } return t; }
+  function fit(p){
+    var vp=p.vp; if(!vp.clientHeight||!vp.clientWidth) return;
+    var doc=null; try{ doc=p.f.contentDocument; }catch(e){ return; }
+    if(!doc||!doc.body) return;
+    var Ph=vp.clientHeight, Pw=vp.clientWidth;
+    var s=tabMode()?1:Math.min(1,Math.max(S_MIN,Ph/p.N));
+    if(Pw/s<IW_MIN) s=Pw/IW_MIN;
+    s=Math.round(s*100)/100;
+    var iw=Math.min(IW_MAX,Math.max(IW_MIN,Math.floor(Pw/s)));
+    var bh=doc.body.offsetHeight; if(!bh) return;
+    var ih=Math.max(1000,bh+24);
+    if(p.iw!==iw||p.ih!==ih||p.s!==s){
+      p.iw=iw; p.ih=ih; p.s=s;
+      p.sizer.style.width=(iw*s)+"px"; p.sizer.style.height=(ih*s)+"px";
+      p.f.style.width=iw+"px"; p.f.style.height=ih+"px"; p.f.style.transform="scale("+s+")";
+    }
+    if(p.pinned) place(p,doc);
+  }
+  function place(p,doc){
+    var ref=doc.getElementById(p.ref); if(!ref) return;
+    var top=topOf(ref)-8;
+    p.vp.scrollTop=Math.round(top*p.s); p.lastSet=p.vp.scrollTop;
+  }
+  function pinNow(p){ p.pinned=true; try{ fit(p); }catch(e){} }
+
+  /* ── 틱: 핀 복귀 조건 읽기 ── */
+  function tick(){
+    P.forEach(function(p){ try{ fit(p); }catch(e){} });
+    try{
+      var d1=P[0].f.contentDocument;
+      if(d1){
+        var has=!!d1.querySelector("#monitor-handoff .handoff-card");
+        if(has&&!P[0].handoff){ setTimeout(function(){ pinNow(P[0]); },400); }
+        P[0].handoff=has;
+        var n=d1.querySelectorAll("#decision-rows tr").length;
+        if(n<P[0].rows) pinNow(P[0]);
+        P[0].rows=n;
+      }
+    }catch(e){}
+    try{
+      var w2=P[1].f.contentWindow;
+      var st=w2?w2.st:null;
+      if(st&&st!==P[1].st){ var first=P[1].st===null; P[1].st=st; if(!first){ pinNow(P[1]); resetChips2(); } }
+    }catch(e){}
+  }
+  setInterval(tick,500);
+  if(window.ResizeObserver){ var ro=new ResizeObserver(function(){ tick(); }); P.forEach(function(p){ ro.observe(p.vp); }); }
+  window.addEventListener("resize",tick);
+
+  /* ── 칸 머리 버튼 ── */
+  Array.prototype.forEach.call(document.querySelectorAll(".pane-h .pb[data-act]"),function(b){
+    b.addEventListener("click",function(){
+      var p=P[b.closest(".pane").id==="p1"?0:1], act=b.getAttribute("data-act");
+      if(act==="pin"){ pinNow(p); }
+      else if(act==="newtop"){
+        try{ var doc=p.f.contentDocument, r=doc.getElementById(p.reset);
+          if(r){ p.pinned=false; p.vp.scrollTop=Math.round((topOf(r)-8)*p.s); p.lastSet=p.vp.scrollTop; } }catch(e){}
+      }
+    });
   });
-  var E=[["rule","규칙","live","챗봇 2 로딩 중"],["v2","팀 모델 v2 단독","",""],["v2rule","팀 모델 v2 + 규칙","live","챗봇 2 준비 후"],["claude","Claude","gray","녹화본 보기"]];
-  var tr=el("tr"); tr.append(el("th",null,"항목"));
-  E.forEach(function(e){ var th=el("th",e[2],e[1]); if(e[3]){ var nd=el("div","note"); if(e[0]==="claude"){ var a=el("a",null,e[3]); a.href="replay/"; nd.append(a); } else nd.textContent=e[3]; th.append(nd); } tr.append(th); });
-  document.querySelector("#engtbl thead").append(tr);
-  document.getElementById("engtag").textContent=m.eng_agree_rule.condition;
-  ["eng_agree_","eng_imm_","eng_over_"].forEach(function(p){
-    var row=el("tr"); row.append(el("td",null,m[p+"rule"].label));
-    E.forEach(function(e){ var r=m[p+e[0]];
-      var td=el("td",e[2],Team2Nums.vu(r)+(r.detail&&p==="eng_over_"?" ("+r.detail+")":""));
-      if(r.detail&&p!=="eng_over_") td.append(el("div","note",r.detail));
-      if(p!=="eng_over_"){ var q=String(r.value).split("/"), w=Math.round(100*parseInt(q[0],10)/parseInt(q[1],10));
-        var b=el("span","cellbar"), i=el("i"); i.style.width=w+"%"; b.append(i); td.append(b); }
-      row.append(td); });
-    document.querySelector("#engtbl tbody").append(row);
-  });
-});
+
+  /* ── 챗봇 2 상태 ── */
+  var d2=$("d2"), s2=$("s2"), prog=$("prog");
+  function onInfo(i){
+    var t, c="", w=0;
+    if(i.state==="fail"){ t="모델을 못 받아 규칙으로 판정"; c="err"; }
+    else if(i.mode==="v2"){ t="팀 모델 v2 + 규칙 안전장치 · 기준선 "+TH; c="v2"; }
+    else if(i.state==="ready"){ t="규칙만 (규칙으로 선택)"; }
+    else if(i.state==="init"){ t="규칙만 · 모델 여는 중"; w=1; }
+    else { t="규칙만 · 모델 받는 중 "+Math.round(i.pct*100)+"%"; w=i.pct; }
+    s2.textContent=t; s2.title=t; d2.className=c; prog.style.width=Math.round(w*100)+"%";
+  }
+  Team2Bridge.watchChatbot1(P[0].f);
+  /* 챗봇 2 iframe은 src가 생긴 뒤부터 읽힌다 (그 전에는 빈 문서라 정보가 없음) */
+  Team2Bridge.watchChatbot2(P[1].f,onInfo);
+
+  /* ── 관리자 배지 ── */
+  function adminCounts(){
+    var c={"대기":0,"상담중":0,"완료":0};
+    try{
+      var a=JSON.parse(localStorage.getItem("team2demo.v1")), b=JSON.parse(localStorage.getItem("team2demo.admin.v1"))||{};
+      var stt=(b&&b.status)||{};
+      ((a&&a.sessions)||[]).forEach(function(s){ if(s.handoff){ var k=stt[s.id]||"대기"; c[k]=(c[k]||0)+1; } });
+    }catch(e){}
+    return c;
+  }
+  function pollAdmin(){ var c=adminCounts(); $("s3").textContent="대기 "+c["대기"]+" · 상담중 "+c["상담중"]+" · 완료 "+c["완료"]; $("badge").textContent=c["대기"]?" ●"+c["대기"]:""; }
+  setInterval(pollAdmin,1000); pollAdmin();
+
+  /* ── 시연 문장 칩 ── */
+  var CH1=[["즉시 이관","책임자 바꿔 주세요",0]];
+  var CH2=[["즉시","진짜 미친 거 아니에요? 2주째 안 오잖아요",0],["안전장치","팀장님 바꿔 주세요",0],["먼저 묻기 ①","어제 온다던 택배가 안 와서 짜증나네요",1],["먼저 묻기 ②","어제도 내일 온다더니 짜증나요",1],["먼저 묻기 ③","네",1]];
+  var chips2=[], seq=0;
+  function toast(pane,msg){ var t=P[pane].toast; t.textContent=msg; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(function(){ t.hidden=true; },2500); }
+  function fallbackCopy(text){ try{ var ta=document.createElement("textarea"); ta.textContent=text; ta.style.position="fixed"; ta.style.opacity="0"; document.body.append(ta); ta.select(); var ok=document.execCommand("copy"); ta.remove(); return ok; }catch(e){ return false; } }
+  function copyText(text){
+    return new Promise(function(res){
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){res(true);},function(){res(fallbackCopy(text));});
+      else res(fallbackCopy(text));
+    });
+  }
+  function handed2(){
+    try{ var a=JSON.parse(localStorage.getItem("team2demo.v1")), last=null;
+      ((a&&a.sessions)||[]).forEach(function(s){ if(s.bot==="챗봇2"&&(!last||s.startedAt>=last.startedAt)) last=s; });
+      return !!(last&&last.handoff);
+    }catch(e){ return false; }
+  }
+  function mkChip(def,pane,list){
+    var c=el("div","chip"); c.setAttribute("role","button"); c.tabIndex=0; c.draggable=true;
+    var tag=el("span","ct"+(def[0].indexOf("먼저")===0?" q":""),def[0]), cs=el("span","cs",def[1]); c.title=def[1];
+    c.append(tag,cs);
+    function go(){
+      if(pane===1&&handed2()){ toast(1,"먼저 '새 상담 ↑'를 눌러 새 상담을 시작하세요"); return; }
+      copyText(def[1]).then(function(ok){
+        if(ok){ c.classList.add("done"); toast(pane,"복사했어요. 입력창을 누르고 Ctrl+V → Enter"); }
+        else toast(pane,def[1]);
+        if(list){ nextIdx(); }
+        try{ P[pane].f.focus(); }catch(e){}
+      });
+    }
+    c.addEventListener("click",go);
+    c.addEventListener("keydown",function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+    c.addEventListener("dragstart",function(e){ try{ e.dataTransfer.setData("text/plain",def[1]); }catch(x){} });
+    return c;
+  }
+  function buildChips(bar,defs,pane,keep){
+    bar.append(el("span","cl","복사"));
+    var grp=null;
+    defs.forEach(function(d){
+      var c=mkChip(d,pane,d[2]?chips2:null);
+      if(d[2]){ if(!grp){ grp=el("span","chipgrp"); bar.append(grp); } grp.append(c); chips2.push(c); } else bar.append(c);
+    });
+  }
+  function nextIdx(){ seq=Math.min(seq+1,chips2.length); markNext(); }
+  function markNext(){ chips2.forEach(function(c,i){ c.classList.toggle("next",i===seq); }); }
+  function resetChips2(){ seq=0; chips2.forEach(function(c){ c.classList.remove("done"); }); markNext(); }
+  buildChips($("cb1"),CH1,0); buildChips($("cb2"),CH2,1); markNext();
+
+  /* ── 탭 모드 ── */
+  var tabs=[$("tab1"),$("tab2"),$("tab3")], panes=[$("p1"),$("p2"),$("p3")];
+  function selectTab(i){
+    tabs.forEach(function(t,k){ t.setAttribute("aria-selected",k===i?"true":"false"); });
+    panes.forEach(function(p,k){ p.classList.toggle("on",k===i); });
+    if(i===1) ensureLoaded(P[1]);
+    setTimeout(tick,30);
+  }
+  tabs.forEach(function(t,i){ t.addEventListener("click",function(){ selectTab(i); }); });
+  mq.addEventListener?mq.addEventListener("change",function(){ loadVisible(); setTimeout(tick,30); }):0;
+  loadVisible();
+})();
 </script>
 </body>
 </html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>챗봇이 버틸 때와 사람에게 넘길 때 · 팀2</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<div class="site-bar"><div class="in"><b>팀2 · 상담사 이관 시연</b><span><a href="../">홈</a></span></div></div>
+<header class="wrap" style="padding-top:32px">
+  <h1 class="prose">챗봇이 버틸 때와 사람에게 넘길 때</h1>
+  <p class="prose" data-tpl style="margin-top:12px">쇼핑몰 상담 {{total_dialogs:vu}}로 상담사 이관 기준을 정한 팀2 프로젝트예요.</p>
+  <div class="ladder" role="img" aria-label="라벨 사다리: 0 정상, 1 문제 제기, 2 불만, 3 즉시 이관. 기준선은 2와 3 사이">
+    <div class="rung r0"><b>0</b><span>정상</span></div>
+    <div class="rung r1"><b>1</b><span>문제 제기</span></div>
+    <div class="rung r2"><b>2</b><span>불만</span></div>
+    <div class="rung r3"><b>3</b><span>즉시 이관</span></div>
+    <span class="cut">기준선 <span data-n="th_c"></span></span>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="flow" id="demo">
+  <h2>직접 열어 보세요</h2>
+  <p class="prose note">고객 말이 챗봇을 거쳐 상담사에게 넘어가는 과정을 세 화면으로 볼 수 있어요.</p>
+  <div class="tickets">
+    <article class="ticket t-l3">
+      <div class="tk-head">챗봇 2 → 상담사</div>
+      <h3>팀 모델 v2 이관 챗봇</h3>
+      <p class="tk-body">고객 말마다 불만·즉시 이관 점수를 내고 넘길지 정해요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b><span data-tpl>모델 {{model_mb:vu}}를 받는 동안은 규칙만, 받은 뒤에는 팀 모델 v2와 규칙 안전장치예요. 휴대폰은 챗봇 1을 권해요.</span></p>
+      <a class="btn" href="../chatbot2/">챗봇 2 열기</a>
+    </article>
+    <article class="ticket">
+      <div class="tk-head">챗봇 → 관리자 화면</div>
+      <h3>관리자 화면</h3>
+      <p class="tk-body">넘어온 상담이 인계 카드로 도착해요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b>이 브라우저에서 한 시연 기록만 보여요. 서버에는 저장하지 않아요.</p>
+      <a class="btn" href="../admin/">관리자 화면 열기</a>
+    </article>
+    <article class="ticket t-l1">
+      <div class="tk-head">고객 → 챗봇 1</div>
+      <h3>고객용 챗봇</h3>
+      <p class="tk-body">매뉴얼 근거 카드(<span data-n="cards_n"></span>)로 답하고 접수까지 해 봐요.</p>
+      <div class="cut-line"></div>
+      <p class="tk-live"><b>여기서 실제로 도는 판정</b>규칙 모드예요. Claude 연동은 claude.ai 안에서만 돼요.</p>
+      <a class="btn" href="../chatbot1/">챗봇 1 열기</a>
+    </article>
+  </div>
+</section>
+
+<section class="flow" id="numbers">
+  <h2>발표 숫자</h2>
+  <p class="prose note">숫자마다 잰 조건이 달라요. 조건이 다른 숫자는 섞어 읽지 마세요.</p>
+  <div id="sum"></div>
+</section>
+
+<section class="flow" id="engines">
+  <h2>판정 엔진 4개 비교</h2>
+  <p class="note"><span class="tag" id="engtag"></span></p>
+  <div class="tw"><table id="engtbl"><thead></thead><tbody></tbody></table></div>
+  <p class="prose s">이 사이트에서 직접 돌려 볼 수 있는 것: 규칙(챗봇 2 로딩 중), v2+규칙(챗봇 2 준비 후). 칸 바탕이 칠해진 곳이에요.</p>
+</section>
+
+<section class="flow" id="links">
+  <h2>더 보기</h2>
+  <ul class="links">
+    <li><a href="../map/">프로젝트 지도</a><span>데이터에서 챗봇까지 한눈에 봐요</span></li>
+    <li><a href="../slides/">슬라이드</a><span>발표 덱과 추가 그림이에요</span></li>
+    <li><a href="../replay/">녹화된 Claude 판정</a><span>Claude가 40문장에 낸 판정을 3회분 그대로 봐요</span></li>
+    <li><a href="../benchmark/">결과표</a><span>엔진 4개를 같은 시험지로 잰 표예요</span></li>
+    <li><a href="../verify/">검증</a><span>이 브라우저에서 점수를 다시 재 봐요</span></li>
+    <li><a href="../stage-demo/">단계 인지형 추천</a><span>상담 단계에 맞춰 답변을 추천해요</span></li>
+  </ul>
+</section>
+</main>
+
+<footer class="foot">
+  <p>데이터 출처: AI 허브 「민원(콜센터) 질의-응답 데이터」</p>
+  <p>40문장은 팀이 지어낸 문장이고, 기대 라벨은 팀 제안값이에요. 실제 상담 원문이 아니에요.</p>
+</footer>
+
+<script src="../assets/nums.js"></script>
+<script>
+Team2Nums.ready.then(function(m){
+  function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
+  var groups=[
+    ["total_dialogs","total_utts"],
+    ["link_a","link_b","link_c","link_d","handoff_total","handoff_immediate","handoff_cumulative","bot_keep"],
+    ["sample_link_a","sample_link_b","risk_capture"],
+    ["recall_a","recall_b","recall_c"],
+    ["train_rows","auc_complaint","auc_immediate","roberta_auc"],
+    ["corr_turns","backchannel"],
+    ["bot1_hit","bot1_faith","bot1_forbid","bot1_safety_link","bot1_done","bot1_link","bot1_safety_recall","cards_n"]
+  ];
+  var box=document.getElementById("sum");
+  groups.forEach(function(keys){
+    var first=m[keys[0]]; if(!first) return;
+    var g=el("div","grp"); g.append(el("h3","grp-h",first.condition));
+    var dl=el("dl","nums");
+    keys.forEach(function(k){ var r=m[k]; if(!r) return;
+      var row=el("div"), dd=el("dd");
+      dd.append(el("b",null,Team2Nums.vu(r)));
+      if(r.detail) dd.append(el("small",null,r.detail));
+      dd.append(el("small",null,"출처 "+r.source));
+      row.append(el("dt",null,r.label),dd); dl.append(row); });
+    g.append(dl); box.append(g);
+  });
+  var E=[["rule","규칙","live","챗봇 2 로딩 중"],["v2","팀 모델 v2 단독","",""],["v2rule","팀 모델 v2 + 규칙","live","챗봇 2 준비 후"],["claude","Claude","gray","녹화본 보기"]];
+  var tr=el("tr"); tr.append(el("th",null,"항목"));
+  E.forEach(function(e){ var th=el("th",e[2],e[1]); if(e[3]){ var nd=el("div","note"); if(e[0]==="claude"){ var a=el("a",null,e[3]); a.href="../replay/"; nd.append(a); } else nd.textContent=e[3]; th.append(nd); } tr.append(th); });
+  document.querySelector("#engtbl thead").append(tr);
+  document.getElementById("engtag").textContent=m.eng_agree_rule.condition;
+  ["eng_agree_","eng_imm_","eng_over_"].forEach(function(p){
+    var row=el("tr"); row.append(el("td",null,m[p+"rule"].label));
+    E.forEach(function(e){ var r=m[p+e[0]];
+      var td=el("td",e[2],Team2Nums.vu(r)+(r.detail&&p==="eng_over_"?" ("+r.detail+")":""));
+      if(r.detail&&p!=="eng_over_") td.append(el("div","note",r.detail));
+      if(p!=="eng_over_"){ var q=String(r.value).split("/"), w=Math.round(100*parseInt(q[0],10)/parseInt(q[1],10));
+        var b=el("span","cellbar"), i=el("i"); i.style.width=w+"%"; b.append(i); td.append(b); }
+      row.append(td); });
+    document.querySelector("#engtbl tbody").append(row);
+  });
+});
+</script>
+</body>
+</html>
