@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>팀2 이관 챗봇 지도</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -113,6 +114,25 @@ tr.chg td{background:color-mix(in srgb,var(--accent) 9%,transparent)}
 ul.plain{margin:0;padding-left:1.15em;display:flex;flex-direction:column;gap:6px;max-width:72ch}
 footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 @media (prefers-reduced-motion: no-preference){ .bar .f,.bar .m,.sweep i{transition:all .15s} }
+
+/* 다이어그램(SVG): 이 페이지의 색 변수를 그대로 쓴다 */
+svg.dg{display:block;margin:0 auto}
+svg.dg text{font-family:var(--sans);font-size:12.5px;fill:var(--ink)}
+svg.dg .nd{fill:var(--surface);stroke:var(--line);stroke-width:1}
+svg.dg .nd.focal{fill:color-mix(in srgb,var(--accent) 14%,var(--surface));stroke:var(--accent)}
+svg.dg .nd.out{fill:var(--sunk);stroke:var(--line);stroke-dasharray:4 3}
+svg.dg .nd.dec{fill:var(--sunk)}
+svg.dg .tag{fill:var(--sunk)}svg.dg .tag.focal{fill:var(--accent)}
+svg.dg .tg{font-size:11px;font-weight:600}svg.dg .tg.focal{fill:var(--accent-ink)}
+svg.dg .nm{font-size:13px;font-weight:600}svg.dg .nm.lg{font-size:17px}
+svg.dg .sb,svg.dg .lb{font-size:11px;fill:var(--muted)}
+svg.dg .ft{font-size:12.5px}
+svg.dg .mk{fill:var(--surface)}
+svg.dg .ar{fill:none;stroke:var(--muted);stroke-width:1.25}
+svg.dg .ar.a{stroke:var(--accent)}svg.dg .ar.d{stroke-dasharray:5 4}
+svg.dg .mk-m{fill:none;stroke:var(--muted);stroke-width:1.5}svg.dg .mk-a{fill:none;stroke:var(--accent);stroke-width:1.5}
+svg.dg .life{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4}
+#judge .two{grid-template-columns:minmax(0,1fr)}
 </style>
 
 <div class="wrap">
@@ -137,20 +157,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padd
   <section id="flow">
     <div class="head"><span class="eyebrow">전체 과정</span><h2>9월 19일부터 11월 25일까지 여섯 단계</h2>
       <p class="muted">실선은 이어진 단계, 점선은 시도했지만 쓰지 않은 방법입니다.</p></div>
-    <div class="panel scroll"><pre class="mermaid">
-flowchart TD
-  A["A. 주제·데이터 (9/19~10/7)<br/>쇼핑 데이터 채택 · 이관 관점 확정"]
-  B["B. 탐색 분석 (10/8~11/2)<br/>턴 수와 불만 상관 -0.19 · 긴 대화 가설 기각"]
-  C["C. 판정 기준 (10/12~11/20)<br/>코드북 v1.0 · 사람 정답 60건 · Jev 라벨 18,267건"]
-  D["D. 모델 (10/21~11/1)<br/>klue/roberta-base + 로지스틱 회귀 · 팀 모델 v2"]
-  E["E. 기준선과 검증 (10/24~11/23)<br/>기준선 0.3에서 0.7로 · 숫자 검증 47/47"]
-  F["F. 답변과 챗봇 (11/8~11/25)<br/>고객용 규칙형 챗봇 · v2 탑재 이관 챗봇"]
-  A --> B --> C --> D --> E --> F
-  A -.-> A0["쓰지 않음: 금융보험 데이터, 상담사 말투 관점"]
-  B -.-> B0["쓰지 않음: 기존 감정 분석 모델<br/>라벨 1을 분노로 98% 오탐"]
-  D -.-> D0["쓰지 않음: 파인튜닝 A·B·C, Optuna 앙상블"]
-  F -.-> F0["시제품으로 남김: 답변 추천 대시보드, RAG 챗봇"]
-</pre></div>
+    <div class="panel scroll"><svg class="dg" viewBox="0 0 960 560" role="img" aria-labelledby="hflow-title hflow-desc" style="width:100%;height:auto;max-width:960px;min-width:860px"><title id="hflow-title">전체 과정</title><desc id="hflow-desc">9월 19일부터 11월 25일까지 여섯 단계와 쓰지 않은 방법.</desc><defs><marker id="hflow-mm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-m"/></marker><marker id="hflow-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-a"/></marker></defs><path d="M504 48 L584 48" class="ar d" marker-end="url(#hflow-mm)"/><path d="M264 80 L264 104" class="ar " marker-end="url(#hflow-mm)"/><path d="M504 136 L584 136" class="ar d" marker-end="url(#hflow-mm)"/><path d="M264 168 L264 192" class="ar " marker-end="url(#hflow-mm)"/><path d="M264 256 L264 280" class="ar " marker-end="url(#hflow-mm)"/><path d="M504 312 L584 312" class="ar d" marker-end="url(#hflow-mm)"/><path d="M264 344 L264 368" class="ar " marker-end="url(#hflow-mm)"/><path d="M264 432 L264 456" class="ar " marker-end="url(#hflow-mm)"/><path d="M504 488 L584 488" class="ar d" marker-end="url(#hflow-mm)"/><rect x="24" y="16" width="480" height="64" rx="8" class="nd "/><text x="40" y="44" class="nm" text-anchor="start">A. 주제·데이터 (9/19~10/7)</text><text x="40" y="64" class="sb" text-anchor="start">쇼핑 데이터 채택 · 이관 관점 확정</text><rect x="584" y="16" width="352" height="64" rx="8" class="nd out"/><text x="600" y="44" class="nm" text-anchor="start">쓰지 않음</text><text x="600" y="64" class="sb" text-anchor="start">금융보험 데이터, 상담사 말투 관점</text><rect x="24" y="104" width="480" height="64" rx="8" class="nd "/><text x="40" y="132" class="nm" text-anchor="start">B. 탐색 분석 (10/8~11/2)</text><text x="40" y="152" class="sb" text-anchor="start">턴 수와 불만 상관 -0.19 · 긴 대화 가설 기각</text><rect x="584" y="104" width="352" height="64" rx="8" class="nd out"/><text x="600" y="132" class="nm" text-anchor="start">쓰지 않음</text><text x="600" y="152" class="sb" text-anchor="start">기존 감정 분석 모델 (라벨 1을 분노로 98% 오탐)</text><rect x="24" y="192" width="480" height="64" rx="8" class="nd "/><text x="40" y="220" class="nm" text-anchor="start">C. 판정 기준 (10/12~11/20)</text><text x="40" y="240" class="sb" text-anchor="start">코드북 v1.0 · 사람 정답 60건 · Jev 라벨 18,267건</text><rect x="24" y="280" width="480" height="64" rx="8" class="nd focal"/><text x="40" y="308" class="nm" text-anchor="start">D. 모델 (10/21~11/1)</text><text x="40" y="328" class="sb" text-anchor="start">klue/roberta-base + 로지스틱 회귀 · 팀 모델 v2</text><rect x="584" y="280" width="352" height="64" rx="8" class="nd out"/><text x="600" y="308" class="nm" text-anchor="start">쓰지 않음</text><text x="600" y="328" class="sb" text-anchor="start">파인튜닝 A·B·C, Optuna 앙상블</text><rect x="24" y="368" width="480" height="64" rx="8" class="nd "/><text x="40" y="396" class="nm" text-anchor="start">E. 기준선과 검증 (10/24~11/23)</text><text x="40" y="416" class="sb" text-anchor="start">기준선 0.3에서 0.7로 · 숫자 검증 47/47</text><rect x="24" y="456" width="480" height="64" rx="8" class="nd "/><text x="40" y="484" class="nm" text-anchor="start">F. 답변과 챗봇 (11/8~11/25)</text><text x="40" y="504" class="sb" text-anchor="start">고객용 규칙형 챗봇 · v2 탑재 이관 챗봇</text><rect x="584" y="456" width="352" height="64" rx="8" class="nd out"/><text x="600" y="484" class="nm" text-anchor="start">시제품으로 남김</text><text x="600" y="504" class="sb" text-anchor="start">답변 추천 대시보드, RAG 챗봇</text></svg></div>
     <div class="legend" aria-label="코드북 라벨">
       <span><i class="lab">0</i>정상·절차</span><span><i class="lab k1">1</i>중립 문제 제기</span><span><i class="lab k2">2</i>명시적 불만</span><span><i class="lab k3">3</i>즉시 이관</span><span><i class="lab k9">9</i>판단 불가</span>
     </div>
@@ -160,46 +167,8 @@ flowchart TD
     <div class="head"><span class="eyebrow">판정 흐름</span><h2>발화 하나가 들어오면 일어나는 일</h2>
       <p class="muted">v2 탑재 이관 챗봇의 동작입니다. 규칙이 먼저 위험한 말을 잡고, 나머지는 팀 모델 v2의 점수 두 개를 기준선과 비교합니다.</p></div>
     <div class="two">
-      <div class="panel scroll"><h3>결정 순서</h3><pre class="mermaid">
-flowchart TD
-  U["고객 발화"] --> R{"규칙 안전장치<br/>욕설 · 신고 · 책임자 요구 등"}
-  R -- 걸림 --> H3["라벨 3"]
-  R -- 안 걸림 --> M["팀 모델 v2<br/>불만 점수 · 즉시 이관 점수"]
-  M --> T1{"즉시 이관 점수가<br/>기준선 이상"}
-  T1 -- 예 --> H3
-  T1 -- 아니요 --> T2{"불만 점수가<br/>기준선 이상"}
-  T2 -- 아니요 --> K["챗봇이 계속 응대"]
-  T2 -- 예 --> L2["라벨 2"]
-  L2 --> W{"최근 고객 발화 3개 중<br/>불만 2개 이상"}
-  W -- 아니요 --> K
-  W -- 예 --> Q["상담사에게 연결해 드릴까요?"]
-  Q -- 네 --> HO["상담사 이관"]
-  Q -- 아니요 --> K
-  H3 -- 묻지 않고 바로 --> HO
-</pre></div>
-      <div class="panel scroll"><h3>대화로 보면 (코드북 기준 기대 동작)</h3><pre class="mermaid">
-sequenceDiagram
-  actor C as 고객
-  participant B as 챗봇
-  participant J as 판정 엔진
-  participant A as 상담사
-  C->>B: 주문한 운동화가 아직 안 왔어요
-  B->>J: 발화와 앞 문맥
-  J-->>B: 라벨 1, 문제를 사실로 설명
-  B-->>C: 응대 계속
-  C->>B: 지난주에 보냈다면서 왜 아직도 안 오는 거예요
-  J-->>B: 라벨 2, 불만 1개째
-  B-->>C: 응대 계속
-  C->>B: 벌써 두 번째 문의하는 건데 정말 답답하네요
-  J-->>B: 라벨 2, 최근 3개 중 불만 2개
-  B-->>C: 상담사에게 연결해 드릴까요?
-  C->>B: 네
-  B->>A: 누적 이관
-  Note over C,A: 즉시 이관은 묻지 않습니다
-  C->>B: 팀장님 바꿔 주세요
-  J-->>B: 라벨 3, 책임자 요구
-  B->>A: 즉시 이관
-</pre></div>
+      <div class="panel scroll"><h3>결정 순서</h3><svg class="dg" viewBox="0 0 744 712" role="img" aria-labelledby="hdecide-title hdecide-desc" style="width:100%;height:auto;max-width:744px;min-width:744px"><title id="hdecide-title">결정 순서</title><desc id="hdecide-desc">고객 발화가 규칙 안전장치와 팀 모델 v2 점수를 거쳐 라벨 3 즉시 이관, 연결 질문, 계속 응대 중 하나로 가는 순서.</desc><defs><marker id="hdecide-mm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-m"/></marker><marker id="hdecide-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-a"/></marker></defs><path d="M372 56 L372 90" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 138 L372 180" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 228 L372 270" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 318 L372 360" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 408 L372 450" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 498 L372 540" class="ar " marker-end="url(#hdecide-mm)"/><path d="M372 588 L372 630" class="ar " marker-end="url(#hdecide-mm)"/><path d="M272 114 L112 114 Q104 114 104 122 L104 180" class="ar " marker-end="url(#hdecide-mm)"/><path d="M272 294 L236 294 Q228 294 228 286 L228 212 Q228 204 220 204 L184 204" class="ar " marker-end="url(#hdecide-mm)"/><path d="M104 228 L104 630" class="ar a" marker-end="url(#hdecide-ma)"/><path d="M272 654 L184 654" class="ar a" marker-end="url(#hdecide-ma)"/><path d="M472 384 L560 384" class="ar " marker-end="url(#hdecide-mm)"/><path d="M472 564 L616 564 Q624 564 624 556 L624 408" class="ar " marker-end="url(#hdecide-mm)"/><path d="M472 654 L648 654 Q656 654 656 646 L656 408" class="ar " marker-end="url(#hdecide-mm)"/><rect x="272" y="8" width="200" height="48" rx="8" class="nd "/><text x="372" y="36" class="nm" text-anchor="middle">고객 발화</text><rect x="272" y="90" width="200" height="48" rx="8" class="nd dec"/><text x="372" y="110.5" class="nm" text-anchor="middle">규칙 안전장치</text><text x="372" y="128.5" class="sb" text-anchor="middle">욕설 · 신고 · 책임자 요구</text><rect x="272" y="180" width="200" height="48" rx="8" class="nd "/><text x="372" y="200.5" class="nm" text-anchor="middle">팀 모델 v2</text><text x="372" y="218.5" class="sb" text-anchor="middle">불만 · 즉시 이관 점수</text><rect x="272" y="270" width="200" height="48" rx="8" class="nd dec"/><text x="372" y="298" class="nm" text-anchor="middle">즉시 이관 점수 ≥ 기준선</text><rect x="272" y="360" width="200" height="48" rx="8" class="nd dec"/><text x="372" y="388" class="nm" text-anchor="middle">불만 점수 ≥ 기준선</text><rect x="272" y="450" width="200" height="48" rx="8" class="nd "/><text x="372" y="478" class="nm" text-anchor="middle">라벨 2</text><rect x="272" y="540" width="200" height="48" rx="8" class="nd dec"/><text x="372" y="568" class="nm" text-anchor="middle">3개 중 불만 2개 이상</text><rect x="272" y="630" width="200" height="48" rx="8" class="nd dec"/><text x="372" y="650.5" class="nm" text-anchor="middle">연결해 드릴까요?</text><text x="372" y="668.5" class="sb" text-anchor="middle">상담사에게</text><rect x="24" y="180" width="160" height="48" rx="8" class="nd "/><text x="104" y="208" class="nm" text-anchor="middle">라벨 3</text><rect x="24" y="630" width="160" height="48" rx="8" class="nd focal"/><text x="104" y="658" class="nm" text-anchor="middle">상담사 이관</text><rect x="560" y="360" width="160" height="48" rx="8" class="nd "/><text x="640" y="388" class="nm" text-anchor="middle">챗봇이 계속 응대</text><rect x="374" y="151" width="51.16" height="16" class="mk"/><text x="380" y="163" class="lb" text-anchor="start">안 걸림</text><rect x="374" y="331" width="45" height="16" class="mk"/><text x="380" y="343" class="lb" text-anchor="start">아니요</text><rect x="374" y="421" width="23" height="16" class="mk"/><text x="380" y="433" class="lb" text-anchor="start">예</text><rect x="374" y="601" width="23" height="16" class="mk"/><text x="380" y="613" class="lb" text-anchor="start">예</text><rect x="171" y="94" width="34" height="16" class="mk"/><text x="188" y="106" class="lb" text-anchor="middle">걸림</text><rect x="238.5" y="274" width="23" height="16" class="mk"/><text x="250" y="286" class="lb" text-anchor="middle">예</text><rect x="106" y="420" width="90.32" height="16" class="mk"/><text x="112" y="432" class="lb" text-anchor="start">묻지 않고 바로</text><rect x="216.5" y="634" width="23" height="16" class="mk"/><text x="228" y="646" class="lb" text-anchor="middle">네</text><rect x="493.5" y="364" width="45" height="16" class="mk"/><text x="516" y="376" class="lb" text-anchor="middle">아니요</text><rect x="525.5" y="544" width="45" height="16" class="mk"/><text x="548" y="556" class="lb" text-anchor="middle">아니요</text><rect x="541.5" y="634" width="45" height="16" class="mk"/><text x="564" y="646" class="lb" text-anchor="middle">아니요</text></svg></div>
+      <div class="panel scroll"><h3>대화로 보면 (코드북 기준 기대 동작)</h3><svg class="dg" viewBox="0 0 930 780" role="img" aria-labelledby="htalk-title htalk-desc" style="width:100%;height:auto;max-width:930px;min-width:860px"><title id="htalk-title">대화로 보면</title><desc id="htalk-desc">고객 대화 예시: 첫 불만은 응대를 이어 가고, 세 번째 발화에서 연결을 묻고, 팀장 요구는 묻지 않고 바로 이관한다.</desc><defs><marker id="htalk-mm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-m"/></marker><marker id="htalk-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-a"/></marker></defs><line x1="120" y1="60" x2="120" y2="760" class="life"/><line x1="350" y1="60" x2="350" y2="760" class="life"/><line x1="580" y1="60" x2="580" y2="760" class="life"/><line x1="810" y1="60" x2="810" y2="760" class="life"/><path d="M120 100 L350 100" class="ar " marker-end="url(#htalk-mm)"/><path d="M350 142 L580 142" class="ar " marker-end="url(#htalk-mm)"/><path d="M580 184 L350 184" class="ar d" marker-end="url(#htalk-mm)"/><path d="M350 226 L120 226" class="ar d" marker-end="url(#htalk-mm)"/><path d="M120 268 L350 268" class="ar " marker-end="url(#htalk-mm)"/><path d="M580 310 L350 310" class="ar d" marker-end="url(#htalk-mm)"/><path d="M350 352 L120 352" class="ar d" marker-end="url(#htalk-mm)"/><path d="M120 394 L350 394" class="ar " marker-end="url(#htalk-mm)"/><path d="M580 436 L350 436" class="ar d" marker-end="url(#htalk-mm)"/><path d="M350 478 L120 478" class="ar d" marker-end="url(#htalk-mm)"/><path d="M120 520 L350 520" class="ar " marker-end="url(#htalk-mm)"/><path d="M350 562 L810 562" class="ar a" marker-end="url(#htalk-ma)"/><path d="M120 656 L350 656" class="ar " marker-end="url(#htalk-mm)"/><path d="M580 698 L350 698" class="ar d" marker-end="url(#htalk-mm)"/><path d="M350 740 L810 740" class="ar a" marker-end="url(#htalk-ma)"/><rect x="48" y="12" width="144" height="40" rx="8" class="nd "/><text x="120" y="36" class="nm" text-anchor="middle">고객</text><rect x="278" y="12" width="144" height="40" rx="8" class="nd focal"/><text x="350" y="36" class="nm" text-anchor="middle">챗봇</text><rect x="508" y="12" width="144" height="40" rx="8" class="nd "/><text x="580" y="36" class="nm" text-anchor="middle">판정 엔진</text><rect x="738" y="12" width="144" height="40" rx="8" class="nd "/><text x="810" y="36" class="nm" text-anchor="middle">상담사</text><rect x="145.18" y="78" width="179.64" height="16" class="mk"/><text x="235" y="90" class="lb" text-anchor="middle">주문한 운동화가 아직 안 왔어요</text><rect x="419.84" y="120" width="90.32" height="16" class="mk"/><text x="465" y="132" class="lb" text-anchor="middle">발화와 앞 문맥</text><rect x="385.52" y="162" width="158.96" height="16" class="mk"/><text x="465" y="174" class="lb" text-anchor="middle">라벨 1, 문제를 사실로 설명</text><rect x="203.92" y="204" width="62.16" height="16" class="mk"/><text x="235" y="216" class="lb" text-anchor="middle">응대 계속</text><rect x="106.02" y="246" width="257.96" height="16" class="mk"/><text x="235" y="258" class="lb" text-anchor="middle">지난주에 보냈다면서 왜 아직도 안 오는 거예요</text><rect x="407.52" y="288" width="114.96" height="16" class="mk"/><text x="465" y="300" class="lb" text-anchor="middle">라벨 2, 불만 1개째</text><rect x="203.92" y="330" width="62.16" height="16" class="mk"/><text x="235" y="342" class="lb" text-anchor="middle">응대 계속</text><rect x="111.52" y="372" width="246.96" height="16" class="mk"/><text x="235" y="384" class="lb" text-anchor="middle">벌써 두 번째 문의하는 건데 정말 답답하네요</text><rect x="378.7" y="414" width="172.6" height="16" class="mk"/><text x="465" y="426" class="lb" text-anchor="middle">라벨 2, 최근 3개 중 불만 2개</text><rect x="153.76" y="456" width="162.48" height="16" class="mk"/><text x="235" y="468" class="lb" text-anchor="middle">상담사에게 연결해 드릴까요?</text><rect x="223.5" y="498" width="23" height="16" class="mk"/><text x="235" y="510" class="lb" text-anchor="middle">네</text><rect x="548.92" y="540" width="62.16" height="16" class="mk"/><text x="580" y="552" class="lb" text-anchor="middle">누적 이관</text><rect x="80" y="598" width="770" height="28" rx="6" class="nd out"/><text x="465" y="616" class="sb" text-anchor="middle">즉시 이관은 묻지 않습니다</text><rect x="178.84" y="634" width="112.32" height="16" class="mk"/><text x="235" y="646" class="lb" text-anchor="middle">팀장님 바꿔 주세요</text><rect x="405.1" y="676" width="119.8" height="16" class="mk"/><text x="465" y="688" class="lb" text-anchor="middle">라벨 3, 책임자 요구</text><rect x="548.92" y="718" width="62.16" height="16" class="mk"/><text x="580" y="730" class="lb" text-anchor="middle">즉시 이관</text></svg></div>
     </div>
   </section>
 
@@ -296,36 +265,7 @@ sequenceDiagram
 
   <section id="map">
     <div class="head"><span class="eyebrow">한눈에 보기</span><h2>시도한 방법 지도</h2></div>
-    <div class="panel scroll"><pre class="mermaid">
-mindmap
-  root((팀2 이관 챗봇))
-    A 주제와 데이터
-      쇼핑 데이터 채택
-      챗봇이 넘길 시점을 문제로 정함
-    B 탐색 분석
-      임베딩과 TF-IDF
-      긴 대화 가설 기각
-      기존 감정 모델은 쓰지 않음
-    C 판정 기준
-      코드북 v1.0
-      사람 정답 60건
-      Jev 라벨 18267건
-      AI 시험 정답 표본 419개
-    D 모델
-      한국어 모델 8개 비교
-      roberta 고정과 로지스틱 회귀
-      팀 모델 v2 채택
-      파인튜닝과 앙상블은 쓰지 않음
-    E 기준선과 검증
-      기준선 세 가지 비교
-      팀 결정 0.7
-      숫자 검증 스크립트 통과
-    F 답변과 챗봇
-      상담사 매뉴얼 v1
-      답변 추천과 RAG 시제품
-      고객용 규칙형 챗봇
-      v2 탑재 이관 챗봇
-</pre></div>
+    <div class="panel scroll"><svg class="dg" viewBox="0 0 960 488" role="img" aria-labelledby="htried-title htried-desc" style="width:100%;height:auto;max-width:960px;min-width:860px"><title id="htried-title">시도한 방법 지도</title><desc id="htried-desc">여섯 단계에서 채택한 것과 쓰지 않은 것.</desc><defs><marker id="htried-mm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-m"/></marker><marker id="htried-ma" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" class="mk-a"/></marker></defs><path d="M312 116 L336 116" class="ar " marker-end="url(#htried-mm)"/><path d="M624 116 L648 116" class="ar " marker-end="url(#htried-mm)"/><path d="M792 216 L792 236 Q792 244 784 244 L176 244 Q168 244 168 252 L168 272" class="ar " marker-end="url(#htried-mm)"/><path d="M312 372 L336 372" class="ar " marker-end="url(#htried-mm)"/><path d="M624 372 L648 372" class="ar " marker-end="url(#htried-mm)"/><rect x="24" y="16" width="288" height="200" rx="10" class="nd "/><rect x="40" y="32" width="24" height="20" rx="3" class="tag "/><text x="52" y="47" class="tg " text-anchor="middle">A</text><text x="76" y="48" class="nm lg" text-anchor="start">주제와 데이터</text><text x="40" y="84" class="ft" text-anchor="start">쇼핑 데이터 채택</text><text x="40" y="106" class="ft" text-anchor="start">챗봇이 넘길 시점을 문제로 정함</text><rect x="336" y="16" width="288" height="200" rx="10" class="nd "/><rect x="352" y="32" width="24" height="20" rx="3" class="tag "/><text x="364" y="47" class="tg " text-anchor="middle">B</text><text x="388" y="48" class="nm lg" text-anchor="start">탐색 분석</text><text x="352" y="84" class="ft" text-anchor="start">임베딩과 TF-IDF</text><text x="352" y="106" class="ft" text-anchor="start">긴 대화 가설 기각</text><text x="352" y="128" class="ft" text-anchor="start">기존 감정 모델은 쓰지 않음</text><rect x="648" y="16" width="288" height="200" rx="10" class="nd "/><rect x="664" y="32" width="24" height="20" rx="3" class="tag "/><text x="676" y="47" class="tg " text-anchor="middle">C</text><text x="700" y="48" class="nm lg" text-anchor="start">판정 기준</text><text x="664" y="84" class="ft" text-anchor="start">코드북 v1.0</text><text x="664" y="106" class="ft" text-anchor="start">사람 정답 60건</text><text x="664" y="128" class="ft" text-anchor="start">Jev 라벨 18267건</text><text x="664" y="150" class="ft" text-anchor="start">AI 시험 정답 표본 419개</text><rect x="24" y="272" width="288" height="200" rx="10" class="nd focal"/><rect x="40" y="288" width="24" height="20" rx="3" class="tag focal"/><text x="52" y="303" class="tg focal" text-anchor="middle">D</text><text x="76" y="304" class="nm lg" text-anchor="start">모델</text><text x="40" y="340" class="ft" text-anchor="start">한국어 모델 8개 비교</text><text x="40" y="362" class="ft" text-anchor="start">roberta 고정과 로지스틱 회귀</text><text x="40" y="384" class="ft" text-anchor="start">팀 모델 v2 채택</text><text x="40" y="406" class="ft" text-anchor="start">파인튜닝과 앙상블은 쓰지 않음</text><rect x="336" y="272" width="288" height="200" rx="10" class="nd "/><rect x="352" y="288" width="24" height="20" rx="3" class="tag "/><text x="364" y="303" class="tg " text-anchor="middle">E</text><text x="388" y="304" class="nm lg" text-anchor="start">기준선과 검증</text><text x="352" y="340" class="ft" text-anchor="start">기준선 세 가지 비교</text><text x="352" y="362" class="ft" text-anchor="start">팀 결정 0.7</text><text x="352" y="384" class="ft" text-anchor="start">숫자 검증 스크립트 통과</text><rect x="648" y="272" width="288" height="200" rx="10" class="nd "/><rect x="664" y="288" width="24" height="20" rx="3" class="tag "/><text x="676" y="303" class="tg " text-anchor="middle">F</text><text x="700" y="304" class="nm lg" text-anchor="start">답변과 챗봇</text><text x="664" y="340" class="ft" text-anchor="start">상담사 매뉴얼 v1</text><text x="664" y="362" class="ft" text-anchor="start">답변 추천과 RAG 시제품</text><text x="664" y="384" class="ft" text-anchor="start">고객용 규칙형 챗봇</text><text x="664" y="406" class="ft" text-anchor="start">v2 탑재 이관 챗봇</text></svg></div>
   </section>
 
   <section id="limits">
