@@ -11,7 +11,7 @@
 - `chatbot2/`: 팀 모델 v2 + 규칙 안전장치 챗봇 껍데기. `app/index.html`, `app/v2/**`는 원본 그대로입니다.
 - `admin/`: 관리자 콘솔. 두 챗봇의 이관 기록과 발화별 판정을 이 브라우저에서만 보여 줍니다. 단독으로 열어도, 첫 화면의 세 번째 칸으로 들어가도 같은 화면입니다.
 - `verify/`: 지어낸 40문장을 이 브라우저의 v2로 다시 채점해 파이썬 채점값과 맞춰 봅니다 (`bench40.json`).
-- `map/`: 프로젝트 지도(mermaid) 8장. `handoff-map.html`은 대화형 지도입니다.
+- `map/`: 프로젝트 지도 8장(SVG로 직접 그림, 숫자는 numbers.json에서). `handoff-map.html`은 대화형 지도입니다.
 - `slides/`: 발표 슬라이드와 `insert/` 추가 그림 5장.
 - `replay/`: 녹화된 Claude 판정. 지어낸 40문장에 Claude가 3회 낸 판정을 `claude40.json`으로 보여 줍니다(실시간 아님).
 - `benchmark/`: 판정 엔진 4개 벤치마크 결과표.
