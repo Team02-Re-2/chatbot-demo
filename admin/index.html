@@ -3,123 +3,193 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>관리자 · 상담사 콘솔</title>
+<title>관리자 · 상담 관리</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body class="console">
-<div class="site-bar" id="sb" hidden><div class="in"><b>팀2 · 상담사 이관 시연</b><span><a href="../">홈</a><a href="../chatbot1/">챗봇 1</a><a href="../chatbot2/">챗봇 2</a></span></div></div>
-<header class="console-head"><b id="qsum" role="status">대기 0 · 상담중 0 · 완료 0</b><span id="clr"></span></header>
-<div class="console-counts" id="tiles"></div>
-<div class="console-mid">
-  <div class="console-queue" id="queue" aria-label="이관 대기열"></div>
-  <div class="console-card" id="card" aria-label="인계 카드"></div>
+<div class="site-bar" id="sb" hidden><div class="in"><b>팀2 상담사 이관 시연</b><span><a href="../">홈</a><a href="../customer-chat/">고객용 챗봇</a></span></div></div>
+<header class="console-head">
+  <h1>상담 관리</h1>
+  <div class="cnt" id="qsum" role="status"></div>
+  <div class="head-r"><span class="note">이 브라우저의 시연 기록</span><span id="clr"></span></div>
+</header>
+<div class="console-main">
+  <nav class="console-queue" id="queue" aria-label="상담 목록"></nav>
+  <section class="console-detail" id="detail" aria-label="상담 상세"></section>
 </div>
-<section class="console-log"><h2 id="logh">판정 기록</h2><div class="tw" id="log"></div></section>
 <script src="../assets/nums.js"></script>
 <script>
 (function(){
-  var KEY="team2demo.v1", AKEY="team2demo.admin.v1", sel=null, picked=false, asking=false, TH=0.7;
+  var KEY="team2demo.v1", AKEY="team2demo.admin.v1";
+  var sel=null, picked=false, asking=false, TH=null, tab="conv";
   var LNAME={0:"정상·절차",1:"중립 문제 제기",2:"명시적 불만",3:"즉시 이관",9:"판단 불가"};
   var ENG={"v2":"팀 모델 v2","v2+규칙":"v2 + 규칙 안전장치","rule":"규칙","규칙":"규칙","절차":"판정 생략","claude":"Claude","모델":"모델"};
+  /* 저장된 글자는 이 고정 표를 거친 값만 클래스로 씁니다 */
+  var SCLS={"대기":"w","상담중":"p","완료":"d"};
+  var KCLS={"즉시":"imm","누적":"cum"};
+  var LCLS={"0":"L0","1":"L1","2":"L2","3":"L3"};
+  var WCLS={"me":"me","bot":"bot","sys":"sys","ask":"sys","end":"sys"};
+  var WNAME={"me":"고객","bot":"챗봇"};
   function el(t,c,x){var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e;}
   function load(){ try{ var o=JSON.parse(localStorage.getItem(KEY)); if(o&&Array.isArray(o.sessions)) return o.sessions; }catch(e){} return []; }
   function loadA(){ try{ var o=JSON.parse(localStorage.getItem(AKEY)); if(o&&o.status&&typeof o.status==="object") return o; }catch(e){} return {status:{}}; }
   function saveA(a){ try{ localStorage.setItem(AKEY,JSON.stringify(a)); }catch(e){} }
   function hhmm(ms){ var d=new Date(Number(ms)||0); return isNaN(d)?"":d.toTimeString().slice(0,5); }
-  function labText(t){ return (t.engine==="v2"&&t.label===0)?"0·1":String(t.label); }
-  function badge(t){ var b=el("span","lab L"+(typeof t.label==="number"?t.label:"9"),labText(t)); b.title=LNAME[t.label]||""; return b; }
   function mmss(ms){ var s=Math.max(0,Math.floor(ms/1000)); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
-  if(window.top===window) document.getElementById("sb").hidden=false;
-  Team2Nums.ready.then(function(m){ if(m.th_c) TH=parseFloat(m.th_c.value)||0.7; render(true); });
-
-  var snapshot="", sigs={}, follow=null, firstRun=true, seenH={}, prevRows=-1;
-  function shown(id){ return cur?cur.id===id:false; }
-  var cur=null;
-  function render(force){
-    try{ render1(force); }finally{ firstRun=false; }
+  function stOf(A,id){ var v=A.status[id]; return SCLS[v]?v:"대기"; }
+  /* bridge가 3자리로 만든 "불만 0.997 · 즉시 0.975"는 그릴 때 숫자만 2자리로 줄입니다 */
+  function two(s){ return String(s==null?"":s).replace(/(불만|즉시)(\s*)(\d+\.\d+)/g,function(a,k,sp,n){ return k+sp+Number(n).toFixed(2); }); }
+  function labText(t){ return (t.engine==="v2"&&t.label===0)?"0·1":String(t.label); }
+  function badge(t){ var b=el("span","lab "+(LCLS[String(t.label)]||"L9"),labText(t)); b.title=LNAME[t.label]||""; return b; }
+  function lastSay(s){
+    var c=Array.isArray(s.conv)?s.conv:[], i;
+    for(i=c.length-1;i>=0;i--) if(c[i]&&c[i].who==="me"&&c[i].text) return String(c[i].text);
+    var t=Array.isArray(s.turns)?s.turns:[];
+    for(i=t.length-1;i>=0;i--) if(t[i]&&t[i].text) return String(t[i].text);
+    return "";
   }
+  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"챗봇 응대 중"); }
+  if(window.top===window) document.getElementById("sb").hidden=false;
+  Team2Nums.ready.then(function(m){ var v=m&&m.th_c?parseFloat(m.th_c.value):NaN; TH=isNaN(v)?null:v; render(true); }).catch(function(){});
+
+  var snapshot="", sigs={}, follow=null, firstRun=true, seenH={}, cur=null, prevKey="", prevLen=-1;
+  function render(force){ try{ render1(force); }finally{ firstRun=false; } }
   function render1(force){
-    var ss=load(), A=loadA();
-    var sig=JSON.stringify([ss,A,sel,picked,asking]);
+    var ss=load().filter(function(s){ return s&&s.bot==="챗봇2"; }), A=loadA();
+    var sig=JSON.stringify([ss,A,sel,picked,asking,tab,TH]);
     if(!force&&sig===snapshot) return; snapshot=sig;
     /* 방금 바뀐 상담 따라가기 */
     var ids={};
     ss.forEach(function(s){ ids[s.id]=1; var g=JSON.stringify(s); if(sigs[s.id]!==g){ if(!firstRun||sigs[s.id]!==undefined) follow=s.id; sigs[s.id]=g; } });
     if(firstRun&&ss.length&&!follow) follow=ss[ss.length-1].id;
-    var withTurns=ss.filter(function(s){return s.turns&&s.turns.length;});
     var hs=ss.filter(function(s){return s.handoff;}).sort(function(a,b){return (b.handoff.at||0)-(a.handoff.at||0);});
+    var rest=ss.filter(function(s){return !s.handoff;}).sort(function(a,b){return (b.startedAt||0)-(a.startedAt||0);});
+    var list=hs.concat(rest);
     var cnt={"대기":0,"상담중":0,"완료":0};
-    hs.forEach(function(s){ var st=A.status[s.id]||"대기"; cnt[st]=(cnt[st]||0)+1; });
-    document.getElementById("qsum").textContent="대기 "+cnt["대기"]+" · 상담중 "+cnt["상담중"]+" · 완료 "+cnt["완료"];
-    var imm=hs.filter(function(s){return s.handoff.kind==="즉시";}).length, cum=hs.filter(function(s){return s.handoff.kind==="누적";}).length;
-    var ask=ss.filter(function(s){return s.asking&&!s.handoff;}).length;
-    var tiles=document.getElementById("tiles"); tiles.textContent="";
-    [["전체 상담",withTurns.length],["즉시 이관",imm],["누적 이관",cum],["묻는 중",ask]].forEach(function(x){
-      var t=el("div"); t.append(el("b",null,String(x[1])),el("span",null,x[0])); tiles.append(t); });
-    tiles.append(el("span","src","이 브라우저에서 한 시연 기록"));
+    hs.forEach(function(s){ cnt[stOf(A,s.id)]++; });
+    var qs=document.getElementById("qsum"); qs.textContent="";
+    ["대기","상담중","완료"].forEach(function(k){ var sp=el("span",null,k); sp.append(el("b",null,String(cnt[k]))); qs.append(sp); });
     /* 지우기 (2단계) */
     var c=document.getElementById("clr"); c.textContent="";
     if(!asking){ var b=el("button","btn sec","기록 지우기"); b.type="button"; b.onclick=function(){asking=true; render(true);}; c.append(b); }
     else { c.append(el("span","note","모두 지울까요? "));
-      var y=el("button","btn","네, 지웁니다"); y.type="button"; y.onclick=function(){ try{localStorage.removeItem(KEY); localStorage.removeItem(AKEY);}catch(e){} asking=false; sel=null; picked=false; follow=null; sigs={}; seenH={}; render(true); };
+      var y=el("button","btn","네, 지웁니다"); y.type="button"; y.onclick=function(){ try{localStorage.removeItem(KEY); localStorage.removeItem(AKEY);}catch(e){} asking=false; sel=null; picked=false; follow=null; sigs={}; seenH={}; prevKey=""; prevLen=-1; render(true); };
       var n=el("button","btn sec","취소"); n.type="button"; n.onclick=function(){asking=false; render(true);}; c.append(y,n); }
     /* 지금 보여 줄 상담 */
     var curId=(picked&&sel&&ids[sel])?sel:follow;
     cur=null; ss.forEach(function(s){ if(s.id===curId) cur=s; });
-    if(!cur&&ss.length) cur=ss[ss.length-1];
-    /* 대기열 */
-    var q=document.getElementById("queue"), qs=q.scrollTop; q.textContent="";
-    if(!hs.length) q.append(el("div","empty","왼쪽 챗봇에서 대화하면 넘어온 상담이 여기에 도착해요"));
-    hs.forEach(function(s){
-      var h=s.handoff, st=A.status[s.id]||"대기", isNew=!firstRun&&!seenH[s.id];
+    if(!cur&&list.length) cur=list[0];
+    /* 목록 */
+    var q=document.getElementById("queue"), qtop=q.scrollTop; q.textContent="";
+    if(!list.length) q.append(el("div","empty","고객용 챗봇에서 대화하면 상담이 여기에 쌓여요"));
+    list.forEach(function(s){
+      var h=s.handoff, st=h?stOf(A,s.id):"", isNew=!!h&&!firstRun&&!seenH[s.id];
       if(isNew&&!picked) sel=s.id;
-      seenH[s.id]=1;
-      var row=el("button","qrow "+(st==="완료"?"k-done":h.kind==="즉시"?"k-imm":"")+(isNew?" new":"")+(shown(s.id)?" sel":""));
+      if(h) seenH[s.id]=1;
+      var row=el("button","qrow"+(h?" hand":"")+(st==="완료"?" k-done":"")+(isNew?" new":"")+((cur&&cur.id===s.id)?" sel":""));
       row.type="button"; row.onclick=function(){sel=s.id; picked=true; render(true);};
-      var l1=el("div","l1"); l1.append(el("span","tag",s.bot),el("b",null,h.kind+" 이관"),el("span","note",hhmm(h.at)));
-      var l2=el("div","l2"); l2.append(el("span","tag",st));
-      if(st==="대기"){ var t=el("span","note",mmss(Date.now()-(h.at||Date.now()))); t.setAttribute("data-at",String(h.at||0)); l2.append(t); }
-      row.append(l1,l2); q.append(row);
+      var l1=el("div","l1"); l1.append(el("b",null,stateText(s)));
+      if(h) l1.append(el("span","stt "+SCLS[st],st));
+      l1.append(el("span","tm",hhmm(h?h.at:s.startedAt)));
+      row.append(l1,el("div","l2",lastSay(s)||"—"));
+      if(h&&st==="대기"){ var l3=el("div","l3"), t=el("span",null,mmss(Date.now()-(h.at||Date.now()))); t.setAttribute("data-at",String(h.at||0)); l3.append(el("span",null,"대기"),t); row.append(l3); }
+      q.append(row);
     });
-    q.scrollTop=qs;
-    /* 인계 카드 */
-    var cd=document.getElementById("card"); cd.textContent="";
-    if(!cur||!cur.handoff){ cd.append(el("div","empty",cur?"이관 전이에요. 아래 판정 기록에서 발화마다 확인해요.":"왼쪽 챗봇에서 대화하면 넘어온 상담이 여기에 도착해요")); }
-    else {
-      var H=cur.handoff, st2=A.status[cur.id]||"대기", box=el("div","ccard");
-      var lt=null; (cur.turns||[]).forEach(function(t){ if(t.scores) lt=t; });
-      var he=H.engine||(cur.turns&&cur.turns.length?cur.turns[cur.turns.length-1].engine:"")||"";
-      var tg=el("div","qrow-tags"); tg.style.margin="0 0 4px";
-      tg.append(el("span","tag",cur.bot+" · "+H.kind+" 이관"),document.createTextNode(" "),el("span","tag","엔진 "+(ENG[he]||he)),document.createTextNode(" "),el("span","tag",st2));
-      box.append(tg,el("h3",null,H.why||""));
-      var dl=el("dl"); Object.keys(H.fields||{}).forEach(function(k){ dl.append(el("dt",null,k),el("dd",null,String(H.fields[k]))); }); box.append(dl);
-      if(lt&&lt.scores){
-        [["불만",lt.scores.complaint],["즉시",lt.scores.immediate]].forEach(function(p){
-          var r=el("div","sbar"), v=Math.max(0,Math.min(1,Number(p[1])||0)), trk=el("div","trk"), i=el("i"), u=el("u");
-          i.style.width=(v*100)+"%"; u.style.left=(TH*100)+"%"; u.title="기준선 "+TH; trk.append(i,u);
-          r.append(el("span",null,p[0]),trk,el("span",null,v.toFixed(2))); box.append(r); });
-      }
-      var bs=el("div"), b1=el("button","btn sec","상담 시작"); b1.type="button"; b1.disabled=st2!=="대기";
+    q.scrollTop=qtop;
+    /* 상세 */
+    var dt=document.getElementById("detail"), old=dt.querySelector(".dscroll");
+    var ost=old?old.scrollTop:0, oat=old?(old.scrollTop+old.clientHeight>=old.scrollHeight-4):true;
+    dt.textContent="";
+    if(!cur){ dt.append(el("div","empty","고객용 챗봇에서 대화하면 여기에 상담 내용이 보여요")); prevKey=""; prevLen=-1; return; }
+    var H=cur.handoff, st2=H?stOf(A,cur.id):"";
+    var turns=Array.isArray(cur.turns)?cur.turns:[];
+    var hasConv=Array.isArray(cur.conv)&&cur.conv.length>0;
+    var tabNow=hasConv?tab:"log";
+    /* 머리 */
+    var hd=el("div","dhead");
+    hd.append(el("span","who","고객용 챗봇"),el("span","note","시작 "+hhmm(cur.startedAt)));
+    hd.append(el("b",null,stateText(cur)));
+    if(H) hd.append(el("span","stt "+SCLS[st2],st2));
+    if(H){
+      var ac=el("div","acts"), b1=el("button","btn sec","상담 시작"); b1.type="button"; b1.disabled=st2!=="대기";
       b1.onclick=function(){var a=loadA(); a.status[cur.id]="상담중"; saveA(a); render(true);};
       var b2=el("button","btn sec","처리 완료"); b2.type="button"; b2.disabled=st2==="완료";
       b2.onclick=function(){var a=loadA(); a.status[cur.id]="완료"; saveA(a); render(true);};
-      bs.append(b1,b2); box.append(bs); cd.append(box);
+      ac.append(b1,b2); hd.append(ac);
     }
-    /* 판정 기록 */
-    var lg=document.getElementById("log"), ls=lg.scrollTop, atBottom=lg.scrollTop+lg.clientHeight>=lg.scrollHeight-4; lg.textContent="";
-    var lh=document.getElementById("logh");
-    if(!cur){ lh.textContent="판정 기록"; lg.append(el("div","empty","왼쪽 챗봇에서 대화하면 여기에 판정이 쌓여요")); prevRows=-1; return; }
-    lh.textContent=cur.bot+" · 시작 "+hhmm(cur.startedAt)+(cur.asking&&!cur.handoff?" · 연결 여부를 묻는 중":"");
-    var tb=el("table"), thd=el("thead"), r0=el("tr");
-    ["턴","고객 말","라벨","엔진","점수","사유"].forEach(function(h){r0.append(el("th",null,h));}); thd.append(r0); tb.append(thd);
-    var body=el("tbody"), rows=(cur.turns||[]);
-    rows.forEach(function(t){ var r=el("tr"); var lt2=el("td"); lt2.append(badge(t));
-      r.append(el("td",null,String(t.n)),el("td",null,String(t.text)),lt2,el("td",null,ENG[t.engine]||String(t.engine||"")),
-        el("td",null,t.scores?"불만 "+Number(t.scores.complaint).toFixed(2)+" · 즉시 "+Number(t.scores.immediate).toFixed(2):"—"),el("td",null,String(t.reason||"")));
-      body.append(r); });
-    tb.append(body); lg.append(tb);
-    lg.scrollTop=(rows.length>prevRows||atBottom)?lg.scrollHeight:ls; prevRows=rows.length;
+    dt.append(hd);
+    var sc=el("div","dscroll");
+    /* 인계 카드 */
+    if(H){
+      var box=el("div","ccard"), lt=null;
+      turns.forEach(function(t){ if(t.scores) lt=t; });
+      var he=H.engine||(turns.length?turns[turns.length-1].engine:"")||"";
+      var tg=el("div","tags"); tg.append(el("span","tag",H.kind+" 이관"),el("span","tag","엔진 "+(ENG[he]||he)));
+      box.append(tg,el("h3",null,H.why||""));
+      var dl=el("dl"); Object.keys(H.fields||{}).forEach(function(k){ dl.append(el("dt",null,k),el("dd",null,two(H.fields[k]))); }); box.append(dl);
+      if(lt&&lt.scores){
+        [["불만",lt.scores.complaint],["즉시",lt.scores.immediate]].forEach(function(p){
+          var r=el("div","sbar"), v=Math.max(0,Math.min(1,Number(p[1])||0)), trk=el("div","trk"), i=el("i");
+          i.style.width=(v*100)+"%"; trk.append(i);
+          if(TH!=null){ var u=el("u"); u.style.left=(Math.max(0,Math.min(1,TH))*100)+"%"; u.title="기준선 "+TH.toFixed(2); trk.append(u); }
+          r.append(el("span",null,p[0]),trk,el("span",null,v.toFixed(2))); box.append(r); });
+        if(TH!=null) box.append(el("p","sbar-note","세로선은 기준선 "+TH.toFixed(2)));
+      }
+      sc.append(box);
+    } else if(cur.asking){
+      sc.append(el("p","note","챗봇이 연결 여부를 묻고 있어요. 고객이 답하면 이 상담이 대기로 넘어옵니다."));
+    }
+    /* 탭 */
+    var tabs=el("div","tabs"); tabs.setAttribute("role","tablist");
+    [["conv","대화"],["log","판정 기록"]].forEach(function(p){
+      if(p[0]==="conv"&&!hasConv) return;
+      var tb=el("button",null,p[1]); tb.type="button"; tb.setAttribute("role","tab"); tb.setAttribute("aria-selected",String(tabNow===p[0]));
+      tb.onclick=function(){ tab=p[0]; render(true); }; tabs.append(tb); });
+    sc.append(tabs);
+    var len;
+    if(tabNow==="conv"){
+      var cv=el("div","conv"); len=cur.conv.length;
+      cur.conv.forEach(function(m){
+        if(!m) return;
+        var w=WCLS[m.who]||"sys", msg=el("div","msg "+w);
+        if(WNAME[m.who]) msg.append(el("span","who",WNAME[m.who]));
+        msg.append(el("div","bub",String(m.text||"")));
+        if(m.who==="me"&&m.n>0){
+          var tt=null; turns.forEach(function(t){ if(t.n===m.n) tt=t; });
+          if(tt){
+            var mt=el("div","tmeta"); mt.append(badge(tt),el("span",null,ENG[tt.engine]||String(tt.engine||"")));
+            if(tt.scores){ mt.append(el("span",null,"불만 "+Number(tt.scores.complaint).toFixed(2)),el("span",null,"즉시 "+Number(tt.scores.immediate).toFixed(2))); }
+            if(tt.reason) mt.append(el("span",null,two(tt.reason)));
+            msg.append(mt);
+          }
+        }
+        cv.append(msg);
+      });
+      sc.append(cv);
+    } else {
+      var lg=el("div","console-log"), tw=el("div","tw"); len=turns.length;
+      if(!turns.length) tw.append(el("div","empty","아직 판정 기록이 없어요"));
+      else {
+        var tb2=el("table"), thd=el("thead"), r0=el("tr");
+        ["턴","고객 말","라벨","엔진","점수","사유"].forEach(function(h){r0.append(el("th",null,h));}); thd.append(r0); tb2.append(thd);
+        var body=el("tbody");
+        turns.forEach(function(t){ var r=el("tr"), lt2=el("td"); lt2.append(badge(t));
+          var scc=el("td","sc");
+          if(t.scores){ scc.append(el("span",null,"불만 "+Number(t.scores.complaint).toFixed(2)),el("span",null,"즉시 "+Number(t.scores.immediate).toFixed(2))); } else scc.textContent="—";
+          r.append(el("td",null,String(t.n)),el("td",null,String(t.text)),lt2,el("td",null,ENG[t.engine]||String(t.engine||"")),scc,el("td",null,two(t.reason)));
+          body.append(r); });
+        tb2.append(body); tw.append(tb2);
+      }
+      lg.append(tw); sc.append(lg);
+    }
+    dt.append(sc);
+    var key=cur.id+":"+tabNow;
+    if(key!==prevKey) sc.scrollTop=0;
+    else if(len>prevLen||oat) sc.scrollTop=sc.scrollHeight;
+    else sc.scrollTop=ost;
+    prevKey=key; prevLen=len;
   }
   window.addEventListener("storage",function(e){ if(!e.key||e.key===KEY||e.key===AKEY) render(); });
   setInterval(render,1000);

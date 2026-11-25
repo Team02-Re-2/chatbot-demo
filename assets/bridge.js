@@ -77,6 +77,7 @@
         var next = {
           id: rec.id, bot: rec.bot, startedAt: rec.startedAt, turns: tl, handoff: handoff,
           asking: !!s.ask && !s.handed,
+          conv: (s.conv || []).map(function (m) { return { who: S(m.who), text: S(m.text), n: (m.turn && m.turn.n) || 0 }; }),
           engineState: v2on ? "v2+규칙" : (V.state === "fail" ? "규칙(모델 오류)" : "규칙")
         };
         var sg = JSON.stringify(next);

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>K쇼핑 상담</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+html{color-scheme:light}
+body.cc{--paper:#F6F8FA;--card:#FFFFFF;--ink:#14213D;--muted:#5B6B7B;--line:#D5DDE5;--focus:#14213D;--tint:#E8EEF5;--btn-fg:#FFFFFF;
+  --pt:#2F6FB2;--pt-bad:#C8372D;
+  height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;font-size:16px;line-height:1.55;background:var(--paper)}
+/* 엔진 iframe: 보이지 않는다 (verify의 iframe#hid와 같은 스타일) */
+iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
+.demo{flex:none;padding:6px 12px;background:var(--tint);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;justify-content:center;font-size:14px}
+.demo .dl{color:var(--muted);font-size:13px}
+.dchip{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:2px 10px 2px 3px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:var(--ink);font:inherit;font-size:13.5px;cursor:pointer}
+.dchip b{padding:1px 8px;border-radius:999px;background:var(--ink);color:var(--btn-fg);font-size:12px;font-weight:700}
+.dchip.next{outline:2px solid var(--ink);outline-offset:1px}
+.dgrp{display:inline-flex;flex-wrap:wrap;gap:6px;padding:3px;border:1px dashed var(--muted);border-radius:999px}
+.card{flex:1 1 0;min-height:0;width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-top:0;border-bottom:0;padding:0;position:relative}
+@media (min-width:480px){.card{margin-top:12px;margin-bottom:12px;border:1px solid var(--line);border-radius:14px;overflow:hidden}}
+.head{flex:none;display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.logo{flex:none;width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--btn-fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+.head h1{font-size:17px;margin:0;line-height:1.25}
+.head .stat{font-size:13px;color:var(--muted);line-height:1.2}
+.head .grow{flex:1;min-width:0}
+.hbtn{flex:none;display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--ink);border-radius:999px;background:transparent;color:var(--ink);font:500 13.5px "IBM Plex Sans KR","Malgun Gothic",sans-serif;cursor:pointer}
+.strip{flex:none;padding:6px 14px 7px;background:var(--paper);border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.4}
+.strip .m{display:flex;align-items:center;gap:7px;font-weight:500}
+.strip .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.strip .dot.v2{background:var(--pt)}.strip .dot.bad{background:var(--pt-bad)}
+.strip .sub{color:var(--muted);font-size:12.5px;margin:1px 0 0 16px}
+.strip .prog{height:3px;margin:5px 0 0;background:var(--line);border-radius:2px;overflow:hidden}
+.strip .prog i{display:block;height:100%;width:0;background:var(--ink)}
+.strip .note2{margin:3px 0 0;color:var(--muted);font-size:12.5px}
+.log{flex:1 1 0;min-height:0;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--paper)}
+.row{display:flex;gap:8px;align-items:flex-end;max-width:100%}
+.row.me{justify-content:flex-end}
+.av{flex:none;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--btn-fg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.col{display:flex;flex-direction:column;max-width:80%}
+.row.me .col{align-items:flex-end}
+.bub{padding:9px 13px;border-radius:16px;font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.row.bot .bub{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:4px}
+.row.me .bub{background:var(--ink);color:var(--btn-fg);border-bottom-right-radius:4px}
+.tm{font-size:11.5px;color:var(--muted);margin:2px 4px 0}
+.sys{align-self:center;max-width:90%;text-align:center;padding:4px 12px;border-radius:999px;background:var(--tint);color:var(--muted);font-size:13px}
+.typing{display:inline-flex;gap:4px;padding:12px 14px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.5}
+.sugg{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:2px}
+.sugg .sl{font-size:12.5px;color:var(--muted)}
+.pill{min-height:38px;padding:5px 14px;border:1px solid var(--ink);border-radius:999px;background:var(--card);color:var(--ink);font:500 14px/1.35 "IBM Plex Sans KR","Malgun Gothic",sans-serif;cursor:pointer;text-align:left}
+.qr{flex:none;display:flex;gap:8px;padding:8px 14px 0;background:var(--paper)}
+.qr[hidden],.banner[hidden],.toast[hidden],.demo[hidden]{display:none}
+.banner{flex:none;margin:0;padding:10px 14px;background:var(--tint);border-top:1px solid var(--line);font-size:14px}
+.banner b{display:block;font-size:15px}
+.banner p{margin:2px 0 8px;color:var(--muted);font-size:13.5px}
+.form{flex:none;display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line);background:var(--card)}
+.form input{flex:1;min-width:0;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:999px;font:inherit;font-size:16px;color:var(--ink);background:var(--card)}
+.form input:disabled{background:var(--paper);color:var(--muted)}
+.form button{flex:none;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:var(--ink);color:var(--btn-fg);font:700 15px "IBM Plex Sans KR","Malgun Gothic",sans-serif;cursor:pointer}
+.form button:disabled{opacity:.45;cursor:default}
+.toast{position:absolute;left:14px;right:14px;bottom:70px;z-index:5;padding:8px 12px;border-radius:8px;background:var(--ink);color:var(--btn-fg);font-size:13.5px;text-align:center}
+</style>
+</head>
+<body class="cc">
+<iframe id="eng" src="../chatbot2/app/index.html" title="판정 엔진" aria-hidden="true" tabindex="-1"></iframe>
+
+<div class="demo" id="demo" hidden aria-label="시연 문장"></div>
+
+<main class="card">
+  <header class="head">
+    <div class="logo" aria-hidden="true">K</div>
+    <div class="grow"><h1>K쇼핑 상담</h1><div class="stat" id="stat">상담 준비 중</div></div>
+    <button type="button" class="hbtn" id="newtop">새 상담</button>
+  </header>
+  <div class="strip" id="strip">
+    <div class="m"><span class="dot" id="sdot"></span><span id="smain">상담 준비 중이에요</span></div>
+    <div class="sub" id="ssub"></div>
+    <div class="prog" id="sprog" hidden><i id="sbar"></i></div>
+    <p class="note2" data-tpl>팀 모델({{model_mb:vu}})은 처음 한 번만 받아요. 받는 동안에도 상담할 수 있어요.</p>
+  </div>
+  <div class="log" id="log" role="log" aria-live="polite" aria-label="상담 대화"></div>
+  <div class="qr" id="qr" hidden></div>
+  <div class="banner" id="banner" role="status" hidden></div>
+  <form class="form" id="chatform" autocomplete="off">
+    <input id="msg" type="text" placeholder="궁금한 점을 적어 주세요" aria-label="메시지" autocomplete="off" disabled>
+    <button type="submit" id="sendbtn" disabled>보내기</button>
+  </form>
+  <div class="toast" id="toast" role="status" hidden></div>
+</main>
+
+<script src="../assets/nums.js"></script>
+<script src="../assets/bridge.js"></script>
+<script>
+(function(){
+  var eng=document.getElementById("eng");
+  var E=eng.contentWindow;
+  function $(id){ return document.getElementById(id); }
+  function el(t,c,x){ var e=document.createElement(t); if(c) e.className=c; if(x!=null) e.textContent=x; return e; }
+  var TH="", demo=(new URLSearchParams(location.search).get("demo")==="1");
+
+  /* ── 기록: 이 페이지가 엔진 상태를 읽어 관리자용 기록을 남긴다 ── */
+  var info=null;
+  Team2Bridge.watchChatbot2(eng,function(i){ info=i; drawStrip(); });
+  Team2Nums.load().then(function(m){ if(m.th_c) TH=m.th_c.value; drawStrip(); });
+
+  /* ── 엔진 쓰기: 아래 두 함수뿐 (사람이 키보드·마우스로 하는 것과 같은 경로) ── */
+  /* ENGINE-WRITE */
+  function sendToEngine(text){
+    var s=E.st; if(!s||s.busy||s.handed||s.phase==="ended") return false;
+    if(!String(text).trim()) return false;
+    var d=E.document, f=d.getElementById("form");
+    d.getElementById("inp").value=text; /* ENGINE-WRITE W1 */
+    if(f.requestSubmit) f.requestSubmit(); /* ENGINE-WRITE W2 */
+    else f.dispatchEvent(new E.Event("submit",{cancelable:true,bubbles:true})); /* ENGINE-WRITE W2 대체 */
+    render(true); return true;
+  }
+  function newChat(){ E.document.getElementById("resetBtn").click(); render(true); } /* ENGINE-WRITE W3 */
+
+  /* ── 판정 방식 띠 ── */
+  function drawStrip(){
+    var dot=$("sdot"), main=$("smain"), sub=$("ssub"), pg=$("sprog"), bar=$("sbar");
+    var cls="dot", m="상담 준비 중이에요", sb="", p=-1;
+    if(info){
+      if(info.state==="fail"){ cls="dot bad"; m="팀 모델을 받지 못해 규칙 판정으로 응대 중이에요"; }
+      else if(info.mode==="v2"){ cls="dot v2"; m="팀 모델 v2 + 규칙 안전장치로 판정 중이에요"; sb=TH?("기준선 "+TH):""; }
+      else if(info.state==="init"){ m="규칙 판정으로 응대 중이에요"; sb="팀 모델 여는 중"; p=1; }
+      else if(info.state==="ready"){ m="규칙 판정으로 응대 중이에요"; }
+      else { m="규칙 판정으로 응대 중이에요"; sb="팀 모델 받는 중 "+Math.round(info.pct*100)+"%"; p=info.pct; }
+    }
+    dot.className=cls; main.textContent=m; sub.textContent=sb; sub.hidden=!sb;
+    pg.hidden=p<0; bar.style.width=Math.round(Math.max(0,p)*100)+"%";
+  }
+
+  /* ── 그리기: E.st만 읽는다 ── */
+  var stRef=null, stN=0, times=[], lastSig="", wasLocked=true, seq=0;
+  function hhmm(){ return new Date().toTimeString().slice(0,5); }
+  function isLocked(s){ return !s||!!(s.busy||s.handed||s.phase==="ended"); }
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toast.h); toast.h=setTimeout(function(){ t.hidden=true; },2000); }
+  var SUG=["주문한 상품 배송 조회는 어디서 하나요?","반품하려면 어떻게 해요?","배송지를 회사 주소로 바꾸고 싶어요"];
+  function render(force){
+    var s=null; try{ s=E.st; }catch(e){ s=null; }
+    if(s!==stRef){ stRef=s; stN++; times=[]; seq=0; markNext(); }
+    var conv=(s&&s.conv)||[];
+    var sig=[stN,conv.length,s?!!s.busy:"-",s?!!s.ask:"-",s?!!s.handed:"-",s?s.phase:"-"].join("|");
+    if(!force&&sig===lastSig) return; lastSig=sig;
+    var locked=isLocked(s), handed=!!(s&&s.handed), ended=!!(s&&s.phase==="ended");
+    $("stat").textContent=!s?"상담 준비 중":handed?"상담사 연결 중":ended?"상담 종료":"챗봇 상담 중";
+    var log=$("log"); log.textContent="";
+    conv.forEach(function(m,i){
+      if(!times[i]) times[i]=hhmm();
+      if(m.who==="me"||m.who==="bot"){
+        var row=el("div","row "+m.who), col=el("div","col");
+        if(m.who==="bot") row.append(el("div","av","K"));
+        col.append(el("div","bub",String(m.text)),el("div","tm",times[i]));
+        row.append(col); log.append(row);
+      } else if(m.who==="sys"){ log.append(el("div","sys","상담사에게 연결하고 있어요")); }
+      else if(m.who==="end"){ log.append(el("div","sys","상담이 끝났어요")); }
+    });
+    if(s&&s.busy){ var r=el("div","row bot"), c=el("div","col"), b=el("div","bub typing"); b.append(el("i"),el("i"),el("i")); c.append(b); r.append(el("div","av","K"),c); log.append(r); }
+    if(s&&!s.turns.length&&!s.busy&&!handed&&!ended){
+      var sg=el("div","sugg"); sg.append(el("div","sl","이런 질문을 해 볼 수 있어요"));
+      SUG.forEach(function(t){ var p=el("button","pill",t); p.type="button"; p.onclick=function(){ sendToEngine(t); }; sg.append(p); });
+      log.append(sg);
+    }
+    log.scrollTop=log.scrollHeight;
+    /* 빠른 답 */
+    var qr=$("qr"); qr.textContent="";
+    if(s&&s.ask&&!locked){ ["네","아니요"].forEach(function(t){ var p=el("button","pill",t); p.type="button"; p.onclick=function(){ sendToEngine(t); }; qr.append(p); }); qr.hidden=false; } else qr.hidden=true;
+    /* 배너 */
+    var bn=$("banner"); bn.textContent="";
+    if(handed||ended){
+      bn.append(el("b",null,handed?"상담사에게 연결하고 있어요":"상담이 끝났어요"));
+      if(handed) bn.append(el("p",null,"지금까지의 대화가 그대로 전달돼요. 다시 설명하지 않으셔도 됩니다."));
+      var nb=el("button","pill","새 상담 시작"); nb.type="button"; nb.onclick=newChat; nb.style.marginTop="6px"; bn.append(nb); bn.hidden=false;
+    } else bn.hidden=true;
+    /* 입력창 */
+    var inp=$("msg"), sb2=$("sendbtn");
+    inp.disabled=locked; sb2.disabled=locked;
+    inp.placeholder=!s?"상담 준비 중이에요":handed?"상담사 연결을 기다리고 있어요":ended?"상담이 끝났어요":"궁금한 점을 적어 주세요";
+    if(wasLocked&&!locked) inp.focus();
+    wasLocked=locked;
+  }
+
+  /* ── 입력: form의 submit 이벤트로만 보낸다 (keydown Enter 처리기 없음) ── */
+  $("chatform").addEventListener("submit",function(e){
+    e.preventDefault();
+    var inp=$("msg"), v=inp.value;
+    if(sendToEngine(v)) inp.value="";
+  });
+  $("newtop").addEventListener("click",newChat);
+
+  /* ── 시연 문장 띠 ── */
+  var grp=[];
+  function markNext(){ grp.forEach(function(c,i){ c.classList.toggle("next",i===seq); }); }
+  function demoSend(text,fresh,idx){
+    var s=null; try{ s=E.st; }catch(e){}
+    if(fresh){ if(s&&s.turns.length>0) newChat(); }
+    else if(isLocked(s)){ toast("①부터 눌러 주세요"); return; }
+    if(sendToEngine(text)&&idx!=null){ seq=idx+1; markNext(); }
+  }
+  if(demo){
+    var bx=$("demo"); bx.hidden=false; bx.append(el("span","dl","시연 문장"));
+    function chip(tag,text,fresh,idx,parent){
+      var c=el("button","dchip"); c.type="button"; c.append(el("b",null,tag),document.createTextNode(text));
+      c.onclick=function(){ demoSend(text,fresh,idx); }; parent.append(c); return c;
+    }
+    chip("즉시","진짜 미친 거 아니에요? 2주째 안 오잖아요",true,null,bx);
+    chip("안전장치","팀장님 바꿔 주세요",true,null,bx);
+    var g=el("span","dgrp"); bx.append(g);
+    grp.push(chip("먼저 묻기 ①","어제 온다던 택배가 안 와서 짜증나네요",true,0,g));
+    grp.push(chip("먼저 묻기 ②","어제도 내일 온다더니 짜증나요",false,1,g));
+    grp.push(chip("먼저 묻기 ③","네",false,2,g));
+    markNext();
+  }
+
+  /* ── 다시 그리는 때: 엔진 #log 변화(읽기), 500ms 주기 ── */
+  var obs=null;
+  function attach(){
+    try{
+      if(obs) obs.disconnect();
+      var lg=E.document.getElementById("log"); if(!lg) return;
+      obs=new MutationObserver(function(){ render(); });
+      obs.observe(lg,{childList:true,subtree:true});
+    }catch(e){}
+  }
+  eng.addEventListener("load",function(){ attach(); render(true); });
+  attach();
+  setInterval(function(){ render(); },500);
+  render(true);
+})();
+</script>
+</body>
+</html>
