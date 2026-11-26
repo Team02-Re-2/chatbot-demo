@@ -20,6 +20,7 @@
   <nav class="console-queue" id="queue" aria-label="상담 목록"></nav>
   <section class="console-detail" id="detail" aria-label="상담 상세"></section>
 </div>
+<script src="../assets/offline.js"></script>
 <script src="../assets/nums.js"></script>
 <script>
 (function(){
@@ -53,7 +54,7 @@
     for(i=t.length-1;i>=0;i--) if(t[i]&&t[i].text) return String(t[i].text);
     return "";
   }
-  function stateText(s){ return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":"챗봇 응대"); }
+  function stateText(s){ var tk=Array.isArray(s.tickets)?s.tickets:[]; return s.handoff?(s.handoff.kind+" 이관"):(s.asking?"묻는 중":tk.length?("챗봇 접수 · "+String(tk[tk.length-1].tname||"")):s.ended?"챗봇 해결":"챗봇 응대"); }
   if(window.top===window) document.getElementById("sb").hidden=false;
   Team2Nums.ready.then(function(m){ var v=m&&m.th_c?parseFloat(m.th_c.value):NaN; TH=isNaN(v)?null:v; render(true); }).catch(function(){});
 
@@ -97,6 +98,7 @@
       if(h) l1.append(el("span","stt "+SCLS[st],st));
       l1.append(el("span","tm",hhmm(h?h.at:s.startedAt)));
       row.append(l1,el("div","l2",lastSay(s)||"—"));
+      if(!h&&Array.isArray(s.tickets)&&s.tickets.length){ var tk1=s.tickets[s.tickets.length-1]; row.append(el("div","l2",String(tk1.no||"")+" · "+String(tk1.followup||""))); }
       if(h&&st==="대기"){ var l3=el("div","l3"), t=el("span",null,mmss(Date.now()-(h.at||Date.now()))); t.setAttribute("data-at",String(h.at||0)); l3.append(el("span",null,"대기"),t); row.append(l3); }
       q.append(row);
     });
