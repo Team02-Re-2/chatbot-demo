@@ -16,13 +16,25 @@
 - `replay/`: 녹화된 Claude 판정. 지어낸 40문장에 Claude가 3회 낸 판정을 `claude40.json`으로 보여 줍니다(실시간 아님).
 - `benchmark/`: 판정 엔진 4개 벤치마크 결과표.
 - `stage-demo/`: 단계 인지형 답변 추천 시연판 (변경 없음).
-- `assets/`: `numbers.json`(화면에 나오는 모든 숫자의 한 곳), `nums.js`, `bridge.js`, `site.css`.
+- `claude/`: 클로드 안내 페이지. "Claude에서 열기" 버튼이 claude.ai에 올린 별도 페이지(클로드 챗봇)로 보냅니다. 클로드에 로그인한 사람은 규칙 판정과 Claude 판정을 나란히 볼 수 있습니다. 공개 사이트(GitHub Pages)에는 Claude를 직접 붙일 수 없어서 claude.ai 쪽에 따로 둡니다.
+- `assets/`: `numbers.json`(화면에 나오는 모든 숫자의 한 곳), `links.json`(슬라이드·클로드 주소의 한 곳), `nums.js`, `links.js`, `bridge.js`, `site.css`.
+
+## 바꾸는 법
+
+- **슬라이드 최종본 연결**: `assets/links.json`의 `slides.url` 한 줄만 바꾸고 푸시합니다 (`https://...` 또는 사이트 안 상대 주소).
+- **클로드 링크 끄기**: `claude.url`을 비우면 버튼이 "준비 중"으로 바뀝니다.
+- **숫자 고치기**: `assets/numbers.json`만 고칩니다. 화면에는 숫자를 직접 적지 않습니다.
+
+## 팀원이 볼 문서
+
+- [PROGRESS.md](PROGRESS.md): 지금까지 한 일을 쉬운 말로 정리한 진행사항
+- [이슈](https://github.com/Team02-Re-2/chatbot-demo/issues): 발표 전 체크리스트와 열린 결정
 
 ## 원칙
 
 - 원본 무수정: `chatbot1/app/customer.html`, `chatbot2/app/index.html`, `chatbot2/app/v2/**`는 저장·재포맷하지 않습니다. `chatbot1/`, `chatbot2/` 껍데기는 iframe을 읽기만 합니다(`assets/bridge.js`). 예외로 `customer-chat/`는 엔진 iframe에 위 3가지 쓰기만 합니다.
 - 숫자는 `assets/numbers.json`에서만 읽어 표시합니다. 각 숫자에 조건과 출처가 붙어 있습니다.
-- 외부 스크립트는 cdn.jsdelivr.net만 씁니다(챗봇 2의 onnxruntime-web, 지도의 mermaid 고정 버전).
+- 외부 스크립트는 cdn.jsdelivr.net만 씁니다(챗봇 2의 onnxruntime-web 고정 버전). 지도는 SVG로 직접 그려서 외부 스크립트가 없습니다.
 
 ## 출처
 
