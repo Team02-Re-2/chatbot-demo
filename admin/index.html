@@ -59,7 +59,7 @@
   if(window.top===window) document.getElementById("sb").hidden=false;
   Team2Nums.ready.then(function(m){ var v=m&&m.th_c?parseFloat(m.th_c.value):NaN; TH=isNaN(v)?null:v; render(true); }).catch(function(){});
 
-  var snapshot="", sigs={}, follow=null, firstRun=true, seenH={}, cur=null, prevKey="", prevLen=-1;
+  var prevHK="", snapshot="", sigs={}, follow=null, firstRun=true, seenH={}, cur=null, prevKey="", prevLen=-1;
   function render(force){ try{ render1(force); }finally{ firstRun=false; } }
   function render1(force){
     var ss=load().filter(function(s){ return s&&s.bot==="챗봇2"; }), A=loadA();
@@ -196,11 +196,11 @@
       lg.append(tw); sc.append(lg);
     }
     dt.append(sc);
-    var key=cur.id+":"+tabNow;
-    if(key!==prevKey) sc.scrollTop=0;
+    var key=cur.id+":"+tabNow, hk=cur.id+":"+(cur.handoff?1:0);
+    if(key!==prevKey||hk!==prevHK) sc.scrollTop=0; /* 이관되면 인계 카드가 보이게 맨 위로 */
     else if(len>prevLen||oat) sc.scrollTop=sc.scrollHeight;
     else sc.scrollTop=ost;
-    prevKey=key; prevLen=len;
+    prevKey=key; prevHK=hk; prevLen=len;
   }
   window.addEventListener("storage",function(e){ if(!e.key||e.key===KEY||e.key===AKEY) render(); });
   setInterval(render,1000);
