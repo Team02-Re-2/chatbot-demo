@@ -125,6 +125,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
 .qr.approve .aph b{font-size:14px;color:var(--ink)}
 .qr.approve .aph span{font-size:12px;color:var(--muted)}
 .dchip.next{background:#EAF2FF}
+.dchip:disabled{opacity:.45;cursor:wait}
 .logo{background:#5DAA3C url("../assets/pickle.svg") center 4px/34px no-repeat;font-size:0}
 </style>
 </head>
@@ -200,6 +201,10 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     var nt=document.querySelector("#strip .note2"); if(nt) nt.hidden=!!(info&&(info.state==="fail"||info.state==="ready"||info.mode==="v2"));
     dot.className=cls; main.textContent=m; sub.textContent=sb; sub.hidden=!sb;
     pg.hidden=p<0; bar.style.width=Math.round(Math.max(0,p)*100)+"%";
+    /* 시연 문장은 팀 모델이 준비된 뒤에 누르게 한다 (먼저 누르면 규칙으로 판정돼 0.79 같은 점수가 안 나옴) */
+    var rdy=!!(info&&(info.mode==="v2"||info.state==="fail"||info.state==="ready"));
+    Array.prototype.forEach.call(document.querySelectorAll("#demo .dchip"),function(b){ b.disabled=!rdy; });
+    var dl0=document.querySelector("#demo .dl"); if(dl0) dl0.textContent=rdy?"시연 대본 순서":"팀 모델 준비 중… 잠시 후 눌러 주세요";
   }
 
   /* ── 그리기: E.st만 읽는다 ── */
@@ -239,7 +244,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     /* 빠른 답 */
     var qr=$("qr"); qr.textContent="";
     qr.classList.remove("approve");
-    if(s&&s.ask&&!locked){ /* 피클의 '실행 전 승인'처럼: 연결은 고객이 고른 뒤에만 */
+    if(s&&s.ask&&!locked){ /* 연결은 고객이 고른 뒤에만 */
       qr.classList.add("approve");
       var hd=el("div","aph"); hd.append(el("b",null,"상담사 연결 승인"),el("span",null,"고객이 고르면 진행해요")); qr.append(hd);
       [["네, 연결해 주세요","네",true],["아니요, 챗봇과 계속","아니요",false]].forEach(function(o){ var p=el("button","pill sm"+(o[2]?" pri":""),o[0]); p.type="button"; p.onclick=function(){ sendToEngine(o[1]); }; qr.append(p); });
@@ -347,7 +352,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     bx.append(el("span","dl","질문 대비"));
     chip("즉시 이관","진짜 미친 거 아니에요? 2주째 안 오잖아요",true,null,bx,"t-red");
     chip("맥락 이어 가기","주문 취소해 주세요",true,null,bx,"t-green");
-    markNext();
+    markNext(); drawStrip();
   }
 
   /* ── 다시 그리는 때: 엔진 #log 변화(읽기), 500ms 주기 ── */
