@@ -3,50 +3,96 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<title>팀2 상담 이관 시연</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<meta name="color-scheme" content="light">
+<title>팀2 · 판정을 넣은 챗봇 시연</title>
+<link rel="icon" href="assets/pickle.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="assets/site.css">
+<style>
+/* 발표 슬라이드(13쪽)와 같은 디자인: 남색 #0F172A · 파랑 #2563EB · 밝은 바탕 #F8FAFC · 흰 카드 */
+:root{--navy:#0F172A;--blue:#2563EB;--blue-t:#EAF2FF;--bg:#F8FAFC;--line:#E2E8F0;--mut:#64748B;--ink:#0F172A;--pk:#5DAA3C}
+html.split-html,html.split-html body{height:100%}
+body.deck{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Pretendard Variable","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;letter-spacing:-.01em;display:flex;flex-direction:column;overflow:hidden;font-variant-numeric:tabular-nums}
+.top{flex:none;display:flex;align-items:center;gap:16px;padding:12px 28px 10px;background:#fff;border-bottom:1px solid var(--line)}
+.top img.mascot{width:46px;height:50px;flex:none}
+.ttl{min-width:0}
+.ttl .eb{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.01em}
+.ttl h1{margin:2px 0 0;font-size:24px;line-height:1.2;font-weight:800;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpis{margin-left:auto;display:flex;gap:22px;align-items:flex-end;flex:none}
+.kpi b{display:block;font-size:20px;font-weight:800;line-height:1.1;color:var(--navy)}
+.kpi b.blue{color:var(--blue)}
+.kpi small{font-size:11.5px;color:var(--mut)}
+.cats{flex:none;display:flex;align-items:center;gap:8px;padding:10px 28px;background:var(--bg)}
+.seg{display:inline-flex;gap:4px;padding:4px;border-radius:14px;background:#fff;border:1px solid var(--line)}
+.seg button,.seg a{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:0 16px;border:0;border-radius:10px;background:transparent;color:var(--mut);font:600 15px Pretendard,system-ui,sans-serif;text-decoration:none;cursor:pointer;white-space:nowrap}
+.seg button[aria-selected="true"]{background:var(--navy);color:#fff}
+.seg .tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:var(--blue-t);color:var(--blue)}
+.seg button[aria-selected="true"] .tag{background:rgba(255,255,255,.16);color:#BFD5FF}
+.seg a:hover,.seg button:hover{color:var(--navy)}
+.seg button[aria-selected="true"]:hover{color:#fff}
+.cats .ext{margin-left:auto;display:flex;gap:8px}
+.cats .ext a{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--navy);font-weight:700;font-size:14.5px;text-decoration:none}
+.cats .ext a.claude{border-color:#D97757;color:#B4532F}
+.cats .ext a .ar{font-weight:400;color:var(--mut)}
+#badge{color:#E11D48;font-weight:800}
+main.stage{flex:1 1 0;min-height:0;display:grid;grid-template-columns:4fr 6fr;gap:16px;padding:0 28px 12px}
+.pane{min-height:0;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.ph{flex:none;display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.ph .who{font-size:11.5px;font-weight:800;letter-spacing:.04em;padding:3px 9px;border-radius:999px;background:var(--blue-t);color:var(--blue)}
+.ph .who.adm{background:#0F172A;color:#fff}
+.ph b{font-size:16px;font-weight:800}
+.ph small{color:var(--mut);font-size:12.5px}
+.ph a{margin-left:auto;font-size:13px;color:var(--mut);text-decoration:none}
+.pane iframe{flex:1 1 0;min-height:0;width:100%;border:0;display:block;background:#fff}
+body.v-admin main.stage{grid-template-columns:1fr}
+body.v-admin #p1{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+body.v-chat main.stage{grid-template-columns:minmax(0,560px);justify-content:center}
+body.v-chat #p2{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.foot{flex:none;padding:0 28px 10px;font-size:12px;color:var(--mut)}
+.foot b{color:var(--navy);font-weight:700}
+@media (max-width:1280px){.kpis{gap:14px}.kpi b{font-size:17px}.ttl h1{font-size:20px}}
+@media (max-width:1099px){
+  .kpis{display:none}
+  main.stage{grid-template-columns:1fr}
+  body:not(.v-admin) #p2{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+  body.v-admin #p2{position:static;width:auto;height:auto;opacity:1;pointer-events:auto}
+  .cats{flex-wrap:wrap}.cats .ext{margin-left:0}
+}
+@media (max-height:780px){.top{padding:8px 24px 6px}.cats{padding:6px 24px}.ttl h1{font-size:20px}.foot{display:none}}
+</style>
 </head>
-<body class="split-page">
-<header class="split-top">
-  <h1>팀2 상담 이관 시연</h1>
-  <div class="top-inline">
-    <div class="nchip"><b><span>기준선 </span><span data-n="th_c"></span></b><small>팀 결정</small></div>
-    <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small><span data-tpl>전체 {{total_dialogs:vu}}</span><span class="wide" data-tpl> 기준선 {{th_a}}에서 {{th_c}}로</span></small></div>
-    <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small data-tpl>표본 {{sample_dialogs:vu}} 가중 추정</small></div>
-    <nav class="top-links" aria-label="바로 가기">
-      <a data-link="slides" href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a><a href="claude/" target="_blank" rel="noopener">클로드</a><a href="ready/">발표 준비</a>
-    </nav>
+<body class="deck">
+<header class="top">
+  <img class="mascot" src="assets/pickle.svg" alt="">
+  <div class="ttl"><div class="eb">PART 4. 실전 적용 · 시제품 · LIVE DEMO</div><h1>판정을 넣은 챗봇, 직접 보여 드리겠습니다</h1></div>
+  <div class="kpis" aria-label="발표 숫자">
+    <div class="kpi"><b class="blue" data-tpl>{{link_a:vu}} → {{link_c:vu}}</b><small data-tpl>상담사 연결 비율 (전체 {{total_dialogs:vu}})</small></div>
+    <div class="kpi"><b data-tpl>{{risk_capture:vu}}</b><small data-tpl>위험 포착 (표본 {{sample_dialogs:vu}} 추정)</small></div>
+    <div class="kpi"><b data-tpl>기준선 {{th_c}}</b><small>팀 결정</small></div>
   </div>
-  <details class="more"><summary>더 보기</summary>
-    <div class="more-pan">
-      <div class="only-narrow">
-        <div class="nchip"><b><span>기준선 </span><span data-n="th_c"></span></b><small>팀 결정</small></div>
-        <div class="nchip"><b data-tpl>연결 {{link_a:vu}} → {{link_c:vu}}</b><small data-tpl>전체 {{total_dialogs:vu}}</small></div>
-        <div class="nchip"><b data-tpl>위험 포착 {{risk_capture:vu}}</b><small data-tpl>표본 {{sample_dialogs:vu}} 가중 추정</small></div>
-        <a data-link="slides" href="slides/">슬라이드</a><a href="verify/">검증</a><a href="benchmark/">결과표</a><a href="claude/" target="_blank" rel="noopener">클로드</a><a href="ready/">발표 준비</a>
-      </div>
-      <a data-link="claude" data-wait="클로드 챗봇 (준비 중)" href="claude/">클로드 챗봇</a><a href="overview/">숫자 전체</a><a href="map/">지도</a><a href="stage-demo/">단계 추천</a><a href="replay/">녹화 Claude</a><a href="chatbot2/">원본 화면</a>
-    </div>
-  </details>
 </header>
-<div class="split-tabs" role="tablist" aria-label="화면 선택">
-  <button type="button" role="tab" id="tab1" aria-selected="true" aria-controls="p1">고객용 챗봇</button>
-  <button type="button" role="tab" id="tab2" aria-selected="false" aria-controls="p2">관리자<span id="badge"></span></button>
-</div>
-<main class="split">
-  <section class="pane on" id="p1" aria-label="고객이 보는 화면">
-    <div class="pane-h"><div class="pt"><small>고객이 보는 화면</small><b>고객용 챗봇</b></div>
-      <a class="pb" href="customer-chat/?demo=1" target="_blank" rel="noopener">새 창에서 열기</a></div>
+<nav class="cats" aria-label="화면 고르기">
+  <div class="seg" role="tablist">
+    <button type="button" role="tab" id="t-both" aria-selected="true">고객용 + 관리자용 <span class="tag">시연</span></button>
+    <button type="button" role="tab" id="t-chat" aria-selected="false">고객용 챗봇</button>
+    <button type="button" role="tab" id="t-admin" aria-selected="false">관리자 대시보드<span id="badge"></span></button>
+  </div>
+  <div class="ext">
+    <a class="claude" data-link="claude" data-wait="클로드 챗봇 (준비 중)" href="claude/" target="_blank" rel="noopener">클로드 챗봇 <span class="ar">↗</span></a>
+    <a href="script/" target="_blank" rel="noopener">2분 시연 대본 <span class="ar">↗</span></a>
+  </div>
+</nav>
+<main class="stage">
+  <section class="pane" id="p1" aria-label="고객용 챗봇">
+    <div class="ph"><span class="who">고객용</span><b>K쇼핑 상담 챗봇</b><small>팀 모델 v2 + 규칙 안전장치</small><a href="customer-chat/?demo=1" target="_blank" rel="noopener">새 창 ↗</a></div>
     <iframe id="f1" src="customer-chat/?demo=1" title="고객용 챗봇"></iframe>
   </section>
-  <section class="pane" id="p2" aria-label="상담사가 보는 화면">
-    <div class="pane-h"><div class="pt"><small>상담사가 보는 화면</small><b>관리자</b></div>
-      <a class="pb" href="admin/" target="_blank" rel="noopener">새 창에서 열기</a></div>
-    <iframe id="f2" src="admin/" title="관리자"></iframe>
+  <section class="pane" id="p2" aria-label="관리자 대시보드">
+    <div class="ph"><span class="who adm">관리자용</span><b>상담사 대시보드</b><small>넘어온 상담 · 인계 카드 · 발화별 판정</small><a href="admin/" target="_blank" rel="noopener">새 창 ↗</a></div>
+    <iframe id="f2" src="admin/" title="관리자 대시보드"></iframe>
   </section>
 </main>
+<div class="foot"><b>시연 전 확인</b> · 이 사이트는 규칙 + 팀 모델 v2로 판정합니다. Claude 판정은 클로드 챗봇(만든 계정으로 로그인)에서만 동작합니다. 기록은 이 브라우저에만 남습니다.</div>
 <script src="assets/offline.js"></script>
 <script src="assets/nums.js"></script>
 <script src="assets/links.js"></script>
@@ -54,13 +100,14 @@
 /* 껍데기만 합니다. 기록은 customer-chat이 남기고, 여기서는 읽기만 합니다. */
 (function(){
   function $(id){ return document.getElementById(id); }
-  var mq=window.matchMedia("(min-width:1100px)");
-  var tabs=[$("tab1"),$("tab2")], panes=[$("p1"),$("p2")];
-  function selectTab(i){
-    tabs.forEach(function(t,k){ t.setAttribute("aria-selected",k===i?"true":"false"); });
-    panes.forEach(function(p,k){ p.classList.toggle("on",k===i); });
+  var tabs={both:$("t-both"),chat:$("t-chat"),admin:$("t-admin")};
+  function view(v){
+    Object.keys(tabs).forEach(function(k){ tabs[k].setAttribute("aria-selected",k===v?"true":"false"); });
+    document.body.classList.toggle("v-admin",v==="admin"); document.body.classList.toggle("v-chat",v==="chat");
+    try{ history.replaceState(null,"",v==="both"?location.pathname:"#"+v); }catch(e){}
   }
-  tabs.forEach(function(t,i){ t.addEventListener("click",function(){ selectTab(i); }); });
+  Object.keys(tabs).forEach(function(k){ tabs[k].addEventListener("click",function(){ view(k); }); });
+  var h=location.hash.slice(1); if(tabs[h]) view(h);
   function waiting(){
     var n=0;
     try{

@@ -15,7 +15,7 @@ var TIMEOUT_MS = 4000;
 var SHELL = [
   "./", "index.html", "customer-chat/?demo=1", "customer-chat/", "admin/", "ready/",
   "chatbot2/app/index.html", "chatbot2/", "verify/", "verify/bench40.json", "benchmark/", "overview/", "claude/",
-  "assets/site.css", "assets/nums.js", "assets/links.js", "assets/bridge.js", "assets/numbers.json", "assets/links.json", "assets/offline.js"
+  "assets/site.css", "assets/nums.js", "assets/links.js", "assets/bridge.js", "assets/numbers.json", "assets/links.json", "assets/offline.js", "assets/pickle.svg", "script/"
 ];
 
 function isModel(url) {
