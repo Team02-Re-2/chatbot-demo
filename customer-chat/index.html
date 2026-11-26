@@ -22,7 +22,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
 .demo .dl{color:var(--muted);font-size:12px}
 .dchip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:2px 12px;border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);font:inherit;font-size:14px;cursor:pointer}
 .dchip b{font-size:13px;font-weight:600}
-.dchip b.t-red{color:var(--red)}.dchip b.t-blue{color:var(--blue-l)}
+.dchip b.t-red{color:var(--red)}.dchip b.t-green{color:#1F8A3B}.dchip b.t-blue{color:var(--blue-l)}
 .dchip.next{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
 /* 낮은 화면(노트북 등)에서는 시연 문장 띠를 한 줄로 두고 옆으로 넘겨 대화 영역을 지킨다 */
 @media (max-width:459px) and (max-height:820px){.demo{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none}.demo::-webkit-scrollbar{display:none}.demo .dgrp{display:inline-flex;gap:8px;flex:none}.demo .dchip,.demo .dl{flex:none;white-space:nowrap}}
@@ -91,6 +91,35 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
 .form button:disabled{cursor:default}
 .form button:disabled .c,.form:has(#msg:placeholder-shown) button .c{fill:var(--sendoff)}
 .toast{position:absolute;left:14px;right:14px;bottom:70px;z-index:5;padding:8px 12px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:13px;text-align:center}
+
+/* ── 맥락 표시: 진행 단계, 주문·접수 카드, 상황별 빠른 답 ── */
+.steps{flex:none;display:flex;align-items:center;gap:6px;padding:6px 14px 8px;background:var(--logbg);border-bottom:.5px solid var(--line);font-size:12px;color:var(--muted);overflow-x:auto;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps[hidden]{display:none}
+.steps .tt{flex:none;font-weight:600;color:var(--ink);margin-right:2px}
+.steps .sp{flex:none;display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:var(--paper);white-space:nowrap}
+.steps .sp i{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--sendoff);display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;line-height:1}
+.steps .sp.done{color:var(--ink)}
+.steps .sp.done i{background:var(--blue);border-color:var(--blue);color:#fff}
+.steps .sp.now{color:var(--blue-l);box-shadow:inset 0 0 0 1px var(--blue)}
+.steps .sp.now i{border-color:var(--blue)}
+.steps .ar{flex:none;color:var(--sendoff)}
+.ocard{align-self:flex-start;width:min(300px,82%);margin:2px 0 2px;padding:12px 14px;border-radius:16px;background:var(--card);border:.5px solid var(--hair);box-shadow:0 2px 10px rgba(0,0,0,.06);font-size:14px;line-height:1.45}
+.ocard .ot{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:12px;margin-bottom:6px}
+.ocard .pn{font-weight:600;font-size:15px;color:var(--ink)}
+.ocard .op{color:var(--muted);font-size:13px}
+.ocard .meta{display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:.5px solid var(--line);font-size:13px}
+.ocard .st{padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--paper);color:var(--ink)}
+.ocard .st.s-done{background:rgba(52,199,89,.15);color:#1F8A3B}
+.ocard .st.s-move{background:rgba(10,132,255,.14);color:var(--blue-l)}
+.ocard .st.s-wait{background:rgba(255,159,10,.16);color:#B36B00}
+.ocard.tk{border-color:rgba(10,132,255,.35)}
+.ocard.tk .big{font-size:17px;font-weight:700;letter-spacing:.02em;color:var(--ink);margin:2px 0}
+.ocard.tk .ok{display:inline-flex;align-items:center;gap:6px;color:#1F8A3B;font-weight:600;font-size:13px}
+@media (prefers-color-scheme:dark){.ocard .st.s-done,.ocard.tk .ok{color:#5BD27A}.ocard .st.s-wait{color:#FFB340}}
+.qr{flex-wrap:wrap}
+.qr .pill.sm{flex:1 1 auto;min-height:38px;padding:6px 12px;font-size:14px;border-radius:19px}
+.qr .pill.pri{background:var(--blue);border-color:var(--blue);color:#fff}
 </style>
 </head>
 <body class="cc">
@@ -110,6 +139,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     <div class="prog" id="sprog" hidden><i id="sbar"></i></div>
     <p class="note2" data-tpl>팀 모델({{model_mb:vu}})은 처음 한 번만 받아요. 받는 동안에도 상담할 수 있어요.</p>
   </div>
+  <div class="steps" id="steps" hidden aria-label="상담 진행 단계"></div>
   <div class="log" id="log" role="log" aria-live="polite" aria-label="상담 대화"></div>
   <div class="qr" id="qr" hidden></div>
   <div class="banner" id="banner" role="status" hidden></div>
@@ -120,6 +150,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
   <div class="toast" id="toast" role="status" hidden></div>
 </main>
 
+<script src="../assets/offline.js"></script>
 <script src="../assets/nums.js"></script>
 <script src="../assets/bridge.js"></script>
 <script>
@@ -175,7 +206,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     var s=null; try{ s=E.st; }catch(e){ s=null; }
     if(s!==stRef){ stRef=s; stN++; times=[]; seq=0; markNext(); }
     var conv=(s&&s.conv)||[];
-    var sig=[stN,conv.length,s?!!s.busy:"-",s?!!s.ask:"-",s?!!s.handed:"-",s?s.phase:"-"].join("|");
+    var sig=[stN,conv.length,s?!!s.busy:"-",s?!!s.ask:"-",s?!!s.handed:"-",s?s.phase:"-",s&&s.pend?s.pend.slot:"-",s&&s.tickets?s.tickets.length:0].join("|");
     if(!force&&sig===lastSig) return; lastSig=sig;
     var locked=isLocked(s), handed=!!(s&&s.handed), ended=!!(s&&s.phase==="ended");
     $("stat").textContent=!s?"상담 준비 중":handed?"상담사 연결 중":ended?"상담 종료":"챗봇 상담 중";
@@ -187,6 +218,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
         if(m.who==="bot") row.append(el("div","av","K"));
         col.append(el("div","bub",String(m.text)),el("div","tm",times[i]));
         row.append(col); log.append(row);
+        if(m.who==="bot"){ var cd=cardFor(s,m,i); if(cd) log.append(cd); }
       } else if(m.who==="sys"){ log.append(el("div","sys","상담사에게 연결하고 있어요")); }
       else if(m.who==="end"){ log.append(el("div","sys","상담이 끝났어요")); }
     });
@@ -200,7 +232,9 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     log.scrollTop=log.scrollHeight;
     /* 빠른 답 */
     var qr=$("qr"); qr.textContent="";
-    if(s&&s.ask&&!locked){ ["네","아니요"].forEach(function(t){ var p=el("button","pill",t); p.type="button"; p.onclick=function(){ sendToEngine(t); }; qr.append(p); }); qr.hidden=false; } else qr.hidden=true;
+    if(s&&s.ask&&!locked){ ["네","아니요"].forEach(function(t){ var p=el("button","pill",t); p.type="button"; p.onclick=function(){ sendToEngine(t); }; qr.append(p); }); qr.hidden=false; }
+    else { var opts=(s&&!locked)?quickFor(s):[]; opts.forEach(function(o,k){ var p=el("button","pill sm"+(k===0&&o.pri?" pri":""),o.t); p.type="button"; p.onclick=function(){ sendToEngine(o.t); }; qr.append(p); }); qr.hidden=!opts.length; }
+    drawSteps(s);
     /* 배너 */
     var bn=$("banner"); bn.textContent="";
     if(handed||ended){
@@ -214,6 +248,60 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     inp.placeholder=!s?"상담 준비 중이에요":handed?"상담사 연결을 기다리고 있어요":ended?"상담이 끝났어요":"궁금한 점을 적어 주세요";
     if(wasLocked&&!locked) inp.focus();
     wasLocked=locked;
+  }
+
+
+  /* ── 맥락 표시 (E.st 읽기만) ── */
+  var TNAME={"KS-03":"교환","KS-06":"반품","KS-08":"주문취소"}, cardSnap={};
+  function stCls(t){ return /배송완료/.test(t)?"s-done":/배송중|배송준비중/.test(t)?"s-move":/입금대기|결제완료/.test(t)?"s-wait":""; }
+  function orderCard(o){
+    var c=el("div","ocard"), t=el("div","ot"); t.append(el("span",null,"주문 "+o.date),el("span","st "+stCls(o.status),o.status)); c.append(t);
+    c.append(el("div","pn",o.product)); c.append(el("div","op",o.option+" · "+o.qty+"개"));
+    var mt=el("div","meta"); mt.append(el("span",null,o.pay),el("b",null,Number(o.price).toLocaleString("ko-KR")+"원")); c.append(mt);
+    if(o.extra) c.append(el("div","op",o.extra));
+    return c;
+  }
+  function ticketCard(k){
+    var c=el("div","ocard tk"), t=el("div","ot"); t.append(el("span",null,"접수 완료"),el("span",null,k.at||""));
+    c.append(t,el("div","big",k.no),el("div","pn",k.tname+(k.order&&k.order!=="미조회"?" · "+k.order.replace(/^\S+\s/,""):"")));
+    c.append(el("div","ok","\u2713 담당 상담사가 이어서 처리해요")); return c;
+  }
+  function cardFor(s,m,i){
+    var key=stN+":"+i;
+    if(cardSnap[key]===undefined){
+      cardSnap[key]=null;
+      var tx=String(m.text||"");
+      if(/이 주문 건 맞으신가요/.test(tx)&&s.lookup&&s.lookup.orders&&s.lookup.orders[0]) cardSnap[key]={o:JSON.parse(JSON.stringify(s.lookup.orders[0]))};
+      var mm=tx.match(/접수번호(?:는)?\s*(K[0-9-]+)/);
+      if(mm&&s.tickets){ var k=s.tickets.filter(function(x){ return x.no===mm[1]; })[0]; if(k) cardSnap[key]={k:JSON.parse(JSON.stringify(k))}; }
+    }
+    var v=cardSnap[key]; if(!v) return null;
+    return v.o?orderCard(v.o):ticketCard(v.k);
+  }
+  function quickFor(s){
+    var P=s.pend;
+    if(s.phase==="closing") return [{t:"없어요, 감사합니다",pri:true},{t:"하나 더 물어볼게요"}];
+    if(!P) return [];
+    if(P.slot==="confirm"||P.slot==="switch") return [{t:"네, 진행해 주세요",pri:true},{t:"아니요"}];
+    if(P.slot==="order-confirm") return [{t:"네, 맞아요",pri:true},{t:"다른 주문이에요"}];
+    if(P.slot==="order-choose"&&s.lookup) return s.lookup.orders.slice(0,3).map(function(o){ return {t:o.product}; });
+    if(P.slot==="reason") return [{t:"디자인이 마음에 안 들어요"},{t:"사이즈가 안 맞아요"},{t:"상품에 하자가 있어요"}];
+    if(P.slot==="option") return [{t:"한 치수 큰 사이즈로 바꿔 주세요"},{t:"블랙으로 바꿔 주세요"}];
+    if(P.slot==="id"&&demo) return [{t:"김민지 010-2147-5678",pri:true}];
+    return [];
+  }
+  function drawSteps(s){
+    var bx=$("steps"); bx.textContent="";
+    var last=s&&s.tickets&&s.tickets.length?s.tickets[s.tickets.length-1].type:"";
+    var ty=s&&(s.pend&&TNAME[s.pend.type]?s.pend.type:TNAME[s.typeKeep]?s.typeKeep:TNAME[last]?last:"");
+    if(!s||!ty||s.handed){ bx.hidden=true; return; }
+    var sl=s.slots||{}, tk=(s.tickets||[]).some(function(k){ return k.type===ty; });
+    var switched=ty==="KS-06"&&s.turns.some(function(t){ return /취소|캔슬/.test(t.text); });
+    var L=[["본인 확인",!!(s.nameOK&&s.lookup)],["주문 확인",!!s.orderOK],[ty==="KS-03"?"교환 옵션":"사유",ty==="KS-03"?!!sl.option:!!sl.reason],["접수",tk]];
+    var now=-1; L.forEach(function(x,k){ if(now<0&&!x[1]) now=k; });
+    bx.append(el("span","tt",(switched?"주문취소 \u2192 ":"")+TNAME[ty]));
+    L.forEach(function(x,k){ if(k) bx.append(el("span","ar","\u203A")); var sp=el("span","sp"+(x[1]?" done":k===now?" now":"")); sp.append(el("i",null,x[1]?"\u2713":String(k+1)),document.createTextNode(x[0])); bx.append(sp); });
+    bx.hidden=false;
   }
 
   /* ── 입력: form의 submit 이벤트로만 보낸다 (keydown Enter 처리기 없음) ── */
@@ -236,7 +324,7 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
   if(demo){
     var bx=$("demo"); bx.hidden=false; document.body.classList.add("demo-on"); bx.append(el("span","dl","시연 문장"));
     function chip(tag,text,fresh,idx,parent){
-      var c=el("button","dchip"); c.type="button"; c.append(el("b",tag.indexOf("먼저")===0?"t-blue":"t-red",tag),document.createTextNode(text));
+      var c=el("button","dchip"); c.type="button"; c.append(el("b",tag.indexOf("먼저")===0?"t-blue":tag==="맥락"?"t-green":"t-red",tag),document.createTextNode(text));
       c.onclick=function(){ demoSend(text,fresh,idx); }; parent.append(c); return c;
     }
     chip("즉시","진짜 미친 거 아니에요? 2주째 안 오잖아요",true,null,bx);
@@ -245,6 +333,8 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     grp.push(chip("먼저 묻기 ①","어제 온다던 택배가 안 와서 짜증나네요",true,0,g));
     grp.push(chip("먼저 묻기 ②","어제도 내일 온다더니 짜증나요",false,1,g));
     grp.push(chip("먼저 묻기 ③","네",false,2,g));
+    bx.append(el("span","dl","맥락 이어 가기"));
+    chip("맥락","주문 취소해 주세요",true,null,bx);
     markNext();
   }
 
