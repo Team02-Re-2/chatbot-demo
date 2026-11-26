@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="light">
 <title>K쇼핑 상담</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
-html{color-scheme:light dark}
-body.cc{--paper:#F2F2F7;--card:#FFFFFF;--logbg:#FFFFFF;--ink:#111111;--muted:#6C6C70;--line:#D1D1D6;--tint:#F2F2F7;--focus:#0A84FF;--btn-fg:#FFFFFF;
-  --blue:#0A84FF;--blue-b:#0071E3;--blue-l:#0066CC;--red:#D70015;--red-dot:#FF3B30;--bot:#E9E9EB;--botink:#111111;--sendoff:#C7C7CC;
+html{color-scheme:light}
+body.cc{--paper:#F8FAFC;--card:#FFFFFF;--logbg:#FFFFFF;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--tint:#F8FAFC;--focus:#2563EB;--btn-fg:#FFFFFF;
+  --blue:#2563EB;--blue-b:#2563EB;--blue-l:#2563EB;--red:#D70015;--red-dot:#FF3B30;--bot:#E9E9EB;--botink:#111111;--sendoff:#C7C7CC;
   --hdr:rgba(255,255,255,.78);--sh:0 1px 2px rgba(0,0,0,.06);--hair:rgba(0,0,0,.08);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;letter-spacing:-.01em;
+  font-family:Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;letter-spacing:-.01em;
   height:100vh;height:100dvh;margin:0;display:flex;flex-direction:column;overflow:hidden;font-size:16px;line-height:1.4;background:var(--paper);color:var(--ink)}
-@media (prefers-color-scheme:dark){body.cc{--paper:#000000;--card:#1C1C1E;--logbg:#000000;--ink:#F2F2F7;--muted:#98989F;--line:#3A3A3C;--tint:#000000;
+@media (prefers-color-scheme:dark) and (max-width:0px){body.cc{--paper:#000000;--card:#1C1C1E;--logbg:#000000;--ink:#F2F2F7;--muted:#98989F;--line:#3A3A3C;--tint:#000000;
   --blue-l:#4DA3FF;--red:#FF6961;--bot:#26262A;--botink:#F2F2F7;--sendoff:#48484A;--hdr:rgba(28,28,30,.78);--hair:rgba(255,255,255,.1)}}
 /* 엔진 iframe: 보이지 않는다 (verify의 iframe#hid와 같은 스타일) */
 iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
@@ -116,10 +116,16 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
 .ocard.tk{border-color:rgba(10,132,255,.35)}
 .ocard.tk .big{font-size:17px;font-weight:700;letter-spacing:.02em;color:var(--ink);margin:2px 0}
 .ocard.tk .ok{display:inline-flex;align-items:center;gap:6px;color:#1F8A3B;font-weight:600;font-size:13px}
-@media (prefers-color-scheme:dark){.ocard .st.s-done,.ocard.tk .ok{color:#5BD27A}.ocard .st.s-wait{color:#FFB340}}
+@media (prefers-color-scheme:dark) and (max-width:0px){.ocard .st.s-done,.ocard.tk .ok{color:#5BD27A}.ocard .st.s-wait{color:#FFB340}}
 .qr{flex-wrap:wrap}
 .qr .pill.sm{flex:1 1 auto;min-height:38px;padding:6px 12px;font-size:14px;border-radius:19px}
 .qr .pill.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.qr.approve{margin:6px 12px 2px;padding:12px;border-radius:16px;background:#EAF2FF;border:1.5px solid var(--blue)}
+.qr.approve .aph{flex:1 0 100%;display:flex;align-items:baseline;gap:8px;margin:0 2px 2px}
+.qr.approve .aph b{font-size:14px;color:var(--ink)}
+.qr.approve .aph span{font-size:12px;color:var(--muted)}
+.dchip.next{background:#EAF2FF}
+.logo{background:#5DAA3C url("../assets/pickle.svg") center 4px/34px no-repeat;font-size:0}
 </style>
 </head>
 <body class="cc">
@@ -232,7 +238,12 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     log.scrollTop=log.scrollHeight;
     /* 빠른 답 */
     var qr=$("qr"); qr.textContent="";
-    if(s&&s.ask&&!locked){ ["네","아니요"].forEach(function(t){ var p=el("button","pill",t); p.type="button"; p.onclick=function(){ sendToEngine(t); }; qr.append(p); }); qr.hidden=false; }
+    qr.classList.remove("approve");
+    if(s&&s.ask&&!locked){ /* 피클의 '실행 전 승인'처럼: 연결은 고객이 고른 뒤에만 */
+      qr.classList.add("approve");
+      var hd=el("div","aph"); hd.append(el("b",null,"상담사 연결 승인"),el("span",null,"고객이 고르면 진행해요")); qr.append(hd);
+      [["네, 연결해 주세요","네",true],["아니요, 챗봇과 계속","아니요",false]].forEach(function(o){ var p=el("button","pill sm"+(o[2]?" pri":""),o[0]); p.type="button"; p.onclick=function(){ sendToEngine(o[1]); }; qr.append(p); });
+      qr.hidden=false; }
     else { var opts=(s&&!locked)?quickFor(s):[]; opts.forEach(function(o,k){ var p=el("button","pill sm"+(k===0&&o.pri?" pri":""),o.t); p.type="button"; p.onclick=function(){ sendToEngine(o.t); }; qr.append(p); }); qr.hidden=!opts.length; }
     drawSteps(s);
     /* 배너 */
@@ -322,19 +333,20 @@ iframe#eng{position:absolute;width:0;height:0;border:0;visibility:hidden}
     if(sendToEngine(text)&&idx!=null){ seq=idx+1; markNext(); }
   }
   if(demo){
-    var bx=$("demo"); bx.hidden=false; document.body.classList.add("demo-on"); bx.append(el("span","dl","시연 문장"));
-    function chip(tag,text,fresh,idx,parent){
-      var c=el("button","dchip"); c.type="button"; c.append(el("b",tag.indexOf("먼저")===0?"t-blue":tag==="맥락"?"t-green":"t-red",tag),document.createTextNode(text));
+    var bx=$("demo"); bx.hidden=false; document.body.classList.add("demo-on"); bx.append(el("span","dl","시연 대본 순서"));
+    function chip(tag,text,fresh,idx,parent,cls){
+      var c=el("button","dchip"); c.type="button"; c.append(el("b",cls||"t-blue",tag),document.createTextNode(text));
       c.onclick=function(){ demoSend(text,fresh,idx); }; parent.append(c); return c;
     }
-    chip("즉시","진짜 미친 거 아니에요? 2주째 안 오잖아요",true,null,bx);
-    chip("안전장치","팀장님 바꿔 주세요",true,null,bx);
+    /* 발표 13쪽 대본 순서: ①② 먼저 묻기 → ③ 네 → ④ 안전장치 (새 상담) */
     var g=el("span","dgrp"); bx.append(g);
-    grp.push(chip("먼저 묻기 ①","어제 온다던 택배가 안 와서 짜증나네요",true,0,g));
-    grp.push(chip("먼저 묻기 ②","어제도 내일 온다더니 짜증나요",false,1,g));
-    grp.push(chip("먼저 묻기 ③","네",false,2,g));
-    bx.append(el("span","dl","맥락 이어 가기"));
-    chip("맥락","주문 취소해 주세요",true,null,bx);
+    grp.push(chip("① 먼저 묻기 · 0:15","어제 온다던 택배가 안 와서 짜증나네요",true,0,g,"t-blue"));
+    grp.push(chip("② 먼저 묻기","어제도 내일 온다더니 짜증나요",false,1,g,"t-blue"));
+    grp.push(chip("③ 연결 동의 · 0:45","네",false,2,g,"t-blue"));
+    grp.push(chip("④ 안전장치 · 1:10","팀장님 바꿔 주세요",true,3,g,"t-red"));
+    bx.append(el("span","dl","질문 대비"));
+    chip("즉시 이관","진짜 미친 거 아니에요? 2주째 안 오잖아요",true,null,bx,"t-red");
+    chip("맥락 이어 가기","주문 취소해 주세요",true,null,bx,"t-green");
     markNext();
   }
 
