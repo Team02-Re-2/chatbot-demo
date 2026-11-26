@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>2분 시연 대본 · 팀2</title>
+<link rel="icon" href="../assets/pickle.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--navy:#0F172A;--blue:#2563EB;--blue-l:#93C5FD;--blue-t:#EAF2FF;--bg:#F8FAFC;--line:#E2E8F0;--mut:#64748B;--ink:#0F172A;--pk:#5DAA3C;--red:#E11D48}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;letter-spacing:-.01em;line-height:1.6;font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 40px 64px}
+.eb{font-size:15px;font-weight:700;color:var(--blue)}
+h1{margin:4px 0 0;font-size:40px;line-height:1.2;font-weight:800}
+h2{font-size:26px;font-weight:800;margin:0 0 4px}
+.rule{height:1px;background:var(--line);margin:18px 0 28px}
+.pg{float:right;color:var(--mut);font-weight:600;margin-top:6px}
+.hero{display:grid;grid-template-columns:5fr 6fr;gap:40px;align-items:stretch}
+.dark{position:relative;background:var(--navy);color:#fff;border-radius:28px;padding:40px 40px 36px;overflow:hidden;min-height:420px}
+.dark .ld{color:var(--blue-l);font-weight:800;font-size:22px;letter-spacing:.02em}
+.dark .big{font-size:120px;font-weight:900;line-height:1;margin:8px 0 18px}
+.dark .url{font-size:22px;color:#E2E8F0;word-break:break-all}
+.dark .url a{color:inherit;text-decoration:none}
+.dark .sub{margin-top:18px;color:#94A3B8;font-size:19px}
+.dark img{position:absolute;right:22px;bottom:18px;width:170px;opacity:.98}
+.tl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;justify-content:space-between;gap:10px}
+.tl li{display:grid;grid-template-columns:28px 78px 1fr;gap:14px;align-items:center;cursor:pointer;border-radius:16px;padding:8px 10px}
+.tl li:hover{background:#fff}
+.tl .dot{width:24px;height:24px;border-radius:50%;border:4px solid var(--blue);background:#fff}
+.tl li.on .dot{background:var(--blue)}
+.tl .tm{font-size:28px;font-weight:800;color:var(--blue)}
+.tl .tx{font-size:21px;line-height:1.35}
+.note{margin-top:22px;padding-top:12px;border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+section{margin-top:56px}
+.steps{display:flex;flex-direction:column;gap:14px;margin-top:18px}
+.st{display:grid;grid-template-columns:110px 1fr 1fr;gap:0;background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.st.on{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-t)}
+.st .t{background:var(--blue-t);color:var(--blue);font-weight:800;font-size:24px;padding:18px 16px;display:flex;flex-direction:column;gap:4px}
+.st .t small{font-size:12.5px;font-weight:700;color:#3B6FD9}
+.st .say{padding:18px 22px;border-right:1px solid var(--line)}
+.st .do{padding:18px 22px;background:#FCFDFE}
+.lab{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--mut);margin-bottom:6px}
+.say p{margin:0;font-size:17px}
+.do ol{margin:0;padding-left:20px;font-size:15.5px}
+.do li{margin:2px 0}
+.chip{display:inline-block;padding:1px 9px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:13.5px;white-space:nowrap}
+.chip.b{border-color:var(--blue);color:var(--blue)}
+.chip.r{border-color:#FDA4AF;color:var(--red)}
+.chip.n{background:var(--navy);border-color:var(--navy);color:#fff}
+.see{margin-top:8px;font-size:14px;color:var(--mut)}
+.see b{color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px}
+.card.hl{border:2px solid var(--blue);background:var(--blue-t)}
+.card .k{font-size:13px;font-weight:800;color:var(--mut)}
+.card h3{margin:6px 0 10px;font-size:21px;line-height:1.3}
+.card .arrow{margin:12px 0;color:var(--blue);font-weight:800}
+.card p{margin:0;font-size:15.5px}
+.band{margin-top:18px;padding:18px 24px;border-radius:18px;background:var(--blue-t);border-left:6px solid var(--blue);font-size:19px;font-weight:700}
+.src{margin-top:12px;font-size:13px;color:var(--mut)}
+.src a{color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.box{background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px 24px}
+.box h3{margin:0 0 8px;font-size:19px}
+.box ul{margin:0;padding-left:20px}
+.box li{margin:4px 0}
+.go{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 20px;border-radius:14px;background:var(--navy);color:#fff;text-decoration:none;font-weight:700}
+.go.sec{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.pk{display:flex;align-items:center;gap:16px}
+.pk img{width:64px}
+@media (max-width:900px){.hero,.two,.cards{grid-template-columns:1fr}.st{grid-template-columns:1fr}.st .say{border-right:0;border-bottom:1px solid var(--line)}h1{font-size:30px}.dark .big{font-size:88px}}
+@media print{body{background:#fff}.wrap{padding:16px}.go{display:none}section{break-inside:avoid}.st{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="pg">13 / 15 · 시연 대본</span>
+  <div class="eb">PART 4. 실전 적용 · 시제품</div>
+  <h1>판정을 넣은 챗봇, 직접 보여 드리겠습니다</h1>
+  <div class="rule"></div>
+
+  <div class="hero">
+    <div class="dark">
+      <div class="ld">LIVE DEMO</div>
+      <div class="big">2분</div>
+      <div class="url"><a href="../">team02-re-2.github.io/<br>chatbot-demo</a></div>
+      <div class="sub">고객 화면 + 상담사 화면<br>(관리자 대시보드)</div>
+      <img src="../assets/pickle.svg" alt="">
+    </div>
+    <ol class="tl" id="tl">
+      <li data-k="s0"><span class="dot"></span><span class="tm">0:00</span><span class="tx">첫 화면 숫자 설명</span></li>
+      <li data-k="s1"><span class="dot"></span><span class="tm">0:15</span><span class="tx">먼저 묻기: 불만 점수 0.79 → 0.97, 연결 여부 질문</span></li>
+      <li data-k="s2"><span class="dot"></span><span class="tm">0:45</span><span class="tx">"네" → 상담사 화면 대기 1건, 인계 정보 확인</span></li>
+      <li data-k="s3"><span class="dot"></span><span class="tm">1:10</span><span class="tx">새 상담: 모델 0.00이어도 안전장치 규칙이 잡음</span></li>
+      <li data-k="s4"><span class="dot"></span><span class="tm">1:40</span><span class="tx">상담 시작 → 처리 완료 → 발표 화면 복귀</span></li>
+    </ol>
+  </div>
+  <div class="note">시연 전 확인: 공개 사이트는 규칙 + 팀 모델 v2로 판정하고, Claude 판정은 클로드 챗봇(만든 계정으로 로그인)에서만 동작합니다. 아래 점수는 공개 사이트에서 직접 넣어 확인한 값입니다 (11/26).</div>
+
+  <section>
+    <h2>대본: 말할 것 · 누를 것</h2>
+    <div class="steps">
+      <div class="st" id="s0"><div class="t">0:00<small>15초</small></div>
+        <div class="say"><span class="lab">말하기</span><p>"지금 보시는 게 저희 시제품입니다. 왼쪽은 고객이 보는 챗봇, 오른쪽은 상담사가 보는 관리자 화면입니다. 위 숫자처럼 기준선 0.7로 상담사 연결을 22.2%에서 10.9%로 줄인 판정이 이 챗봇 안에서 그대로 돌아갑니다."</p></div>
+        <div class="do"><span class="lab">누르기 · 확인</span><ol><li>첫 화면 맨 위 숫자 3개를 손으로 가리킵니다.</li><li>챗봇 위 <b>파란 점 "팀 모델 v2 + 규칙 안전장치로 판정 중"</b>을 확인합니다.</li></ol></div></div>
+      <div class="st" id="s1"><div class="t">0:15<small>30초</small></div>
+        <div class="say"><span class="lab">말하기</span><p>"택배가 안 와서 짜증난다는 첫 말에 불만 점수 0.79가 나옵니다. 아직 한 번이라 챗봇이 계속 응대합니다. 같은 불만이 한 번 더 나오면 0.97, 최근 발화 두 개가 모두 불만입니다. 그래도 바로 넘기지 않고 '상담사에게 연결해 드릴까요?' 먼저 묻습니다. 피클이 전화나 결제 직전에 사용자 승인을 받는 것과 같은 방식입니다."</p></div>
+        <div class="do"><span class="lab">누르기 · 확인</span><ol><li>시연 문장 <span class="chip b">① 먼저 묻기</span> → 관리자 화면 판정 <b>불만 0.79</b></li><li><span class="chip b">② 먼저 묻기</span> → <b>불만 0.97</b>, 챗봇에 <b>연결 승인 카드</b></li></ol></div></div>
+      <div class="st" id="s2"><div class="t">0:45<small>25초</small></div>
+        <div class="say"><span class="lab">말하기</span><p>"고객이 '네'라고 하면 그때 상담사에게 넘어갑니다. 오른쪽에 대기 1건이 생기고, 인계 카드에 어떤 말 때문에 넘어왔는지, 근거 표현과 점수, 판정 이력이 정리됩니다. 상담사는 고객에게 처음부터 다시 묻지 않아도 됩니다."</p></div>
+        <div class="do"><span class="lab">누르기 · 확인</span><ol><li><span class="chip b">③ 네</span> 누르기</li><li>관리자 화면 <b>대기 1</b>, <b>누적 이관</b> 카드</li><li>인계 카드의 <b>이관 발화 · 판정 이력 · v2 점수</b>를 가리킵니다.</li></ol></div></div>
+      <div class="st" id="s3"><div class="t">1:10<small>30초</small></div>
+        <div class="say"><span class="lab">말하기</span><p>"이번엔 새 상담입니다. '팀장님 바꿔 주세요'는 감정 단어가 없어서 모델 점수가 0.00입니다. 하지만 책임자 호출 안전장치 규칙이 잡아서 묻지 않고 바로 넘깁니다. 모델이 놓쳐도 규칙이 받칩니다."</p></div>
+        <div class="do"><span class="lab">누르기 · 확인</span><ol><li><span class="chip r">④ 안전장치</span> 누르기 (새 상담이 자동으로 열립니다)</li><li>관리자 화면 <b>즉시 이관</b>, 판정 <b>v2 0.00 · 규칙 안전장치: 책임자 요구</b></li></ol></div></div>
+      <div class="st" id="s4"><div class="t">1:40<small>20초</small></div>
+        <div class="say"><span class="lab">말하기</span><p>"상담사는 대기 건을 눌러 상담을 시작하고, 처리가 끝나면 완료로 바꿉니다. 사람이 꼭 필요한 순간에만 이렇게 넘어옵니다. 시연은 여기까지입니다."</p></div>
+        <div class="do"><span class="lab">누르기 · 확인</span><ol><li>관리자 화면에서 맨 위 대기 건 → <span class="chip n">상담 시작</span> → <span class="chip">처리 완료</span></li><li><b>Alt+Tab</b>으로 발표 화면 복귀</li></ol></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>피클 벤치마킹: 피클에서 가져온 3가지</h2>
+    <div class="pk"><img src="../assets/pickle.svg" alt=""><p style="margin:0;font-size:17px">피클은 <b>고객 쪽 대리인</b>(고객 대신 전화·주문·예약)입니다. 저희 챗봇은 <b>받는 쪽 판정기</b>입니다. 피클 때문에 받는 쪽이 겪은 문제(본인확인·책임)를 "언제 사람이 받을지"로 풀었습니다.</p></div>
+    <div class="cards">
+      <div class="card"><div class="k">피클 · 11/20 업데이트</div><h3>되돌리기 어려운 일은 먼저 승인</h3><p>자율성 3단계. '중간'이면 전화 발신·결제 직전에 사용자 승인을 받습니다.</p><div class="arrow">→ 우리 챗봇</div><p><b>먼저 묻기 승인 카드.</b> 불만이 쌓여도 바로 넘기지 않고 "연결해 드릴까요?"를 묻고, "네"일 때만 연결합니다. 위기(라벨 3)는 예외로 바로 연결.</p></div>
+      <div class="card hl"><div class="k">피클 · 실시간 확인</div><h3>하는 일을 실시간으로 보여 주고, 끝나면 요약</h3><p>통화 내용을 채팅창 박스에 실시간 텍스트로 중계하고, 통화가 끝나면 결과를 요약해 알려 줍니다.</p><div class="arrow">→ 관리자 대시보드</div><p><b>발화별 판정 실시간 중계 + 인계 카드.</b> 고객 말마다 점수·근거가 쌓이고, 이관되면 왜 넘어왔는지 한 장으로 요약됩니다.</p></div>
+      <div class="card"><div class="k">피클 · 캐릭터와 대화</div><h3>캐릭터와 대화하듯 맡긴다</h3><p>캐릭터를 고르고 메시지·음성으로 일을 맡깁니다. 결과는 카드로 확인합니다.</p><div class="arrow">→ 고객용 챗봇</div><p><b>피클 캐릭터 + 카드형 응답.</b> 주문 카드, 접수번호 카드, 상황별 빠른 답 버튼으로 고객이 눌러서 진행합니다.</p></div>
+    </div>
+    <div class="band">공통점: AI가 혼자 결정하지 않고, 중요한 순간엔 사람이 확인한다</div>
+    <div class="src">출처: <a href="https://play.google.com/store/apps/details?hl=ko&amp;id=com.pickle.client" target="_blank" rel="noopener">피클 Google Play 앱 소개</a> · <a href="https://www.edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=02341926645649328" target="_blank" rel="noopener">이데일리 2026.11.25</a> · <a href="http://www.newsis.com/view/NISX20261125_0003883342" target="_blank" rel="noopener">뉴시스 2026.11.25</a> · <a href="https://thecore.media/briefing_pickle_agent_reviews/" target="_blank" rel="noopener">더코어 2026.11.08</a>. 캐릭터 그림은 팀이 직접 그린 것으로 피클의 공식 캐릭터가 아닙니다.</div>
+  </section>
+
+  <section>
+    <h2>시연 전 · 질문 대비</h2>
+    <div class="two">
+      <div class="box"><h3>발표 전 (15분 전)</h3><ul>
+        <li><a href="../ready/">발표 준비 화면</a>에서 "지금 모두 받아 두기" (팀 모델 약 220MB, 처음 한 번)</li>
+        <li>관리자 화면 <b>기록 지우기</b> → 대기 0에서 시작</li>
+        <li>첫 화면을 열어 두고 <b>새로고침하지 않기</b>. 노트북이 작으면 F11</li>
+        <li>챗봇 위 점이 <b>파란색(v2)</b>인지 확인. 회색이면 규칙만으로 판정 중</li>
+      </ul><a class="go" href="../">시연 화면 열기</a> <a class="go sec" href="../ready/">발표 준비</a></div>
+      <div class="box"><h3>시간이 남거나 질문이 나오면</h3><ul>
+        <li><span class="chip r">즉시</span> "진짜 미친 거 아니에요? 2주째 안 오잖아요" → 즉시 이관</li>
+        <li><span class="chip" style="color:#1F8A3B">맥락</span> "주문 취소해 주세요" → 빠른 답 버튼만 차례로: 배송완료 주문이라 <b>취소가 반품으로</b> 바뀌고 접수 카드 → 이관 없이 챗봇이 해결</li>
+        <li>먼저 묻기에서 <b>아니요</b>를 누르면 챗봇이 계속 응대합니다. 그 뒤 불만이 또 나오면 바로 연결돼요</li>
+        <li>Claude 판정 비교는 <a data-link="claude" href="../claude/">클로드 챗봇</a> (만든 계정으로 로그인)</li>
+      </ul></div>
+    </div>
+  </section>
+</div>
+<script src="../assets/links.js"></script>
+<script>
+/* 타임라인을 누르면 아래 대본 칸으로 이동하고 표시 */
+(function(){
+  var lis=document.querySelectorAll("#tl li");
+  function on(k){ lis.forEach(function(l){ l.classList.toggle("on",l.getAttribute("data-k")===k); });
+    document.querySelectorAll(".st").forEach(function(s){ s.classList.toggle("on",s.id===k); }); }
+  lis.forEach(function(l){ l.addEventListener("click",function(){ var k=l.getAttribute("data-k"); on(k); document.getElementById(k).scrollIntoView({behavior:"smooth",block:"center"}); }); });
+  on("s0");
+})();
+</script>
+</body>
+</html>
