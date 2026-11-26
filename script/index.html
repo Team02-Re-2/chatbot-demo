@@ -106,7 +106,7 @@ section{margin-top:56px}
         <div class="say"><span class="lab">말하기</span><p>"지금 보시는 게 저희 시제품입니다. 왼쪽은 고객이 보는 챗봇, 오른쪽은 상담사가 보는 관리자 화면입니다. 위 숫자처럼 기준선 0.7로 상담사 연결을 22.2%에서 10.9%로 줄인 판정이 이 챗봇 안에서 그대로 돌아갑니다."</p></div>
         <div class="do"><span class="lab">누르기 · 확인</span><ol><li>첫 화면 맨 위 숫자 3개를 손으로 가리킵니다.</li><li>챗봇 위 <b>파란 점 "팀 모델 v2 + 규칙 안전장치로 판정 중"</b>을 확인합니다.</li></ol></div></div>
       <div class="st" id="s1"><div class="t">0:15<small>30초</small></div>
-        <div class="say"><span class="lab">말하기</span><p>"택배가 안 와서 짜증난다는 첫 말에 불만 점수 0.79가 나옵니다. 아직 한 번이라 챗봇이 계속 응대합니다. 같은 불만이 한 번 더 나오면 0.97, 최근 발화 두 개가 모두 불만입니다. 그래도 바로 넘기지 않고 '상담사에게 연결해 드릴까요?' 먼저 묻습니다. 피클이 전화나 결제 직전에 사용자 승인을 받는 것과 같은 방식입니다."</p></div>
+        <div class="say"><span class="lab">말하기</span><p>"택배가 안 와서 짜증난다는 첫 말에 불만 점수 0.79가 나옵니다. 아직 한 번이라 챗봇이 계속 응대합니다. 같은 불만이 한 번 더 나오면 0.97, 최근 발화 두 개가 모두 불만입니다. 그래도 바로 넘기지 않고 '상담사에게 연결해 드릴까요?' 먼저 묻습니다."</p></div>
         <div class="do"><span class="lab">누르기 · 확인</span><ol><li>시연 문장 <span class="chip b">① 먼저 묻기</span> → 관리자 화면 판정 <b>불만 0.79</b></li><li><span class="chip b">② 먼저 묻기</span> → <b>불만 0.97</b>, 챗봇에 <b>연결 승인 카드</b></li></ol></div></div>
       <div class="st" id="s2"><div class="t">0:45<small>25초</small></div>
         <div class="say"><span class="lab">말하기</span><p>"고객이 '네'라고 하면 그때 상담사에게 넘어갑니다. 오른쪽에 대기 1건이 생기고, 인계 정보에 어떤 말 때문에 넘어왔는지, 근거 표현과 점수, 판정 이력이 정리됩니다. 상담사는 고객에게 처음부터 다시 묻지 않아도 됩니다."</p></div>
@@ -120,17 +120,6 @@ section{margin-top:56px}
     </div>
   </section>
 
-  <section>
-    <h2>피클 벤치마킹: 피클에서 가져온 3가지</h2>
-    <div class="pk"><img src="../assets/pickle.svg" alt=""><p style="margin:0;font-size:17px">피클은 <b>고객 쪽 대리인</b>(고객 대신 전화·주문·예약)입니다. 저희 챗봇은 <b>받는 쪽 판정기</b>입니다. 피클 때문에 받는 쪽이 겪은 문제(본인확인·책임)를 "언제 사람이 받을지"로 풀었습니다.</p></div>
-    <div class="cards">
-      <div class="card"><div class="k">피클 · 11/20 업데이트</div><h3>되돌리기 어려운 일은 먼저 승인</h3><p>자율성 3단계. '중간'이면 전화 발신·결제 직전에 사용자 승인을 받습니다.</p><div class="arrow">→ 우리 챗봇</div><p><b>먼저 묻기 승인 카드.</b> 불만이 쌓여도 바로 넘기지 않고 "연결해 드릴까요?"를 묻고, "네"일 때만 연결합니다. 위기(라벨 3)는 예외로 바로 연결.</p></div>
-      <div class="card hl"><div class="k">피클 · 실시간 확인</div><h3>하는 일을 실시간으로 보여 주고, 끝나면 요약</h3><p>통화 내용을 채팅창 박스에 실시간 텍스트로 중계하고, 통화가 끝나면 결과를 요약해 알려 줍니다.</p><div class="arrow">→ 관리자 대시보드</div><p><b>발화별 판정 실시간 중계 + 인계 카드.</b> 고객 말마다 점수·근거가 쌓이고, 이관되면 왜 넘어왔는지 한 장으로 요약됩니다.</p></div>
-      <div class="card"><div class="k">피클 · 캐릭터와 대화</div><h3>캐릭터와 대화하듯 맡긴다</h3><p>캐릭터를 고르고 메시지·음성으로 일을 맡깁니다. 결과는 카드로 확인합니다.</p><div class="arrow">→ 고객용 챗봇</div><p><b>피클 캐릭터 + 카드형 응답.</b> 주문 카드, 접수번호 카드, 상황별 빠른 답 버튼으로 고객이 눌러서 진행합니다.</p></div>
-    </div>
-    <div class="band">공통점: AI가 혼자 결정하지 않고, 중요한 순간엔 사람이 확인한다</div>
-    <div class="src">출처: <a href="https://play.google.com/store/apps/details?hl=ko&amp;id=com.pickle.client" target="_blank" rel="noopener">피클 Google Play 앱 소개</a> · <a href="https://www.edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=02341926645649328" target="_blank" rel="noopener">이데일리 2026.11.25</a> · <a href="http://www.newsis.com/view/NISX20261125_0003883342" target="_blank" rel="noopener">뉴시스 2026.11.25</a> · <a href="https://thecore.media/briefing_pickle_agent_reviews/" target="_blank" rel="noopener">더코어 2026.11.08</a>. 캐릭터 그림은 팀이 직접 그린 것으로 피클의 공식 캐릭터가 아닙니다.</div>
-  </section>
 
   <section>
     <h2>시연 전 · 질문 대비</h2>
