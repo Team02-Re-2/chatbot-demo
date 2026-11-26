@@ -17,9 +17,13 @@
 - `benchmark/`: 판정 엔진 4개 벤치마크 결과표.
 - `stage-demo/`: 단계 인지형 답변 추천 시연판 (변경 없음).
 - `claude/`: 클로드 안내 페이지. "Claude에서 열기" 버튼이 claude.ai에 올린 별도 페이지(클로드 챗봇)로 보냅니다. 클로드에 로그인한 사람은 규칙 판정과 Claude 판정을 나란히 볼 수 있습니다. 공개 사이트(GitHub Pages)에는 Claude를 직접 붙일 수 없어서 claude.ai 쪽에 따로 둡니다.
-- `assets/`: `numbers.json`(화면에 나오는 모든 숫자의 한 곳), `links.json`(슬라이드·클로드 주소의 한 곳), `nums.js`, `links.js`, `bridge.js`, `site.css`.
+- `ready/`: 발표 준비 화면. 숫자·링크 파일, 저장 도우미, 모델 저장본(조각 수), 저장 공간, 화면 크기, 시연 기록을 자동으로 확인하고, 모델을 미리 받아 두거나 기록을 지울 수 있습니다. 사람이 볼 체크리스트(이슈 #2)도 있습니다.
+- `sw.js`: 발표장 인터넷 대비 저장 도우미(서비스 워커). 모델 조각·실행 엔진·단어 목록은 저장본 우선, 나머지 화면은 인터넷 우선(4초 넘거나 끊기면 저장본). 모델 파일이 바뀌면 `MODEL_VER`를 바꿉니다.
+- `assets/`: `numbers.json`(화면에 나오는 모든 숫자의 한 곳), `links.json`(슬라이드·클로드 주소의 한 곳), `nums.js`, `links.js`, `bridge.js`, `site.css`, `offline.js`(저장 도우미 켜기. 껍데기 페이지에만 넣음. 주소 끝에 `?nosw=1`을 붙여 열면 끄고 저장본도 지움).
 
 ## 바꾸는 법
+
+- 발표 전 점검: `ready/`를 발표 노트북으로 열고 "지금 모두 받아 두기"를 한 번 누릅니다 (이 PC 기준 약 3~4분, 한 번만).
 
 - **슬라이드 최종본 연결**: `assets/links.json`의 `slides.url` 한 줄만 바꾸고 푸시합니다 (`https://...` 또는 사이트 안 상대 주소).
 - **클로드 링크 끄기**: `claude.url`을 비우면 버튼이 "준비 중"으로 바뀝니다.
@@ -33,6 +37,9 @@
 ## 원칙
 
 - 원본 무수정: `chatbot1/app/customer.html`, `chatbot2/app/index.html`, `chatbot2/app/v2/**`는 저장·재포맷하지 않습니다. `chatbot1/`, `chatbot2/` 껍데기는 iframe을 읽기만 합니다(`assets/bridge.js`). 예외로 `customer-chat/`는 엔진 iframe에 위 3가지 쓰기만 합니다.
+- 예외 기록 (11/26): `같은 뜻 표현 인식` 커밋에서 원본 두 파일(`chatbot1/app/customer.html`, `chatbot2/app/index.html`)에 답변 경로용 `sameMeaning`을 넣었습니다. 감정·이관 판정은 원문을 쓰며, 이 버전으로 `verify/` 12개 기준이 모두 통과했습니다(11/26 21:07 KST). 해시 기준은 이 커밋 이후 파일로 다시 잡아야 합니다.
+- 예외 기록 (11/26 밤): `chatbot2/app/index.html`에 맥락 이어 가기(`/*CTX-START*/ ~ /*CTX-END*/`, `/*CTX*/` 줄)를 넣었습니다. 답변 순서만 바꾸고 v2·규칙 판정 코드는 그대로이며, 40문장 점수·라벨·규칙이 이전과 같습니다. `customer-chat/`은 엔진의 `st.pend`, `st.slots`, `st.tickets`를 읽기만 해서 진행 단계·카드·빠른 답을 그립니다.
+- `sw.js`와 `assets/offline.js`는 원본 파일에 넣지 않습니다. 원본 엔진의 요청을 중간에서 저장·재사용만 합니다.
 - 숫자는 `assets/numbers.json`에서만 읽어 표시합니다. 각 숫자에 조건과 출처가 붙어 있습니다.
 - 외부 스크립트는 cdn.jsdelivr.net만 씁니다(챗봇 2의 onnxruntime-web 고정 버전). 지도는 SVG로 직접 그려서 외부 스크립트가 없습니다.
 
