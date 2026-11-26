@@ -84,7 +84,10 @@
           id: rec.id, bot: rec.bot, startedAt: rec.startedAt, turns: tl, handoff: handoff,
           asking: !!s.ask && !s.handed,
           conv: (s.conv || []).map(function (m) { return { who: S(m.who), text: S(m.text), n: (m.turn && m.turn.n) || 0 }; }),
-          engineState: v2on ? "v2+규칙" : (V.state === "fail" ? "규칙(모델 오류)" : "규칙")
+          engineState: v2on ? "v2+규칙" : (V.state === "fail" ? "규칙(모델 오류)" : "규칙"),
+          /* 챗봇이 직접 접수한 건 (상담사 후속 처리용) */
+          tickets: (s.tickets || []).map(function (k) { return { no: S(k.no), tname: S(k.tname), order: S(k.order), followup: S(k.followup) }; }),
+          ended: s.phase === "ended"
         };
         var sg = JSON.stringify(next);
         if (sg !== sig) { sig = sg; upsert(next); }
