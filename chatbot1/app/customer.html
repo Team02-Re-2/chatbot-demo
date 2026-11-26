@@ -1316,6 +1316,25 @@
 
   const F_ACK = /^(?:네+|예+|응+|아니요|아니오|알겠(?:습니다|어요|네요)?|감사(?:합니다|해요)?|고마워요|고맙습니다|확인(?:했습니다|했어요|할게요)?|좋아요|괜찮아요|오케이|ㅇㅋ)[.!?\s~]*$/;
 
+  // 같은 뜻의 다른 말을 라우팅용 표준어로 바꾼다. 감정·이관 판정과 대화 기록에는 원문을 쓴다.
+  const AFFIRM = /^(?:(?:네+|넵|예|응+|어|그래(?:요)?|좋아(?:요)?|ㅇㅇ|ㅇㅋ|ᄋᄋ|ᄋᄏ|오케이)(?:[,.!~\s]+|$))?(?:(?:그럼|그렇게|그걸로|바로)\s*)?(?:(?:(?:접수|진행|확인)\s*(?:좀\s*)?)?(?:해\s*(?:줘(?:요)?|주세요|주라|줄래(?:요)?)|해(?:요)?)|(?:접수\s*|진행\s*)?부탁(?:해(?:요)?|드려요|드립니다|합니다|할게요)?)?[.!~^\s]*$/;
+  const NOT_PRODUCT = /배송지|주소|옵션|사이즈|색|컬러|결제|카드|은행|수단|번호|상담|사람|팀장|책임|담당|직원|매니저|사장|관리자|점장|분|날짜|이름/;
+  function sameMeaning(q, choices, inFlow) {
+    const offered = choices?.[0] || '';
+    if (/^네[,\s]/.test(offered) && AFFIRM.test(q)) return offered;
+    if (choices?.includes(q)) return q;
+    let text = q.replace(/캔슬/g, '취소')
+      .replace(/(?:안\s*살(?:래|게|\s*거(?:야|예요|에요))(?:요)?|안\s*사고\s*싶(?:어요?|은데요?)|구매\s*안\s*할(?:래|게)(?:요)?|(?:(?:주문|결제)(?:한\s*(?:거|것|건))?\s*)없던\s*(?:걸|것으)로(?:\s*해\s*(?:줘요?|주세요))?)/g, '주문 취소해 주세요')
+      .replace(/환불\s*(?:해\s*)?(?:줄|주실)\s*수\s*있(?:어요?|나요?|을까요?)(?=[?!.~\s]*$)/, '환불해 줘')
+      .replace(/물러\s*(?=줘|주세요|주실|줄\s*수)/g, '취소해 ')
+      .replace(/무를(?=\s*(?:수|래))/g, '취소할')
+      .replace(/무르고(?=\s*싶)/g, '취소하고')
+      .replace(/안\s*(?:와요|오네요?|와|옴)(?=[?!.~\s]*$)/, '배송 안 왔어요');
+    // 상담이 진행 중이면 "L로 바꿔 주세요"처럼 선택지를 고르는 답이라 바꾸지 않는다.
+    if (!inFlow && !NOT_PRODUCT.test(text) && !/[A-Za-z0-9]/.test(text)) text = text.replace(/바꿔\s*(?=줘|주세요|줄|주시|달라)/, '교환해 ');
+    return text;
+  }
+
   const isSimpleAck = q => q.length <= 12 && (F_ACK.test(q) || /^(?:네|넵|예)[,.!\s]*(?:알겠(?:어요|습니다)|감사(?:합니다|해요)|확인(?:했어요|했습니다))[.!?~\s]*$/.test(q) || /^넵[.!?~\s]*$/.test(q));
 
   const INJECTION = /(?:규칙|지침|시스템|프롬프트|이전\s*(?:명령|지시)).{0,14}(?:무시|따르지|잊|공개|출력|보여)|내부\s*(?:규정|지침|문서|자료|매뉴얼|기준|데이터)|관행|(?:그냥|가짜로).{0,20}(?:라고|다고)\s*(?:말|해)|시스템\s*메시지|ignore\s+(?:all\s+|the\s+)?(?:previous|prior)\s+instructions|(?:developer|system)\s*(?:prompt|message)/i;
@@ -2072,7 +2091,7 @@
         inputText.match(/^(.+?(?:취소|교환|반품|변경|조회|확인)(?:해\s*주[시세]?고|하고|해\s*주세요|할래요)?)[, ]+(?!(?:이?후|하면|했는데|했을\s*때)(?:\s|$))(?:(?:그리고|그다음|또)\s*)?(.+)$/);
       const dualSecond = queuedCoupon ? joined[2] : dual && (/환불.{0,14}(?:언제|며칠|얼마나|기간|시점)/.test(dual[2]) ? '환불 시점 이어서' :
         detectIntentKey(dual[2]) && detectIntentKey(dual[2]) !== detectIntentKey(dual[1]) ? dual[2] : '');
-      const q = queuedCoupon ? joined[1] : dualSecond ? dual[1] : inputText;
+      const q = sameMeaning(queuedCoupon ? joined[1] : dualSecond ? dual[1] : inputText, lastChoices, Boolean(scenarioKey || pendingIntent || draft));
       const isAck = isSimpleAck(q);
       const offeredLookup = lookupOffer;
       lookupOffer = '';

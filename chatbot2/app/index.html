@@ -609,6 +609,26 @@ function closingIntent(raw){
   if(END_RE.test(s)||END_RE.test(s2)) return "end";
   return "more";
 }
+/*SM-START*/
+  // 같은 뜻의 다른 말을 라우팅용 표준어로 바꾼다. 감정·이관 판정과 대화 기록에는 원문을 쓴다.
+  const AFFIRM = /^(?:(?:네+|넵|예|응+|어|그래(?:요)?|좋아(?:요)?|ㅇㅇ|ㅇㅋ|ᄋᄋ|ᄋᄏ|오케이)(?:[,.!~\s]+|$))?(?:(?:그럼|그렇게|그걸로|바로)\s*)?(?:(?:(?:접수|진행|확인)\s*(?:좀\s*)?)?(?:해\s*(?:줘(?:요)?|주세요|주라|줄래(?:요)?)|해(?:요)?)|(?:접수\s*|진행\s*)?부탁(?:해(?:요)?|드려요|드립니다|합니다|할게요)?)?[.!~^\s]*$/;
+  const NOT_PRODUCT = /배송지|주소|옵션|사이즈|색|컬러|결제|카드|은행|수단|번호|상담|사람|팀장|책임|담당|직원|매니저|사장|관리자|점장|분|날짜|이름/;
+  function sameMeaning(q, choices, inFlow) {
+    const offered = choices?.[0] || '';
+    if (/^네[,\s]/.test(offered) && AFFIRM.test(q)) return offered;
+    if (choices?.includes(q)) return q;
+    let text = q.replace(/캔슬/g, '취소')
+      .replace(/(?:안\s*살(?:래|게|\s*거(?:야|예요|에요))(?:요)?|안\s*사고\s*싶(?:어요?|은데요?)|구매\s*안\s*할(?:래|게)(?:요)?|(?:(?:주문|결제)(?:한\s*(?:거|것|건))?\s*)없던\s*(?:걸|것으)로(?:\s*해\s*(?:줘요?|주세요))?)/g, '주문 취소해 주세요')
+      .replace(/환불\s*(?:해\s*)?(?:줄|주실)\s*수\s*있(?:어요?|나요?|을까요?)(?=[?!.~\s]*$)/, '환불해 줘')
+      .replace(/물러\s*(?=줘|주세요|주실|줄\s*수)/g, '취소해 ')
+      .replace(/무를(?=\s*(?:수|래))/g, '취소할')
+      .replace(/무르고(?=\s*싶)/g, '취소하고')
+      .replace(/안\s*(?:와요|오네요?|와|옴)(?=[?!.~\s]*$)/, '배송 안 왔어요');
+    // 상담이 진행 중이면 "L로 바꿔 주세요"처럼 선택지를 고르는 답이라 바꾸지 않는다.
+    if (!inFlow && !NOT_PRODUCT.test(text) && !/[A-Za-z0-9]/.test(text)) text = text.replace(/바꿔\s*(?=줘|주세요|줄|주시|달라)/, '교환해 ');
+    return text;
+  }
+/*SM-END*/
 var TICKET_SEQ=0;
 function makeTicket(type,followup,turnN){
   var d=new Date(), no="K"+String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0")+"-"+String(((hashStr(String(d.getTime()))%9000)+1000)+(++TICKET_SEQ));
@@ -687,7 +707,8 @@ async function onSend(raw){
   var signal=st.ctl.signal;
 
   /* 검색은 동기라 바로 끝난다. 판정과 답변 생성은 동시에 시작한다. */
-  var res=CORE.search2(searchText,{tau:0.15});
+  var routeText=sameMeaning(searchText,[],!!st.typeKeep);
+  var res=CORE.search2(routeText,{tau:0.15});
   var h0=CORE.context(res,st.typeKeep,!!st.typeKeep&&!res.hintTypes.length); /* "첫 번째요"처럼 유형 단서가 없는 말이면 앞 유형을 유지한다 */
   /* 판정은 코드북대로 앞 고객 2 + 챗봇 2만 보지만, 답변은 대화 전체(최근 24개)를 본다 */
   var ctxText=st.conv.slice(0,-1).filter(function(m){return m.who==="me"||m.who==="bot";}).slice(-24).map(function(m){return (m.who==="me"?"고객: ":"챗봇: ")+m.text;}).join("\n");
@@ -751,7 +772,7 @@ async function onSend(raw){
   if(turn.aux==="claude"&&j.name_given&&!st.nameOK){ st.nameOK=true; if(st.lookup){ regen=true; newLookup=true; } }
   if(turn.aux==="claude"&&j.product&&!pr){ regen=applyProduct(productFromName(j.product)); }
   if(j.types&&j.types.length&&eng==="claude"&&turn.aux==="claude"){
-    var res2=CORE.search2(text,{tau:0.15,llm:{query:"",types:j.types,in_scope:j.in_scope}}), h2=CORE.context(res2,st.typeKeep,false);
+    var res2=CORE.search2(sameMeaning(text,[],!!st.typeKeep),{tau:0.15,llm:{query:"",types:j.types,in_scope:j.in_scope}}), h2=CORE.context(res2,st.typeKeep,false);
     if(h2.type!==h0.type){ h=h2; regen=true; }
   }
   if(regen&&turn.aux==="claude") ansP=sample.json(answerPrompt(h,ctxText,text),{modelTier:"quick",cache:false,signal:signal});
@@ -769,7 +790,7 @@ async function onSend(raw){
       : os[0].date+"에 주문하신 "+os[0].product+" ("+os[0].option+") 건이 확인됩니다. 현재 "+os[0].status+(os[0].extra?"("+os[0].extra+")":"")+" 상태입니다. 이 주문 건 맞으신가요?",cited:[]}; }
   if(!a&&st.nameOK&&!st.lookup&&NEED_ORDER[h.type]) a={reply:"감사합니다. 주문 조회를 위해 전화번호 또는 주문번호 중 하나를 알려 주시겠어요?",cited:["CM-C1"]};
   var REQ_RE=/(교환|반품|환불|취소|수거|확인|접수|AS|에이에스|수리|회신|연락|처리|변경)\s*(을|를|좀)?\s*(해\s*(주|줘)|부탁|요청|접수|원해|할게|하고\s*싶|해야)/i;
-  if(!a&&st.nameOK&&st.lookup&&h.type&&REQ_RE.test(raw)){
+  if(!a&&st.nameOK&&st.lookup&&h.type&&(REQ_RE.test(raw)||REQ_RE.test(sameMeaning(String(raw),[],!!st.typeKeep)))){
     a={reply:"네, 말씀하신 "+TYPES[h.type][0]+" 요청으로 접수했습니다.",cited:[],outcome:"접수완료",followup:TYPES[h.type][0]+" 요청("+(j.request||text).slice(0,40)+") 처리 후 고객에게 결과 회신"}; }
   if(!a) a=offlineAnswer(h,j);
   if(h.type) st.typeKeep=h.type;
